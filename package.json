@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "build": "strapi-plugin build",
-    "postinstall": "mkdir -p ./dist/src/images/ && cp -R ./admin/src/lexical/images/* ./dist/src/images/",
+    "prebuild": "mkdir -p ./dist/src/images/ && cp -R ./admin/src/lexical/images/* ./dist/src/images/",
     "watch": "strapi-plugin watch",
     "watch:link": "strapi-plugin watch:link",
     "verify": "strapi-plugin verify",
