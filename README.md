@@ -2,9 +2,11 @@
 
 Integrates the [Lexical WYSIWYG editor](https://lexical.dev/) as a custom field in Strapi.
 
+[![https://nodei.co/npm/strapi-plugin-lexical.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/strapi-plugin-lexical.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/strapi-plugin-lexical)
+
+
 > **Alpha Software**  
 > This plugin is in active development. Contributions in the form of bug reports, feature suggestions, and pull requests are highly encouraged!
-
 <details>
 <summary>Table of contents</summary>
 
