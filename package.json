@@ -25,6 +25,7 @@
   "scripts": {
     "build": "strapi-plugin build",
     "prebuild": "mkdir -p ./dist/src/images/ && cp -R ./admin/src/lexical/images/* ./dist/src/images/",
+    "prepublishOnly": "npm run build",
     "watch": "strapi-plugin watch",
     "watch:link": "strapi-plugin watch:link",
     "verify": "strapi-plugin verify",
