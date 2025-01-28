@@ -16,6 +16,9 @@
   margin: 0;
   position: relative;
 }
+.PlaygroundEditorTheme__paragraph ~ .PlaygroundEditorTheme__paragraph {
+  margin-top: 1.75rem;
+}
 .PlaygroundEditorTheme__quote {
   margin: 0;
   margin-left: 20px;
