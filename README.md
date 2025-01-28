@@ -36,9 +36,10 @@ Integrates the [Lexical WYSIWYG editor](https://lexical.dev/) as a custom field 
 2. Include the required CSS and Prism.js in your Strapi admin:
    ```javascript
    // ./src/admin/app.js
-   import "strapi-plugin-lexical/dist/style.css";
+   import "../../node_modules/strapi-plugin-lexical/dist/style.css";
    import "prismjs";
    ```
+   (Why importing so weird? [See here](https://github.com/strapi/sdk-plugin/issues/73))
 
 3. Add Vite support for Prism.js:
    - Install the plugin:
