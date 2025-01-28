@@ -21,7 +21,6 @@ Integrates the [Lexical WYSIWYG editor](https://lexical.dev/) as a custom field 
   - [Contributing](#contributing)
   - [Resources](#resources)
 
-
 <!-- /TOC -->
 
 </details>

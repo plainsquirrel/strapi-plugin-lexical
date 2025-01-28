@@ -54,7 +54,7 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
   };
 
   const initialConfig = React.useMemo(() => ({
-    editorState: value ? JSON.stringify(value) : null,
+    editorState: value && value.root ? JSON.stringify(value) : null,
     namespace: 'Lexical',
     nodes: [...Nodes],
     onError: (error: Error) => {
