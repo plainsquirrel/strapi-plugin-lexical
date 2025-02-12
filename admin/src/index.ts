@@ -1,9 +1,10 @@
 import { PLUGIN_ID } from './pluginId';
 import { Initializer } from './components/Initializer';
 import { PluginIcon } from './components/PluginIcon';
+import { StrapiApp } from '@strapi/strapi/admin';
 
 export default {
-  register(app: any) {
+  register(app: StrapiApp) {
     app.registerPlugin({
       id: PLUGIN_ID,
       initializer: Initializer,
@@ -25,7 +26,8 @@ export default {
       },
       icon: PluginIcon,
       components: {
-        Input: async () => import(/* webpackChunkName: "input-component" */ './components/Input'),
+        // @ts-expect-error its fine and works, the typing of the props seems to be wrong at the moment
+        Input: async () => import(/* webpackChunkName: "lexical-input-component" */ './components/Input'),
       },
       options: {
         // declare options here
