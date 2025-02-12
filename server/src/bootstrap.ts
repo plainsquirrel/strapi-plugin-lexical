@@ -1,14 +1,13 @@
 import type { Core, Struct } from '@strapi/strapi';
 
 const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
-  const validComponents: string[] = ['linkable.media'];
-  const existingComponents = Object.keys(strapi.components);
-
-  // Create media linkable component
-  const componentUID: `${string}.${string}` = `linkable.media`;
-  const componentSchema: Partial<Struct.ComponentSchema> = {
-    category: 'Linkable',
-    uid: componentUID,
+  // Create media links component
+  const mediaComponentUID: `${string}.${string}` = `lexical-links.media`;
+  const mediaComponentSchema: Partial<Struct.ComponentSchema> = {
+    category: 'lexical-links',
+    // @ts-expect-error yes, its there, and required. types seem to be wrong
+    displayName: 'Media',
+    uid: mediaComponentUID,
     info: {
       displayName: 'Media',
       description: `Component linking to media`,
@@ -21,11 +20,14 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
     },
   };
 
-  if (!existingComponents.includes('linkable.media')) {
+  const validComponents: string[] = [mediaComponentUID];
+  const existingComponents = Object.keys(strapi.components);
+
+  if (!existingComponents.includes(mediaComponentUID)) {
     await strapi
       .plugin('content-type-builder')
-      .services.components.createComponent({ component: componentSchema });
-    strapi.log.info(`Lexical: Created linkable media component: ${componentUID}`);
+      .services.components.createComponent({ component: mediaComponentSchema });
+    strapi.log.info(`Lexical: Created links component for media assets: ${mediaComponentUID}`);
   }
 
   // Retrieve all API content types (excluding core types like users-permissions)
@@ -37,11 +39,12 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
     const contentType = strapi.contentTypes[contentTypeUID];
 
     if (contentType) {
-      const componentUID: `${string}.${string}` = `linkable.${contentType.info.singularName}`;
+      const componentUID: `${string}.${string}` = `lexical-links.${contentType.info.singularName}`;
+
       validComponents.push(componentUID);
       const componentSchema: Struct.ComponentSchema = {
-        category: 'Linkable',
-        displayName: contentType.info.displayName,
+        category: 'lexical-links',
+        displayName: contentType.info.singularName,
         uid: componentUID,
         info: {
           displayName: contentType.info.displayName,
@@ -64,19 +67,19 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
         await strapi
           .plugin('content-type-builder')
           .services.components.createComponent({ component: componentSchema });
-        strapi.log.info(`Lexical: Created linkable component: ${componentUID}`);
+        strapi.log.info(`Lexical: Created links component for ${componentUID}`);
       }
     }
   }
 
-  // Delete linkables to old/deleted collections
-  for (const outdatedLinkable of existingComponents.filter(
-    (c) => c.startsWith('linkable.') && !validComponents.includes(c)
+  // Delete links to old/deleted collections
+  for (const outdatedLinkComponent of existingComponents.filter(
+    (c) => c.startsWith('lexical-links.') && !validComponents.includes(c)
   )) {
-    strapi.log.info(`Lexical: Deleting outdated linkable component: ${outdatedLinkable}`);
+    strapi.log.info(`Lexical: Deleting outdated links component of ${outdatedLinkComponent}`);
     await strapi
       .plugin('content-type-builder')
-      .services.components.deleteComponent(outdatedLinkable);
+      .services.components.deleteComponent(outdatedLinkComponent);
   }
 };
 
