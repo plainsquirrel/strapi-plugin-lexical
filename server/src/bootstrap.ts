@@ -14,10 +14,9 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
       description: `Component linking to media`,
     },
     attributes: {
-      linksTo: {
+      links: {
         type: 'media',
         multiple: true,
-        writable: false,
       },
     },
   };
@@ -49,9 +48,9 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
           description: `Component linking to ${contentType.info.displayName}`,
         },
         attributes: {
-          linksTo: {
+          links: {
             type: 'relation',
-            relation: 'manyToOne',
+            relation: 'oneToMany',
             // @ts-expect-error no we need an string here. wrong types?
             target: contentTypeUID,
             writable: false,
