@@ -4,11 +4,12 @@ import {
   Field,
   Flex
 } from '@strapi/design-system';
+import { unstable_useContentManagerContext as useContentManagerContext, useStrapiApp, useFetchClient } from '@strapi/strapi/admin';
 
-import { useIntl, MessageDescriptor } from "react-intl";
+import { MessageDescriptor } from "react-intl";
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { SerializedEditorState, SerializedLexicalNode } from "lexical";
+import { LexicalNode, SerializedEditorState, SerializedElementNode, SerializedLexicalNode } from "lexical";
 
 import LexicalEditor from "../lexical/Editor";
 import { FlashMessageContext } from '../lexical/context/FlashMessageContext';
@@ -19,8 +20,9 @@ import PlaygroundEditorTheme from '../lexical/themes/PlaygroundEditorTheme';
 import Nodes from "../lexical/nodes";
 
 
-import { createGlobalStyle, css } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import { InputProps } from "@strapi/strapi/admin";
+import { SerializedStrapiImageNode, StrapiImageNode } from "src/lexical/nodes/StrapiImageNode";
 
 
 const GlobalStyleVariables = createGlobalStyle`
@@ -43,13 +45,67 @@ interface CustomFieldsComponentProps {
   error: MessageDescriptor;
 }
 
+
 const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & InputProps>((props, ref) => {
-  const { attribute, disabled, name, onChange, required, value, error, hint, labelAction, label } =
+  const { attribute, disabled, name, onChange, required, value, error, hint, labelAction, label, ...rest } =
     props;
 
-  const handleChange = (newValue: SerializedEditorState<SerializedLexicalNode>) => {
+  const { get } = useFetchClient()
+
+  const handleChange = async (newValue: SerializedEditorState<SerializedLexicalNode>) => {
+    // @todo add throtteling
+    // Set value for lexical editor
     onChange({
       target: { name, type: attribute.type, value: newValue },
+    });
+
+    // @todo make sure to run all of this link parsing and setting logic only when the field is available
+    // @todo make real map
+    const linkComponentsLookupMap = {
+      strapiImage: "lexical-links.media"
+    }
+
+    // @todo make set
+    const mediaDocumentsIds: string[] = []
+    const gatherStrapiImages = (nodes: SerializedElementNode[]) => {
+      for (const node of nodes) {
+        if (Object.keys(linkComponentsLookupMap).includes(node.type)) {
+          const imageNode = node as unknown as SerializedStrapiImageNode
+          mediaDocumentsIds.push(imageNode.documentId)
+        }
+
+        if (node.children) {
+          gatherStrapiImages(node.children as SerializedElementNode[])
+        }
+      }
+    }
+
+    gatherStrapiImages(newValue.root.children as SerializedElementNode[])
+
+    const dynamicZoneValue = []
+
+    if (mediaDocumentsIds.length > 0) {
+      const resultFetchClient = await get(`/upload/files`, {
+        params: {
+          filters: {
+            documentId: {
+              $in: mediaDocumentsIds,
+            },
+          }
+        }
+      });
+
+      dynamicZoneValue.push({
+        __component: 'lexical-links.media',
+        links: resultFetchClient.data.results
+      },)
+    }
+
+    // Set value for dynamic zone field
+    onChange({
+      target: {
+        name: `${name}Links`, type: "dynamiczone", value: dynamicZoneValue
+      },
     });
   };
 
