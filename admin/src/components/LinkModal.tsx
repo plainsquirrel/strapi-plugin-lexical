@@ -5,88 +5,165 @@ import {
   Field,
   Modal,
   Button,
-  TextInput,
   Tabs,
   Box,
-  Typography,
   Table,
   Tbody,
   Td,
-  Tr
+  Tr, Radio,
+  Typography
 } from '@strapi/design-system';
 
 import { unstable_useContentManagerContext as useContentManagerContext, useFetchClient } from '@strapi/strapi/admin';
 
-const LinkModal = ({ fieldName }: { fieldName: string }) => {
+const highlightText = (text: string, q: string): JSX.Element => {
+  if (!q.trim().length) return <>{text}</>;
 
+  const regex = new RegExp(`(${q})`, 'gi');
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, index) =>
+        part.toLowerCase() === q.toLowerCase() ? <strong key={index}>{part}</strong> : part
+      )}
+    </>
+  );
+};
+
+const linkRegex = /^(https?|ftp|mailto|tel|ws|wss|sms|geo|maps|whatsapp|facetime|facetime-audio|skype|sip|sips):\/\/?/i;
+
+const LinkModal = ({ fieldName, currentValue, setValue }: { fieldName: string, currentValue: string, setValue: (value: string) => void }) => {
   const { locale } = useIntl()
-
   const { get } = useFetchClient()
-
   const { model } = useContentManagerContext();
+
+  const currentType = React.useMemo(() => currentValue.startsWith("strapi://") ? "internal" : "external", [currentValue])
+  const defaultTab = React.useMemo(() => currentValue && currentType === "external" ? "external" : "internal", [currentType])
 
   const [linkModalOpen, setLinkModalOpen] = React.useState(true)
 
+  const [activeTab, setActiveTab] = React.useState(defaultTab)
 
   const [searchResults, setSearchResults] = React.useState<any>(null)
+  const [q, setQ] = React.useState<string>("")
 
   const handleSearch = React.useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const resultSearchLinkables = await get(`/lexical/search/${model}/${fieldName}?q=${e.target.value.trim()}&locale=${locale}`);
-    setSearchResults(resultSearchLinkables.data)
+    const userQuery = e.target.value.trim()
+    if (userQuery.length) {
+      setQ(userQuery)
+      const resultSearchLinkables = await get(`/lexical/search/${model}/${fieldName}?q=${userQuery}&locale=${locale}`);
+      setSearchResults(resultSearchLinkables.data)
+      return
+    }
+    setSearchResults({})
   }, [])
 
+  const [internalError, setInternalError] = React.useState("")
+  const [externalError, setExternalError] = React.useState("")
+  const onSubmitCb = React.useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget)
+    console.dir({ formData, activeTab })
 
-  return <Modal.Root open={linkModalOpen} onOpenChange={setLinkModalOpen} >
+    const value = formData.get(activeTab)?.toString()
+
+    if (activeTab === "internal" && !value) {
+      setInternalError("Please select an internal content item to link to.");
+      return
+    }
+
+    if (activeTab === "external") {
+      if (!value || !value.trim().length) {
+        setExternalError("Please enter a valid URL or URI.");
+        return
+      }
+      if (!value.match(linkRegex)) {
+        setExternalError("Invalid URL or URI. Ensure it starts with 'https://', 'mailto:', or another supported protocol.");
+        return
+      }
+    }
+
+    if (!value) {
+      console.error("This shouldn't happen!", { activeTab, value })
+      return
+    }
+    setInternalError("")
+    setExternalError("")
+    setValue(value.toString())
+  }, [activeTab, setValue, setInternalError, externalError])
+
+  return <Modal.Root open={linkModalOpen} onOpenChange={setLinkModalOpen}>
     <Modal.Content>
-      <Modal.Header>
-        <Modal.Title>Link Content</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Tabs.Root defaultValue="internal">
+      <form onSubmit={onSubmitCb}>
+        <Modal.Header>
+          <Modal.Title>Link Content</Modal.Title>
+        </Modal.Header>
+        <Tabs.Root defaultValue={defaultTab} onValueChange={setActiveTab}>
           <Tabs.List aria-label="Do you want to link internal or external content?">
             <Tabs.Trigger value="internal">Internal Link</Tabs.Trigger>
             <Tabs.Trigger value="external">External Link</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="internal">
-            <Box padding={4}>
-              {/* <Typography tag="p">The default settings for your attribute</Typography> */}
-              <Field.Root>
-                <Field.Label>Search within Strapi</Field.Label>
-                <TextInput
+            <Box padding={4} style={{ "minHeight": "60vh", "overflowY": "scroll" }}>
+              <Field.Root error={internalError} onChange={handleSearch}>
+                <Field.Label>Search for content within Strapi to link to</Field.Label>
+                <Field.Input
+                  type="search"
                   placeholder="Search..."
                   size="M"
-                  type="search"
-                  onChange={handleSearch}
                 />
+                <Field.Error />
               </Field.Root>
               {
-                searchResults && Object.keys(searchResults).map((collectionUID) => <div key={collectionUID}>
-                  <Typography textColor="neutral800">{collectionUID.split('.')[1]}</Typography>
-                  <Table colCount={2} rowCount={searchResults[collectionUID].length}>
-                    <Tbody>
-                      {searchResults[collectionUID].map((result: { documentId: string; id: number; label: string }) =>
-                        <Tr key={result.documentId}>
-                          <Td>{result.label} ({result.id})</Td>
-                          <Td><Button onClick={() => alert(`@todo now let set the link node to strapi://${result.documentId}`)}>Link</Button></Td>
-                        </Tr>)}
-                    </Tbody>
-                  </Table>
-                </div>)
+                searchResults && (
+                  <Radio.Group name="internal" defaultValue={currentType === "internal" ? currentValue : undefined}>
+                    <Table colCount={2} rowCount={1} style={{ marginTop: "0.5rem" }}>
+                      <Tbody>
+                        {
+                          Object.keys(searchResults).map((collectionUID) =>
+                            searchResults[collectionUID].map(
+                              (result: { documentId: string; id: number; label: string }) =>
+                                <Tr key={result.documentId}>
+                                  <Td>
+                                    <Radio.Item value={`strapi://${result.documentId}`} id={result.documentId} />
+                                  </Td>
+                                  <Td>
+                                    <label htmlFor={result.documentId}>
+                                      <Typography>{highlightText(result.label, q)} ({collectionUID.split('.')[1]}:{result.id})</Typography>
+                                    </label>
+                                  </Td>
+                                </Tr>
+                            )
+                          )
+                        }
+                      </Tbody>
+                    </Table>
+                  </Radio.Group>
+                )
               }
             </Box>
           </Tabs.Content>
           <Tabs.Content value="external">
-            <Box padding={4}>
-              <TextInput
-                placeholder="Enter external URL..."
-                size="M"
-                type="url"
-              />
-              <Button>Set Link</Button>
+            <Box padding={4} style={{ "minHeight": "60vh", "overflowY": "scroll" }}>
+              <Field.Root error={externalError} name="external" defaultValue={currentType === "external" ? currentValue : ""} required>
+                <Field.Label>Enter URI to external content</Field.Label>
+                <Field.Input
+                  placeholder="Enter external URL..."
+                  size="M"
+                  type="url"
+                />
+                <Field.Error />
+              </Field.Root>
             </Box>
           </Tabs.Content>
         </Tabs.Root>
-      </Modal.Body>
+        <Modal.Footer>
+          <Modal.Close>
+            <Button variant="tertiary" onClick={() => setLinkModalOpen(false)}>Cancel</Button>
+          </Modal.Close>
+          <Button type="submit">Set Link</Button>
+        </Modal.Footer>
+      </form>
     </Modal.Content>
   </Modal.Root>
 }

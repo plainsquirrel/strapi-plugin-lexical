@@ -120,11 +120,11 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
   }), []);
 
   return (
-    <Field.Root name={name} id={name} error={error} hint={hint} required={required}>
+    <Field.Root name={name} id={name} error={error as string} hint={hint} required={required}>
       <Flex direction="column" alignItems="stretch" gap={1}>
         <Field.Label action={labelAction}>{label}</Field.Label>
         <div>
-          <LinkModal fieldName={name} />
+          <LinkModal fieldName={name} currentValue="" setValue={v => alert(`User selected link: ${v}`)}/>
           <GlobalStyleVariables />
           <FlashMessageContext>
             <LexicalComposer initialConfig={initialConfig}>
