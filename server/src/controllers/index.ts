@@ -1,5 +1,5 @@
-import controller from './controller';
+import lexical from './lexical';
 
 export default {
-  controller,
+  lexical,
 };

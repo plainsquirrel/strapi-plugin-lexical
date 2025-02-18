@@ -1,11 +1,10 @@
 export default [
   {
     method: 'GET',
-    path: '/',
-    // name of the controller file & the method.
-    handler: 'controller.index',
+    path: '/search/:model/:field',
+    handler: 'lexical.search',
     config: {
-      policies: [],
+      auth: false, // Set to true if authentication is required
     },
   },
 ];

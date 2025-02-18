@@ -2,14 +2,13 @@ import * as React from "react";
 
 import {
   Field,
-  Flex
-} from '@strapi/design-system';
-import { unstable_useContentManagerContext as useContentManagerContext, useStrapiApp, useFetchClient } from '@strapi/strapi/admin';
+  Flex} from '@strapi/design-system';
+import { useFetchClient } from '@strapi/strapi/admin';
 
 import { MessageDescriptor } from "react-intl";
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { LexicalNode, SerializedEditorState, SerializedElementNode, SerializedLexicalNode } from "lexical";
+import { SerializedEditorState, SerializedElementNode, SerializedLexicalNode } from "lexical";
 
 import LexicalEditor from "../lexical/Editor";
 import { FlashMessageContext } from '../lexical/context/FlashMessageContext';
@@ -19,10 +18,10 @@ import PlaygroundEditorTheme from '../lexical/themes/PlaygroundEditorTheme';
 
 import Nodes from "../lexical/nodes";
 
-
 import { createGlobalStyle } from 'styled-components';
 import { InputProps } from "@strapi/strapi/admin";
-import { SerializedStrapiImageNode, StrapiImageNode } from "src/lexical/nodes/StrapiImageNode";
+import { SerializedStrapiImageNode } from "src/lexical/nodes/StrapiImageNode";
+import LinkModal from "./LinkModal";
 
 
 const GlobalStyleVariables = createGlobalStyle`
@@ -51,6 +50,7 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
     props;
 
   const { get } = useFetchClient()
+
 
   const handleChange = async (newValue: SerializedEditorState<SerializedLexicalNode>) => {
     // @todo add throtteling
@@ -124,6 +124,7 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
       <Flex direction="column" alignItems="stretch" gap={1}>
         <Field.Label action={labelAction}>{label}</Field.Label>
         <div>
+          <LinkModal fieldName={name} />
           <GlobalStyleVariables />
           <FlashMessageContext>
             <LexicalComposer initialConfig={initialConfig}>

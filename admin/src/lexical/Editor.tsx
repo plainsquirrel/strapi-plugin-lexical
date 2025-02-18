@@ -90,7 +90,7 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
   const hasLinkAttributes = false
   const isCharLimitUtf8 = false
   const isRichText = true
-  const showTreeView = true
+  const showTreeView = false
   const showTableOfContents = false
   const shouldUseLexicalContextMenu = false
   const shouldPreserveNewLinesInMarkdown = false
