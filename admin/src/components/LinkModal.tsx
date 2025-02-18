@@ -46,16 +46,20 @@ const LinkModal = ({ fieldName, currentValue, setValue, open, setOpen }: {
 
   const [activeTab, setActiveTab] = React.useState(defaultTab)
 
-  const [searchResults, setSearchResults] = React.useState<any>(null)
+  const [searchResults, setSearchResults] = React.useState<{ documentId: string; id: number; label: string, collectionName: string }[]>([])
   const [q, setQ] = React.useState<string>("")
 
+  // Prepopulate with already selected item
   React.useEffect(() => {
-    const loadCurrentSelected = async () => {
-      const id = "foo"
-      const resultSearchLinkables = await get(`/api/${model}/${id}`);
+    const loadCurrentSelected = async (currentSelectedItem: string) => {
+      const resultCurrentItem = await get(`/lexical/get/${currentSelectedItem}`);
+
+      if (resultCurrentItem.data) {
+        setSearchResults([resultCurrentItem.data])
+      }
     }
     if (currentValue.startsWith("strapi://")) {
-      loadCurrentSelected()
+      loadCurrentSelected(currentValue.replace("strapi://", ""))
     }
   }, [currentValue])
 
@@ -67,7 +71,7 @@ const LinkModal = ({ fieldName, currentValue, setValue, open, setOpen }: {
       setSearchResults(resultSearchLinkables.data)
       return
     }
-    setSearchResults({})
+    setSearchResults([])
   }, [])
 
   const [internalError, setInternalError] = React.useState("")
@@ -115,7 +119,7 @@ const LinkModal = ({ fieldName, currentValue, setValue, open, setOpen }: {
           </Tabs.List>
           <Tabs.Content value="internal">
             <Box padding={4} style={{ "minHeight": "60vh", "overflowY": "scroll" }}>
-              <Field.Root error={internalError} onChange={handleSearch}>
+              <Field.Root error={internalError} onChange={handleSearch} required>
                 <Field.Label>Search for content within Strapi to link to</Field.Label>
                 <Field.Input
                   type="search"
@@ -130,20 +134,18 @@ const LinkModal = ({ fieldName, currentValue, setValue, open, setOpen }: {
                     <Table colCount={2} rowCount={1} style={{ marginTop: "0.5rem" }}>
                       <Tbody>
                         {
-                          Object.keys(searchResults).map((collectionUID) =>
-                            searchResults[collectionUID].map(
-                              (result: { documentId: string; id: number; label: string }) =>
-                                <Tr key={result.documentId}>
-                                  <Td>
-                                    <Radio.Item value={`strapi://${collectionUID}/${result.documentId}`} id={result.documentId} />
-                                  </Td>
-                                  <Td>
-                                    <label htmlFor={result.documentId}>
-                                      <Typography>{highlightText(result.label, q)} ({collectionUID.split('.')[1]}:{result.id})</Typography>
-                                    </label>
-                                  </Td>
-                                </Tr>
-                            )
+                          searchResults.map(
+                            (result) =>
+                              <Tr key={result.documentId}>
+                                <Td>
+                                  <Radio.Item value={`strapi://${result.collectionName}/${result.documentId}`} id={result.documentId} />
+                                </Td>
+                                <Td>
+                                  <label htmlFor={result.documentId}>
+                                    <Typography>{highlightText(result.label, q)} ({result.collectionName}:{result.id})</Typography>
+                                  </label>
+                                </Td>
+                              </Tr>
                           )
                         }
                       </Tbody>
@@ -155,12 +157,13 @@ const LinkModal = ({ fieldName, currentValue, setValue, open, setOpen }: {
           </Tabs.Content>
           <Tabs.Content value="external">
             <Box padding={4} style={{ "minHeight": "60vh", "overflowY": "scroll" }}>
-              <Field.Root error={externalError} name="external" defaultValue={currentType === "external" ? currentValue : ""} required>
+              <Field.Root error={externalError} name="external" required>
                 <Field.Label>Enter URI to external content</Field.Label>
                 <Field.Input
                   placeholder="Enter external URL..."
                   size="M"
                   type="url"
+                  defaultValue={currentType === "external" ? currentValue : ""}
                 />
                 <Field.Error />
               </Field.Root>

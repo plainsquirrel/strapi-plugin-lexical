@@ -1,5 +1,5 @@
-import lexical from './lexical';
+import lexicalSearch from './lexical-search';
 
 export default {
-  lexical,
+  lexicalSearch,
 };

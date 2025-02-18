@@ -39,6 +39,7 @@ import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../utils/setFloatingElemPositionForLinkEditor';
 import { sanitizeUrl } from '../../utils/url';
 import LinkModal from '../../../components/LinkModal';
+import { useFetchClient } from '@strapi/strapi/admin';
 
 function preventDefault(
   event: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>,
@@ -63,6 +64,8 @@ function FloatingLinkEditor({
   setIsLinkEditMode: Dispatch<boolean>;
   fieldName: string
 }): JSX.Element {
+  const { get } = useFetchClient()
+
   const editorRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [linkUrl, setLinkUrl] = useState('');
@@ -218,6 +221,24 @@ function FloatingLinkEditor({
     }
   };
 
+  const [linkHref, setLinkHref] = React.useState("about:blank")
+  // Set correct link to strapi for better UX. @todo find a nicer way to do this, all of this feels very hacky
+  React.useEffect(() => {
+    const findStrapiLink = async (strapiURI: string) => {
+      const [collectionName, documentId] = strapiURI.replace("strapi://", "").split("/")
+
+      const resultIdentify = await get(`/lexical/identify/${collectionName}`)
+      setLinkHref(`${location.protocol}//${location.host}/admin/content-manager/collection-types/${resultIdentify.data.collectionUID}/${documentId}`)
+    }
+    const sanitized = sanitizeUrl(linkUrl)
+    if (sanitized.indexOf("strapi://") === 0) {
+      findStrapiLink(sanitized)
+      return
+    }
+    setLinkHref(sanitized)
+  }, [linkUrl])
+
+
   return (
     <div ref={editorRef} className="link-editor">
       {!isLink ? null : isLinkEditMode ? (
@@ -230,7 +251,7 @@ function FloatingLinkEditor({
       ) : (
         <div className="link-view">
           <a
-            href={sanitizeUrl(linkUrl)}
+            href={linkHref}
             target="_blank"
             rel="noopener noreferrer">
             {linkUrl}

@@ -24,10 +24,10 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
   const existingComponents = Object.keys(strapi.components);
 
   if (!existingComponents.includes(mediaComponentUID)) {
+    strapi.log.info(`Lexical: Creating links component for media assets: ${mediaComponentUID}`);
     await strapi
       .plugin('content-type-builder')
       .services.components.createComponent({ component: mediaComponentSchema });
-    strapi.log.info(`Lexical: Created links component for media assets: ${mediaComponentUID}`);
   }
 
   // Retrieve all API content types (excluding core types like users-permissions)
@@ -39,15 +39,15 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
     const contentType = strapi.contentTypes[contentTypeUID];
 
     if (contentType) {
-      const componentUID: `${string}.${string}` = `lexical-links.${contentType.info.singularName}`;
-
+      const cleanCollectionName = contentType.collectionName.replace(/_/g, ' ');
+      const componentUID: `${string}.${string}` = `lexical-links.${cleanCollectionName.replace(/ /g, '-')}`;
       validComponents.push(componentUID);
       const componentSchema: Struct.ComponentSchema = {
         category: 'lexical-links',
-        displayName: contentType.info.singularName,
+        displayName: cleanCollectionName,
         uid: componentUID,
         info: {
-          displayName: contentType.info.displayName,
+          displayName: cleanCollectionName,
           description: `Component linking to ${contentType.info.displayName}`,
         },
         attributes: {
@@ -63,11 +63,11 @@ const bootstrap = async ({ strapi }: { strapi: Core.Strapi }) => {
 
       // Check if component already exists before creating it
       if (!existingComponents.some((component) => component === componentUID)) {
+        strapi.log.info(`Lexical: Creating links component for ${componentUID}`);
         // Register the component
         await strapi
           .plugin('content-type-builder')
           .services.components.createComponent({ component: componentSchema });
-        strapi.log.info(`Lexical: Created links component for ${componentUID}`);
       }
     }
   }

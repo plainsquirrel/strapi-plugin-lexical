@@ -36,6 +36,13 @@ export type SerializedStrapiImageNode = Spread<
   SerializedLexicalNode
 >;
 
+export type SerializedLinkNode = Spread<
+  {
+    url: string;
+  },
+  SerializedLexicalNode
+>;
+
 export class StrapiImageNode extends DecoratorNode<JSX.Element> {
   __documentId: string;
   __src: string;

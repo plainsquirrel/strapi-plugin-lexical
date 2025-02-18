@@ -18,11 +18,11 @@ export default {
       type: 'json',
       intlLabel: {
         id: 'lexical.lexical.label',
-        defaultMessage: 'Lexical Label',
+        defaultMessage: 'Lexical Editor',
       },
       intlDescription: {
         id: 'lexical.lexical.description',
-        defaultMessage: 'Lexical Description',
+        defaultMessage: 'Lexical advanced WYSIWYG editor',
       },
       icon: PluginIcon,
       components: {

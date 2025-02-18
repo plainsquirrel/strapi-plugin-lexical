@@ -21,6 +21,7 @@ import Nodes from "../lexical/nodes";
 import { createGlobalStyle } from 'styled-components';
 import { InputProps } from "@strapi/strapi/admin";
 import { SerializedStrapiImageNode } from "src/lexical/nodes/StrapiImageNode";
+import { SerializedLinkNode } from "@lexical/link";
 
 const GlobalStyleVariables = createGlobalStyle`
     :root {
@@ -49,7 +50,6 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
 
   const { get } = useFetchClient()
 
-
   const handleChange = async (newValue: SerializedEditorState<SerializedLexicalNode>) => {
     // @todo add throtteling
     // Set value for lexical editor
@@ -57,28 +57,39 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
       target: { name, type: attribute.type, value: newValue },
     });
 
-    // @todo make sure to run all of this link parsing and setting logic only when the field is available
-    // @todo make real map
-    const linkComponentsLookupMap = {
-      strapiImage: "lexical-links.media"
-    }
+    const mediaNodes = ["strapiImage"]
+    const linkNodes = ["link"]
+
+    // lets make it more stupid ;) make array of media components, and array of link components, default to what we have, later they have to be configurable
+    // type: link, property: "url=strapi://"
 
     // @todo make set
     const mediaDocumentsIds: string[] = []
-    const gatherStrapiImages = (nodes: SerializedElementNode[]) => {
+    const collectionLinks: Map<string, string[]>= new Map()
+    const gatherStrapiRelations = (nodes: SerializedElementNode[]) => {
       for (const node of nodes) {
-        if (Object.keys(linkComponentsLookupMap).includes(node.type)) {
+        if (mediaNodes.includes(node.type)) {
           const imageNode = node as unknown as SerializedStrapiImageNode
           mediaDocumentsIds.push(imageNode.documentId)
         }
 
+        if (linkNodes.includes(node.type)) {
+          const linkNode = node as unknown as SerializedLinkNode
+          const [collectionName, documentId] = linkNode.url.replace("strapi://", "").split("/")
+          const currentLinks = collectionLinks.get(collectionName) || []
+          currentLinks.push(documentId)
+          collectionLinks.set(collectionName, currentLinks)
+        }
+
         if (node.children) {
-          gatherStrapiImages(node.children as SerializedElementNode[])
+          gatherStrapiRelations(node.children as SerializedElementNode[])
         }
       }
     }
 
-    gatherStrapiImages(newValue.root.children as SerializedElementNode[])
+    gatherStrapiRelations(newValue.root.children as SerializedElementNode[])
+
+    console.dir({mediaDocumentsIds, collectionLinks})
 
     const dynamicZoneValue = []
 
@@ -98,6 +109,25 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
         links: resultFetchClient.data.results
       },)
     }
+
+    for (const [collectionName, documentIds] of collectionLinks.entries()) {
+      const resultFetchClient = await get(`/api/${collectionName}`, {
+        params: {
+          filters: {
+            documentId: {
+              $in: documentIds,
+            },
+          }
+        }
+      });
+
+      dynamicZoneValue.push({
+        __component: `lexical-links.${collectionName}`,
+        links: resultFetchClient.data.results
+      },)
+    }
+
+    console.dir({dynamicZoneValue})
 
     // Set value for dynamic zone field
     onChange({
