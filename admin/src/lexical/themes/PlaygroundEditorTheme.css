@@ -13,38 +13,58 @@
   text-align: right;
 }
 .PlaygroundEditorTheme__paragraph {
-  margin: 0;
+  margin: 1rem 0;
   position: relative;
 }
+
 .PlaygroundEditorTheme__paragraph ~ .PlaygroundEditorTheme__paragraph {
   margin-top: 1.75rem;
 }
+
 .PlaygroundEditorTheme__quote {
-  margin: 0;
+  margin: 1rem 0;
   margin-left: 20px;
-  margin-bottom: 10px;
   font-size: 15px;
-  border-left-color: rgb(206, 208, 212);
-  border-left-width: 4px;
-  border-left-style: solid;
+  border-left: 4px solid rgb(206, 208, 212);
   padding-left: 16px;
 }
+
 .PlaygroundEditorTheme__h1 {
-  font-size: 24px;
-  font-weight: 400;
-  margin: 0;
-}
-.PlaygroundEditorTheme__h2 {
-  font-size: 15px;
+  font-size: 32px;
   font-weight: 700;
-  margin: 0;
-  text-transform: uppercase;
+  margin: 2rem 0 1rem;
 }
+
+.PlaygroundEditorTheme__h2 {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+}
+
 .PlaygroundEditorTheme__h3 {
-  font-size: 12px;
-  margin: 0;
-  text-transform: uppercase;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 1.75rem 0 0.75rem;
 }
+
+.PlaygroundEditorTheme__h4 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.PlaygroundEditorTheme__h5 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.PlaygroundEditorTheme__h6 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+}
+
 .PlaygroundEditorTheme__indent {
   --lexical-indent-base-value: 40px;
 }
