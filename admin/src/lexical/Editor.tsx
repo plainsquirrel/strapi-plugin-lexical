@@ -78,6 +78,7 @@ import StrapiImagePlugin from './plugins/StrapiImagePlugin';
 interface LexicalEditorProps {
   onChange: (newValue: SerializedEditorState<SerializedLexicalNode>) => void
   ref: React.ForwardedRef<HTMLDivElement>
+  fieldName: string
 }
 
 export default function Editor(props: LexicalEditorProps): JSX.Element {
@@ -221,6 +222,7 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
                   anchorElem={floatingAnchorElem}
                   isLinkEditMode={isLinkEditMode}
                   setIsLinkEditMode={setIsLinkEditMode}
+                  fieldName={props.fieldName}
                 />
                 <TableCellActionMenuPlugin
                   anchorElem={floatingAnchorElem}

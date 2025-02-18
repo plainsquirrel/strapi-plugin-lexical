@@ -21,8 +21,6 @@ import Nodes from "../lexical/nodes";
 import { createGlobalStyle } from 'styled-components';
 import { InputProps } from "@strapi/strapi/admin";
 import { SerializedStrapiImageNode } from "src/lexical/nodes/StrapiImageNode";
-import LinkModal from "./LinkModal";
-
 
 const GlobalStyleVariables = createGlobalStyle`
     :root {
@@ -124,13 +122,12 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
       <Flex direction="column" alignItems="stretch" gap={1}>
         <Field.Label action={labelAction}>{label}</Field.Label>
         <div>
-          <LinkModal fieldName={name} currentValue="" setValue={v => alert(`User selected link: ${v}`)}/>
           <GlobalStyleVariables />
           <FlashMessageContext>
             <LexicalComposer initialConfig={initialConfig}>
               <TableContext>
                 <ToolbarContext>
-                  <LexicalEditor onChange={handleChange} ref={ref} />
+                  <LexicalEditor onChange={handleChange} ref={ref} fieldName={name} />
                 </ToolbarContext>
               </TableContext>
             </LexicalComposer>

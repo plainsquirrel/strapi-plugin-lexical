@@ -33,20 +33,31 @@ const highlightText = (text: string, q: string): JSX.Element => {
 
 const linkRegex = /^(https?|ftp|mailto|tel|ws|wss|sms|geo|maps|whatsapp|facetime|facetime-audio|skype|sip|sips):\/\/?/i;
 
-const LinkModal = ({ fieldName, currentValue, setValue }: { fieldName: string, currentValue: string, setValue: (value: string) => void }) => {
+const LinkModal = ({ fieldName, currentValue, setValue, open, setOpen }: {
+  fieldName: string, currentValue: string, setValue: (value: string) => void,
+  open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const { locale } = useIntl()
   const { get } = useFetchClient()
   const { model } = useContentManagerContext();
 
   const currentType = React.useMemo(() => currentValue.startsWith("strapi://") ? "internal" : "external", [currentValue])
-  const defaultTab = React.useMemo(() => currentValue && currentType === "external" ? "external" : "internal", [currentType])
-
-  const [linkModalOpen, setLinkModalOpen] = React.useState(true)
+  const defaultTab = React.useMemo(() => currentType === "external" && currentValue.length ? "external" : "internal", [currentValue, currentType])
 
   const [activeTab, setActiveTab] = React.useState(defaultTab)
 
   const [searchResults, setSearchResults] = React.useState<any>(null)
   const [q, setQ] = React.useState<string>("")
+
+  React.useEffect(() => {
+    const loadCurrentSelected = async () => {
+      const id = "foo"
+      const resultSearchLinkables = await get(`/api/${model}/${id}`);
+    }
+    if (currentValue.startsWith("strapi://")) {
+      loadCurrentSelected()
+    }
+  }, [currentValue])
 
   const handleSearch = React.useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const userQuery = e.target.value.trim()
@@ -63,7 +74,6 @@ const LinkModal = ({ fieldName, currentValue, setValue }: { fieldName: string, c
   const [externalError, setExternalError] = React.useState("")
   const onSubmitCb = React.useCallback((e: React.FormEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget)
-    console.dir({ formData, activeTab })
 
     const value = formData.get(activeTab)?.toString()
 
@@ -92,7 +102,7 @@ const LinkModal = ({ fieldName, currentValue, setValue }: { fieldName: string, c
     setValue(value.toString())
   }, [activeTab, setValue, setInternalError, externalError])
 
-  return <Modal.Root open={linkModalOpen} onOpenChange={setLinkModalOpen}>
+  return <Modal.Root open={open} onOpenChange={setOpen}>
     <Modal.Content>
       <form onSubmit={onSubmitCb}>
         <Modal.Header>
@@ -125,7 +135,7 @@ const LinkModal = ({ fieldName, currentValue, setValue }: { fieldName: string, c
                               (result: { documentId: string; id: number; label: string }) =>
                                 <Tr key={result.documentId}>
                                   <Td>
-                                    <Radio.Item value={`strapi://${result.documentId}`} id={result.documentId} />
+                                    <Radio.Item value={`strapi://${collectionUID}/${result.documentId}`} id={result.documentId} />
                                   </Td>
                                   <Td>
                                     <label htmlFor={result.documentId}>
@@ -159,7 +169,7 @@ const LinkModal = ({ fieldName, currentValue, setValue }: { fieldName: string, c
         </Tabs.Root>
         <Modal.Footer>
           <Modal.Close>
-            <Button variant="tertiary" onClick={() => setLinkModalOpen(false)}>Cancel</Button>
+            <Button variant="tertiary" onClick={() => setOpen(false)}>Cancel</Button>
           </Modal.Close>
           <Button type="submit">Set Link</Button>
         </Modal.Footer>

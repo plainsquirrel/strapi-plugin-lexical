@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
 import './index.css';
 
@@ -15,8 +15,8 @@ import {
   $isLinkNode,
   TOGGLE_LINK_COMMAND,
 } from '@lexical/link';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$findMatchingParent, mergeRegister} from '@lexical/utils';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $findMatchingParent, mergeRegister } from '@lexical/utils';
 import {
   $getSelection,
   $isLineBreakNode,
@@ -31,13 +31,14 @@ import {
   LexicalEditor,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import {Dispatch, useCallback, useEffect, useRef, useState} from 'react';
+import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 import * as React from 'react';
-import {createPortal} from 'react-dom';
+import { createPortal } from 'react-dom';
 
-import {getSelectedNode} from '../../utils/getSelectedNode';
-import {setFloatingElemPositionForLinkEditor} from '../../utils/setFloatingElemPositionForLinkEditor';
-import {sanitizeUrl} from '../../utils/url';
+import { getSelectedNode } from '../../utils/getSelectedNode';
+import { setFloatingElemPositionForLinkEditor } from '../../utils/setFloatingElemPositionForLinkEditor';
+import { sanitizeUrl } from '../../utils/url';
+import LinkModal from '../../../components/LinkModal';
 
 function preventDefault(
   event: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>,
@@ -52,6 +53,7 @@ function FloatingLinkEditor({
   anchorElem,
   isLinkEditMode,
   setIsLinkEditMode,
+  fieldName
 }: {
   editor: LexicalEditor;
   isLink: boolean;
@@ -59,6 +61,7 @@ function FloatingLinkEditor({
   anchorElem: HTMLElement;
   isLinkEditMode: boolean;
   setIsLinkEditMode: Dispatch<boolean>;
+  fieldName: string
 }): JSX.Element {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -147,7 +150,7 @@ function FloatingLinkEditor({
 
   useEffect(() => {
     return mergeRegister(
-      editor.registerUpdateListener(({editorState}) => {
+      editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
           $updateLinkEditor();
         });
@@ -187,29 +190,14 @@ function FloatingLinkEditor({
     }
   }, [isLinkEditMode, isLink]);
 
-  const monitorInputInteraction = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    if (event.key === 'Enter') {
-      handleLinkSubmission(event);
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      setIsLinkEditMode(false);
-    }
-  };
-
-  const handleLinkSubmission = (
-    event:
-      | React.KeyboardEvent<HTMLInputElement>
-      | React.MouseEvent<HTMLElement>,
-  ) => {
-    event.preventDefault();
+  const handleLinkSubmission = (newValue: string) => {
     if (lastSelection !== null) {
-      if (linkUrl !== '') {
+      if (newValue !== '') {
+        setEditedLinkUrl(newValue)
         editor.update(() => {
           editor.dispatchCommand(
             TOGGLE_LINK_COMMAND,
-            sanitizeUrl(editedLinkUrl),
+            sanitizeUrl(newValue),
           );
           const selection = $getSelection();
           if ($isRangeSelection(selection)) {
@@ -223,9 +211,9 @@ function FloatingLinkEditor({
               parent.replace(linkNode, true);
             }
           }
+          setLinkUrl(newValue)
         });
       }
-      setEditedLinkUrl('https://');
       setIsLinkEditMode(false);
     }
   };
@@ -233,38 +221,12 @@ function FloatingLinkEditor({
   return (
     <div ref={editorRef} className="link-editor">
       {!isLink ? null : isLinkEditMode ? (
-        <>
-          <input
-            ref={inputRef}
-            className="link-input"
-            value={editedLinkUrl}
-            onChange={(event) => {
-              setEditedLinkUrl(event.target.value);
-            }}
-            onKeyDown={(event) => {
-              monitorInputInteraction(event);
-            }}
-          />
-          <div>
-            <div
-              className="link-cancel"
-              role="button"
-              tabIndex={0}
-              onMouseDown={preventDefault}
-              onClick={() => {
-                setIsLinkEditMode(false);
-              }}
-            />
-
-            <div
-              className="link-confirm"
-              role="button"
-              tabIndex={0}
-              onMouseDown={preventDefault}
-              onClick={handleLinkSubmission}
-            />
-          </div>
-        </>
+        <LinkModal
+          open={isLinkEditMode}
+          setOpen={v => !v && setIsLinkEditMode(false)}
+          fieldName={fieldName}
+          currentValue={editedLinkUrl}
+          setValue={handleLinkSubmission} />
       ) : (
         <div className="link-view">
           <a
@@ -304,6 +266,7 @@ function useFloatingLinkEditorToolbar(
   anchorElem: HTMLElement,
   isLinkEditMode: boolean,
   setIsLinkEditMode: Dispatch<boolean>,
+  fieldName: string
 ): JSX.Element | null {
   const [activeEditor, setActiveEditor] = useState(editor);
   const [isLink, setIsLink] = useState(false);
@@ -345,7 +308,7 @@ function useFloatingLinkEditorToolbar(
       }
     }
     return mergeRegister(
-      editor.registerUpdateListener(({editorState}) => {
+      editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
           $updateToolbar();
         });
@@ -386,6 +349,7 @@ function useFloatingLinkEditorToolbar(
       setIsLink={setIsLink}
       isLinkEditMode={isLinkEditMode}
       setIsLinkEditMode={setIsLinkEditMode}
+      fieldName={fieldName}
     />,
     anchorElem,
   );
@@ -395,10 +359,12 @@ export default function FloatingLinkEditorPlugin({
   anchorElem = document.body,
   isLinkEditMode,
   setIsLinkEditMode,
+  fieldName
 }: {
   anchorElem?: HTMLElement;
   isLinkEditMode: boolean;
   setIsLinkEditMode: Dispatch<boolean>;
+  fieldName: string;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
   return useFloatingLinkEditorToolbar(
@@ -406,5 +372,6 @@ export default function FloatingLinkEditorPlugin({
     anchorElem,
     isLinkEditMode,
     setIsLinkEditMode,
+    fieldName
   );
 }
