@@ -1,6 +1,3 @@
-declare module '@strapi/design-system/*';
-declare module '@strapi/design-system';
-
 declare module '*.svg';
 declare module '*.gif';
 declare module '*.png';
