@@ -9,12 +9,7 @@ import type { JSX } from 'react';
 
 import './index.css';
 
-import {
-  $createLinkNode,
-  $isAutoLinkNode,
-  $isLinkNode,
-  TOGGLE_LINK_COMMAND,
-} from '@lexical/link';
+import { $createLinkNode, $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
 import {
@@ -42,7 +37,7 @@ import LinkModal from '../../../components/LinkModal';
 import { useFetchClient } from '@strapi/strapi/admin';
 
 function preventDefault(
-  event: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>,
+  event: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>
 ): void {
   event.preventDefault();
 }
@@ -54,7 +49,7 @@ function FloatingLinkEditor({
   anchorElem,
   isLinkEditMode,
   setIsLinkEditMode,
-  fieldName
+  fieldName,
 }: {
   editor: LexicalEditor;
   isLink: boolean;
@@ -62,17 +57,15 @@ function FloatingLinkEditor({
   anchorElem: HTMLElement;
   isLinkEditMode: boolean;
   setIsLinkEditMode: Dispatch<boolean>;
-  fieldName: string
+  fieldName: string;
 }): JSX.Element {
-  const { get } = useFetchClient()
+  const { get } = useFetchClient();
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [linkUrl, setLinkUrl] = useState('');
   const [editedLinkUrl, setEditedLinkUrl] = useState('https://');
-  const [lastSelection, setLastSelection] = useState<BaseSelection | null>(
-    null,
-  );
+  const [lastSelection, setLastSelection] = useState<BaseSelection | null>(null);
 
   const $updateLinkEditor = useCallback(() => {
     const selection = $getSelection();
@@ -165,7 +158,7 @@ function FloatingLinkEditor({
           $updateLinkEditor();
           return true;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(
         KEY_ESCAPE_COMMAND,
@@ -176,8 +169,8 @@ function FloatingLinkEditor({
           }
           return false;
         },
-        COMMAND_PRIORITY_HIGH,
-      ),
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [editor, $updateLinkEditor, setIsLink, isLink]);
 
@@ -196,12 +189,9 @@ function FloatingLinkEditor({
   const handleLinkSubmission = (newValue: string) => {
     if (lastSelection !== null) {
       if (newValue !== '') {
-        setEditedLinkUrl(newValue)
+        setEditedLinkUrl(newValue);
         editor.update(() => {
-          editor.dispatchCommand(
-            TOGGLE_LINK_COMMAND,
-            sanitizeUrl(newValue),
-          );
+          editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl(newValue));
           const selection = $getSelection();
           if ($isRangeSelection(selection)) {
             const parent = getSelectedNode(selection).getParent();
@@ -214,50 +204,49 @@ function FloatingLinkEditor({
               parent.replace(linkNode, true);
             }
           }
-          setLinkUrl(newValue)
+          setLinkUrl(newValue);
         });
       }
       setIsLinkEditMode(false);
     }
   };
 
-  const [linkHref, setLinkHref] = React.useState("about:blank")
+  const [linkHref, setLinkHref] = React.useState('about:blank');
   // Set correct link to strapi for better UX. @todo find a nicer way to do this, all of this feels very hacky
   React.useEffect(() => {
     const findStrapiLink = async (strapiURI: string) => {
-      const [collectionName, documentId] = strapiURI.replace("strapi://", "").split("/")
+      const [collectionName, documentId] = strapiURI.replace('strapi://', '').split('/');
       try {
-        const resultIdentify = await get(`/lexical/identify/${collectionName}`)
-        setLinkHref(`/admin/content-manager/collection-types/${resultIdentify.data.collectionUID}/${documentId}`)
+        const resultIdentify = await get(`/lexical/identify/${collectionName}`);
+        setLinkHref(
+          `/admin/content-manager/collection-types/${resultIdentify.data.collectionUID}/${documentId}`
+        );
       } catch (err) {
-        console.info(`Unable to identify this public collection name: ${collectionName}`)
-        console.error(err)
+        console.info(`Unable to identify this public collection name: ${collectionName}`);
+        console.error(err);
       }
+    };
+    const sanitized = sanitizeUrl(linkUrl);
+    if (sanitized.indexOf('strapi://') === 0) {
+      findStrapiLink(sanitized);
+      return;
     }
-    const sanitized = sanitizeUrl(linkUrl)
-    if (sanitized.indexOf("strapi://") === 0) {
-      findStrapiLink(sanitized)
-      return
-    }
-    setLinkHref(sanitized)
-  }, [linkUrl])
-
+    setLinkHref(sanitized);
+  }, [linkUrl]);
 
   return (
     <div ref={editorRef} className="link-editor">
       {!isLink ? null : isLinkEditMode ? (
         <LinkModal
           open={isLinkEditMode}
-          setOpen={v => !v && setIsLinkEditMode(false)}
+          setOpen={(v) => !v && setIsLinkEditMode(false)}
           fieldName={fieldName}
           currentValue={editedLinkUrl}
-          setValue={handleLinkSubmission} />
+          setValue={handleLinkSubmission}
+        />
       ) : (
         <div className="link-view">
-          <a
-            href={linkHref}
-            target="_blank"
-            rel="noopener noreferrer">
+          <a href={linkHref} target="_blank" rel="noopener noreferrer">
             {linkUrl}
           </a>
           <div
@@ -302,10 +291,7 @@ function useFloatingLinkEditorToolbar(
       if ($isRangeSelection(selection)) {
         const focusNode = getSelectedNode(selection);
         const focusLinkNode = $findMatchingParent(focusNode, $isLinkNode);
-        const focusAutoLinkNode = $findMatchingParent(
-          focusNode,
-          $isAutoLinkNode,
-        );
+        const focusAutoLinkNode = $findMatchingParent(focusNode, $isAutoLinkNode);
         if (!(focusLinkNode || focusAutoLinkNode)) {
           setIsLink(false);
           return;
@@ -321,8 +307,7 @@ function useFloatingLinkEditorToolbar(
               (linkNode && !linkNode.is(focusLinkNode)) ||
               (focusAutoLinkNode && !focusAutoLinkNode.is(autoLinkNode)) ||
               (autoLinkNode &&
-                (!autoLinkNode.is(focusAutoLinkNode) ||
-                  autoLinkNode.getIsUnlinked()))
+                (!autoLinkNode.is(focusAutoLinkNode) || autoLinkNode.getIsUnlinked()))
             );
           });
         if (!badNode) {
@@ -345,7 +330,7 @@ function useFloatingLinkEditorToolbar(
           setActiveEditor(newEditor);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL,
+        COMMAND_PRIORITY_CRITICAL
       ),
       editor.registerCommand(
         CLICK_COMMAND,
@@ -361,8 +346,8 @@ function useFloatingLinkEditorToolbar(
           }
           return false;
         },
-        COMMAND_PRIORITY_LOW,
-      ),
+        COMMAND_PRIORITY_LOW
+      )
     );
   }, [editor]);
 
@@ -376,7 +361,7 @@ function useFloatingLinkEditorToolbar(
       setIsLinkEditMode={setIsLinkEditMode}
       fieldName={fieldName}
     />,
-    anchorElem,
+    anchorElem
   );
 }
 
@@ -384,7 +369,7 @@ export default function FloatingLinkEditorPlugin({
   anchorElem = document.body,
   isLinkEditMode,
   setIsLinkEditMode,
-  fieldName
+  fieldName,
 }: {
   anchorElem?: HTMLElement;
   isLinkEditMode: boolean;

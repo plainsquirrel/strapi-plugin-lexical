@@ -6,21 +6,16 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {
-  INSERT_TABLE_COMMAND,
-  TableCellNode,
-  TableNode,
-  TableRowNode,
-} from '@lexical/table';
-import {EditorThemeClasses, Klass, LexicalEditor, LexicalNode} from 'lexical';
-import {createContext, useContext, useEffect, useMemo, useState} from 'react';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { INSERT_TABLE_COMMAND, TableCellNode, TableNode, TableRowNode } from '@lexical/table';
+import { EditorThemeClasses, Klass, LexicalEditor, LexicalNode } from 'lexical';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import invariant from '../utils/invariant';
 
 import Button from '../ui/Button';
-import {DialogActions} from '../ui/Dialog';
+import { DialogActions } from '../ui/Dialog';
 import TextInput from '../ui/TextInput';
 
 export type InsertTableCommandPayload = Readonly<{
@@ -34,7 +29,7 @@ export type CellContextShape = {
   cellEditorPlugins: null | JSX.Element | Array<JSX.Element>;
   set: (
     cellEditorConfig: null | CellEditorConfig,
-    cellEditorPlugins: null | JSX.Element | Array<JSX.Element>,
+    cellEditorPlugins: null | JSX.Element | Array<JSX.Element>
   ) => void;
 };
 
@@ -54,7 +49,7 @@ export const CellContext = createContext<CellContextShape>({
   },
 });
 
-export function TableContext({children}: {children: JSX.Element}) {
+export function TableContext({ children }: { children: JSX.Element }) {
   const [contextValue, setContextValue] = useState<{
     cellEditorConfig: null | CellEditorConfig;
     cellEditorPlugins: null | JSX.Element | Array<JSX.Element>;
@@ -69,11 +64,12 @@ export function TableContext({children}: {children: JSX.Element}) {
           cellEditorConfig: contextValue.cellEditorConfig,
           cellEditorPlugins: contextValue.cellEditorPlugins,
           set: (cellEditorConfig, cellEditorPlugins) => {
-            setContextValue({cellEditorConfig, cellEditorPlugins});
+            setContextValue({ cellEditorConfig, cellEditorPlugins });
           },
         }),
-        [contextValue.cellEditorConfig, contextValue.cellEditorPlugins],
-      )}>
+        [contextValue.cellEditorConfig, contextValue.cellEditorPlugins]
+      )}
+    >
       {children}
     </CellContext.Provider>
   );
@@ -149,7 +145,7 @@ export function TablePlugin({
     if (!editor.hasNodes([TableNode, TableRowNode, TableCellNode])) {
       invariant(
         false,
-        'TablePlugin: TableNode, TableRowNode, or TableCellNode is not registered on editor',
+        'TablePlugin: TableNode, TableRowNode, or TableCellNode is not registered on editor'
       );
     }
   }, [editor]);

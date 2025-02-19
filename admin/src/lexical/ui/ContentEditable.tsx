@@ -6,25 +6,25 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
 import './ContentEditable.css';
 
-import {ContentEditable} from '@lexical/react/LexicalContentEditable';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import * as React from 'react';
 
 type Props = {
   className?: string;
   placeholderClassName?: string;
   placeholder: string;
-  ref?: React.ForwardedRef<HTMLDivElement>
+  ref?: React.ForwardedRef<HTMLDivElement>;
 };
 
 export default function LexicalContentEditable({
   className,
   placeholder,
   placeholderClassName,
-  ref
+  ref,
 }: Props): JSX.Element {
   return (
     <ContentEditable
@@ -32,9 +32,7 @@ export default function LexicalContentEditable({
       className={className ?? 'ContentEditable__root'}
       aria-placeholder={placeholder}
       placeholder={
-        <div className={placeholderClassName ?? 'ContentEditable__placeholder'}>
-          {placeholder}
-        </div>
+        <div className={placeholderClassName ?? 'ContentEditable__placeholder'}>{placeholder}</div>
       }
     />
   );

@@ -6,12 +6,12 @@
  *
  */
 
-import type {BaseSelection, NodeKey, TextNode} from 'lexical';
-import type {JSX} from 'react';
+import type { BaseSelection, NodeKey, TextNode } from 'lexical';
+import type { JSX } from 'react';
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$isAtNodeEnd} from '@lexical/selection';
-import {mergeRegister} from '@lexical/utils';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $isAtNodeEnd } from '@lexical/selection';
+import { mergeRegister } from '@lexical/utils';
 import {
   $addUpdateTag,
   $createTextNode,
@@ -24,16 +24,13 @@ import {
   KEY_ARROW_RIGHT_COMMAND,
   KEY_TAB_COMMAND,
 } from 'lexical';
-import {useCallback, useEffect} from 'react';
+import { useCallback, useEffect } from 'react';
 
-import {useToolbarState} from '../../context/ToolbarContext';
-import {
-  $createAutocompleteNode,
-  AutocompleteNode,
-} from '../../nodes/AutocompleteNode';
-import {addSwipeRightListener} from '../../utils/swipe';
+import { useToolbarState } from '../../context/ToolbarContext';
+import { $createAutocompleteNode, AutocompleteNode } from '../../nodes/AutocompleteNode';
+import { addSwipeRightListener } from '../../utils/swipe';
 
-const HISTORY_MERGE = {tag: 'history-merge'};
+const HISTORY_MERGE = { tag: 'history-merge' };
 
 declare global {
   interface Navigator {
@@ -101,7 +98,7 @@ function formatSuggestionText(suggestion: string): string {
 export default function AutocompletePlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
   const query = useQuery();
-  const {toolbarState} = useToolbarState();
+  const { toolbarState } = useToolbarState();
 
   useEffect(() => {
     let autocompleteNodeKey: null | NodeKey = null;
@@ -111,9 +108,7 @@ export default function AutocompletePlugin(): JSX.Element | null {
     let prevNodeFormat: number = 0;
     function $clearSuggestion() {
       const autocompleteNode =
-        autocompleteNodeKey !== null
-          ? $getNodeByKey(autocompleteNodeKey)
-          : null;
+        autocompleteNodeKey !== null ? $getNodeByKey(autocompleteNodeKey) : null;
       if (autocompleteNode !== null && autocompleteNode.isAttached()) {
         autocompleteNode.remove();
         autocompleteNodeKey = null;
@@ -126,10 +121,7 @@ export default function AutocompletePlugin(): JSX.Element | null {
       lastSuggestion = null;
       prevNodeFormat = 0;
     }
-    function updateAsyncSuggestion(
-      refSearchPromise: SearchPromise,
-      newSuggestion: null | string,
-    ) {
+    function updateAsyncSuggestion(refSearchPromise: SearchPromise, newSuggestion: null | string) {
       if (searchPromise !== refSearchPromise || newSuggestion === null) {
         // Outdated or no suggestion
         return;
@@ -144,10 +136,7 @@ export default function AutocompletePlugin(): JSX.Element | null {
         const selectionCopy = selection.clone();
         const prevNode = selection.getNodes()[0] as TextNode;
         prevNodeFormat = prevNode.getFormat();
-        const node = $createAutocompleteNode(
-          formatSuggestionText(newSuggestion),
-          uuid,
-        )
+        const node = $createAutocompleteNode(formatSuggestionText(newSuggestion), uuid)
           .setFormat(prevNodeFormat)
           .setStyle(`font-size: ${toolbarState.fontSize}`);
         autocompleteNodeKey = node.getKey();
@@ -232,25 +221,12 @@ export default function AutocompletePlugin(): JSX.Element | null {
     const rootElem = editor.getRootElement();
 
     return mergeRegister(
-      editor.registerNodeTransform(
-        AutocompleteNode,
-        $handleAutocompleteNodeTransform,
-      ),
+      editor.registerNodeTransform(AutocompleteNode, $handleAutocompleteNodeTransform),
       editor.registerUpdateListener(handleUpdate),
-      editor.registerCommand(
-        KEY_TAB_COMMAND,
-        $handleKeypressCommand,
-        COMMAND_PRIORITY_LOW,
-      ),
-      editor.registerCommand(
-        KEY_ARROW_RIGHT_COMMAND,
-        $handleKeypressCommand,
-        COMMAND_PRIORITY_LOW,
-      ),
-      ...(rootElem !== null
-        ? [addSwipeRightListener(rootElem, handleSwipeRight)]
-        : []),
-      unmountSuggestion,
+      editor.registerCommand(KEY_TAB_COMMAND, $handleKeypressCommand, COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_ARROW_RIGHT_COMMAND, $handleKeypressCommand, COMMAND_PRIORITY_LOW),
+      ...(rootElem !== null ? [addSwipeRightListener(rootElem, handleSwipeRight)] : []),
+      unmountSuggestion
     );
   }, [editor, query, toolbarState.fontSize]);
 
@@ -287,8 +263,7 @@ class AutocompleteServer {
           ? String.fromCharCode(char0 + 32) + searchText.substring(1)
           : searchText;
         const match = this.DATABASE.find(
-          (dictionaryWord) =>
-            dictionaryWord.startsWith(caseInsensitiveSearchText) ?? null,
+          (dictionaryWord) => dictionaryWord.startsWith(caseInsensitiveSearchText) ?? null
         );
         if (match === undefined) {
           return resolve(null);

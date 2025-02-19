@@ -6,25 +6,25 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
-import {$createCodeNode} from '@lexical/code';
+import { $createCodeNode } from '@lexical/code';
 import {
   INSERT_CHECK_LIST_COMMAND,
   INSERT_ORDERED_LIST_COMMAND,
   INSERT_UNORDERED_LIST_COMMAND,
 } from '@lexical/list';
-import {INSERT_EMBED_COMMAND} from '@lexical/react/LexicalAutoEmbedPlugin';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {INSERT_HORIZONTAL_RULE_COMMAND} from '@lexical/react/LexicalHorizontalRuleNode';
+import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { INSERT_HORIZONTAL_RULE_COMMAND } from '@lexical/react/LexicalHorizontalRuleNode';
 import {
   LexicalTypeaheadMenuPlugin,
   MenuOption,
   useBasicTypeaheadTriggerMatch,
 } from '@lexical/react/LexicalTypeaheadMenuPlugin';
-import {$createHeadingNode, $createQuoteNode} from '@lexical/rich-text';
-import {$setBlocksType} from '@lexical/selection';
-import {INSERT_TABLE_COMMAND} from '@lexical/table';
+import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
+import { $setBlocksType } from '@lexical/selection';
+import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import {
   $createParagraphNode,
   $getSelection,
@@ -33,20 +33,20 @@ import {
   LexicalEditor,
   TextNode,
 } from 'lexical';
-import {useCallback, useMemo, useState} from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import useModal from '../../hooks/useModal';
 import catTypingGif from '../../images/cat-typing.gif';
-import {EmbedConfigs} from '../AutoEmbedPlugin';
-import {INSERT_COLLAPSIBLE_COMMAND} from '../CollapsiblePlugin';
-import {InsertEquationDialog} from '../EquationsPlugin';
-import {INSERT_IMAGE_COMMAND, InsertImageDialog} from '../ImagesPlugin';
+import { EmbedConfigs } from '../AutoEmbedPlugin';
+import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
+import { InsertEquationDialog } from '../EquationsPlugin';
+import { INSERT_IMAGE_COMMAND, InsertImageDialog } from '../ImagesPlugin';
 import InsertLayoutDialog from '../LayoutPlugin/InsertLayoutDialog';
-import {INSERT_PAGE_BREAK} from '../PageBreakPlugin';
-import {InsertPollDialog} from '../PollPlugin';
-import {InsertTableDialog} from '../TablePlugin';
+import { INSERT_PAGE_BREAK } from '../PageBreakPlugin';
+import { InsertPollDialog } from '../PollPlugin';
+import { InsertTableDialog } from '../TablePlugin';
 
 class ComponentPickerOption extends MenuOption {
   // What shows up in the editor
@@ -67,7 +67,7 @@ class ComponentPickerOption extends MenuOption {
       keywords?: Array<string>;
       keyboardShortcut?: string;
       onSelect: (queryString: string) => void;
-    },
+    }
   ) {
     super(title);
     this.title = title;
@@ -105,7 +105,8 @@ function ComponentPickerMenuItem({
       aria-selected={isSelected}
       id={'typeahead-item-' + index}
       onMouseEnter={onMouseEnter}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       {option.icon}
       <span className="text">{option.title}</span>
     </li>
@@ -133,10 +134,9 @@ function getDynamicOptions(editor: LexicalEditor, queryString: string) {
           new ComponentPickerOption(`${rows}x${columns} Table`, {
             icon: <i className="icon table" />,
             keywords: ['table'],
-            onSelect: () =>
-              editor.dispatchCommand(INSERT_TABLE_COMMAND, {columns, rows}),
-          }),
-      ),
+            onSelect: () => editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
+          })
+      )
     );
   }
 
@@ -170,7 +170,7 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
                 $setBlocksType(selection, () => $createHeadingNode(`h${n}`));
               }
             }),
-        }),
+        })
     ),
     new ComponentPickerOption('Table', {
       icon: <i className="icon table" />,
@@ -183,20 +183,17 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
     new ComponentPickerOption('Numbered List', {
       icon: <i className="icon number" />,
       keywords: ['numbered list', 'ordered list', 'ol'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined),
+      onSelect: () => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined),
     }),
     new ComponentPickerOption('Bulleted List', {
       icon: <i className="icon bullet" />,
       keywords: ['bulleted list', 'unordered list', 'ul'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined),
+      onSelect: () => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined),
     }),
     new ComponentPickerOption('Check List', {
       icon: <i className="icon check" />,
       keywords: ['check list', 'todo list'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined),
+      onSelect: () => editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined),
     }),
     new ComponentPickerOption('Quote', {
       icon: <i className="icon quote" />,
@@ -232,8 +229,7 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
     new ComponentPickerOption('Divider', {
       icon: <i className="icon horizontal-rule" />,
       keywords: ['horizontal rule', 'divider', 'hr'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
+      onSelect: () => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
     }),
     new ComponentPickerOption('Page Break', {
       icon: <i className="icon page-break" />,
@@ -253,9 +249,8 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
         new ComponentPickerOption(`Embed ${embedConfig.contentName}`, {
           icon: embedConfig.icon,
           keywords: [...embedConfig.keywords, 'embed'],
-          onSelect: () =>
-            editor.dispatchCommand(INSERT_EMBED_COMMAND, embedConfig.type),
-        }),
+          onSelect: () => editor.dispatchCommand(INSERT_EMBED_COMMAND, embedConfig.type),
+        })
     ),
     new ComponentPickerOption('Equation', {
       icon: <i className="icon equation" />,
@@ -285,8 +280,7 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
     new ComponentPickerOption('Collapsible', {
       icon: <i className="icon caret-right" />,
       keywords: ['collapse', 'collapsible', 'toggle'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
+      onSelect: () => editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
     }),
     new ComponentPickerOption('Columns Layout', {
       icon: <i className="icon columns" />,
@@ -301,9 +295,8 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
         new ComponentPickerOption(`Align ${alignment}`, {
           icon: <i className={`icon ${alignment}-align`} />,
           keywords: ['align', 'justify', alignment],
-          onSelect: () =>
-            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment),
-        }),
+          onSelect: () => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment),
+        })
     ),
   ];
 }
@@ -330,8 +323,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
       ...getDynamicOptions(editor, queryString),
       ...baseOptions.filter(
         (option) =>
-          regex.test(option.title) ||
-          option.keywords.some((keyword) => regex.test(keyword)),
+          regex.test(option.title) || option.keywords.some((keyword) => regex.test(keyword))
       ),
     ];
   }, [editor, queryString, showModal]);
@@ -341,7 +333,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
       selectedOption: ComponentPickerOption,
       nodeToRemove: TextNode | null,
       closeMenu: () => void,
-      matchingString: string,
+      matchingString: string
     ) => {
       editor.update(() => {
         nodeToRemove?.remove();
@@ -349,7 +341,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
         closeMenu();
       });
     },
-    [editor],
+    [editor]
   );
 
   return (
@@ -362,7 +354,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
         options={options}
         menuRenderFn={(
           anchorElementRef,
-          {selectedIndex, selectOptionAndCleanUp, setHighlightedIndex},
+          { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
         ) =>
           anchorElementRef.current && options.length
             ? ReactDOM.createPortal(
@@ -385,7 +377,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
                     ))}
                   </ul>
                 </div>,
-                anchorElementRef.current,
+                anchorElementRef.current
               )
             : null
         }

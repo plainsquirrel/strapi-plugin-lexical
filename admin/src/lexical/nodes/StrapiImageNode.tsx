@@ -15,11 +15,11 @@ import type {
   SerializedLexicalNode,
   Spread,
 } from 'lexical';
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
-import {$applyNodeReplacement, DecoratorNode} from 'lexical';
+import { $applyNodeReplacement, DecoratorNode } from 'lexical';
 import * as React from 'react';
-import {Suspense} from 'react';
+import { Suspense } from 'react';
 
 const StrapiImageComponent = React.lazy(() => import('./StrapiImageComponent'));
 
@@ -52,15 +52,11 @@ export class StrapiImageNode extends DecoratorNode<JSX.Element> {
   }
 
   static clone(node: StrapiImageNode): StrapiImageNode {
-    return new StrapiImageNode(
-      node.__documentId,
-      node.__src,
-      node.__key,
-    );
+    return new StrapiImageNode(node.__documentId, node.__src, node.__key);
   }
 
   static importJSON(serializedNode: SerializedStrapiImageNode): StrapiImageNode {
-    const {documentId, src} = serializedNode;
+    const { documentId, src } = serializedNode;
     return $createStrapiImageNode({
       documentId,
       src,
@@ -76,14 +72,10 @@ export class StrapiImageNode extends DecoratorNode<JSX.Element> {
   exportDOM(): DOMExportOutput {
     const element = document.createElement('img');
     element.setAttribute('src', this.__src);
-    return {element};
+    return { element };
   }
 
-  constructor(
-    documentId: string,
-    src: string,
-    key?: NodeKey,
-  ) {
+  constructor(documentId: string, src: string, key?: NodeKey) {
     super(key);
     this.__documentId = documentId;
     this.__src = src;
@@ -126,20 +118,10 @@ export class StrapiImageNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-export function $createStrapiImageNode({
-  documentId,
-  src
-}: StrapiImagePayload): StrapiImageNode {
-  return $applyNodeReplacement(
-    new StrapiImageNode(
-      documentId,
-      src
-    ),
-  );
+export function $createStrapiImageNode({ documentId, src }: StrapiImagePayload): StrapiImageNode {
+  return $applyNodeReplacement(new StrapiImageNode(documentId, src));
 }
 
-export function $isStrapiImageNode(
-  node: LexicalNode | null | undefined,
-): node is StrapiImageNode {
+export function $isStrapiImageNode(node: LexicalNode | null | undefined): node is StrapiImageNode {
   return node instanceof StrapiImageNode;
 }

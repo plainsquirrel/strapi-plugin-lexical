@@ -72,34 +72,34 @@ import ContentEditable from './ui/ContentEditable';
 import StrapiOnChangePlugin from './plugins/StrapiOnChangePlugin';
 import { EditorState, SerializedEditorState, SerializedLexicalNode } from 'lexical';
 
-import "./styles.css"
+import './styles.css';
 import StrapiImagePlugin from './plugins/StrapiImagePlugin';
 
 interface LexicalEditorProps {
-  onChange: (newValue: SerializedEditorState<SerializedLexicalNode>) => void
-  ref: React.ForwardedRef<HTMLDivElement>
-  fieldName: string
+  onChange: (newValue: SerializedEditorState<SerializedLexicalNode>) => void;
+  ref: React.ForwardedRef<HTMLDivElement>;
+  fieldName: string;
 }
 
 export default function Editor(props: LexicalEditorProps): JSX.Element {
   const { historyState } = useSharedHistoryContext();
 
-  const isCollab = false
-  const isAutocomplete = false
-  const isMaxLength = false
-  const isCharLimit = false
-  const hasLinkAttributes = false
-  const isCharLimitUtf8 = false
-  const isRichText = true
-  const showTreeView = false
-  const showTableOfContents = false
-  const shouldUseLexicalContextMenu = false
-  const shouldPreserveNewLinesInMarkdown = false
-  const tableCellMerge = false
-  const tableCellBackgroundColor = false
-  const tableHorizontalScroll = false
-  const shouldAllowHighlightingWithBrackets = false
-  const selectionAlwaysOnDisplay = false
+  const isCollab = false;
+  const isAutocomplete = false;
+  const isMaxLength = false;
+  const isCharLimit = false;
+  const hasLinkAttributes = false;
+  const isCharLimitUtf8 = false;
+  const isRichText = true;
+  const showTreeView = false;
+  const showTableOfContents = false;
+  const shouldUseLexicalContextMenu = false;
+  const shouldPreserveNewLinesInMarkdown = false;
+  const tableCellMerge = false;
+  const tableCellBackgroundColor = false;
+  const tableHorizontalScroll = false;
+  const shouldAllowHighlightingWithBrackets = false;
+  const selectionAlwaysOnDisplay = false;
 
   const isEditable = useLexicalEditable();
   const placeholder = isCollab
@@ -107,10 +107,8 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
     : isRichText
       ? 'Enter some rich text...'
       : 'Enter some plain text...';
-  const [floatingAnchorElem, setFloatingAnchorElem] =
-    useState<HTMLDivElement | null>(null);
-  const [isSmallWidthViewport, setIsSmallWidthViewport] =
-    useState<boolean>(false);
+  const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
+  const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
   const [isLinkEditMode, setIsLinkEditMode] = useState<boolean>(false);
@@ -154,14 +152,13 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
         />
       )}
       {isRichText && (
-        <ShortcutsPlugin
-          editor={activeEditor}
-          setIsLinkEditMode={setIsLinkEditMode}
-        />
+        <ShortcutsPlugin editor={activeEditor} setIsLinkEditMode={setIsLinkEditMode} />
       )}
       <div
-        className={`editor-container ${showTreeView ? 'tree-view' : ''} ${!isRichText ? 'plain-text' : ''
-          }`}>
+        className={`editor-container ${showTreeView ? 'tree-view' : ''} ${
+          !isRichText ? 'plain-text' : ''
+        }`}
+      >
         {isMaxLength && <MaxLengthPlugin maxLength={30} />}
         <DragDropPaste />
         <AutoFocusPlugin />
@@ -224,10 +221,7 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
                   setIsLinkEditMode={setIsLinkEditMode}
                   fieldName={props.fieldName}
                 />
-                <TableCellActionMenuPlugin
-                  anchorElem={floatingAnchorElem}
-                  cellMerge={true}
-                />
+                <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
                 <TableHoverActionsPlugin anchorElem={floatingAnchorElem} />
                 <FloatingTextFormatToolbarPlugin
                   anchorElem={floatingAnchorElem}
@@ -246,10 +240,7 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
           </>
         )}
         {(isCharLimit || isCharLimitUtf8) && (
-          <CharacterLimitPlugin
-            charset={isCharLimit ? 'UTF-16' : 'UTF-8'}
-            maxLength={5}
-          />
+          <CharacterLimitPlugin charset={isCharLimit ? 'UTF-16' : 'UTF-8'} maxLength={5} />
         )}
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>

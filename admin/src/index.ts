@@ -27,7 +27,8 @@ export default {
       icon: PluginIcon,
       components: {
         // @ts-expect-error its fine and works, the typing of the props seems to be wrong at the moment
-        Input: async () => import(/* webpackChunkName: "lexical-input-component" */ './components/Input'),
+        Input: async () =>
+          import(/* webpackChunkName: "lexical-input-component" */ './components/Input'),
       },
       options: {
         // declare options here

@@ -15,9 +15,9 @@ import type {
   Spread,
 } from 'lexical';
 
-import {TextNode} from 'lexical';
+import { TextNode } from 'lexical';
 
-import {uuid as UUID} from '../plugins/AutocompletePlugin';
+import { uuid as UUID } from '../plugins/AutocompletePlugin';
 
 export type SerializedAutocompleteNode = Spread<
   {
@@ -45,13 +45,10 @@ export class AutocompleteNode extends TextNode {
     return 'autocomplete';
   }
 
-  static importJSON(
-    serializedNode: SerializedAutocompleteNode,
-  ): AutocompleteNode {
-    return $createAutocompleteNode(
-      serializedNode.text,
-      serializedNode.uuid,
-    ).updateFromJSON(serializedNode);
+  static importJSON(serializedNode: SerializedAutocompleteNode): AutocompleteNode {
+    return $createAutocompleteNode(serializedNode.text, serializedNode.uuid).updateFromJSON(
+      serializedNode
+    );
   }
 
   exportJSON(): SerializedAutocompleteNode {
@@ -71,7 +68,7 @@ export class AutocompleteNode extends TextNode {
   }
 
   exportDOM(_: LexicalEditor): DOMExportOutput {
-    return {element: null};
+    return { element: null };
   }
 
   excludeFromCopy() {
@@ -88,9 +85,6 @@ export class AutocompleteNode extends TextNode {
   }
 }
 
-export function $createAutocompleteNode(
-  text: string,
-  uuid: string,
-): AutocompleteNode {
+export function $createAutocompleteNode(text: string, uuid: string): AutocompleteNode {
   return new AutocompleteNode(text, uuid).setMode('token');
 }

@@ -6,9 +6,9 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
-import {ElementFormatType} from 'lexical';
+import { ElementFormatType } from 'lexical';
 import React, {
   createContext,
   ReactNode,
@@ -82,19 +82,12 @@ type ToolbarStateValue<Key extends ToolbarStateKey> = ToolbarState[Key];
 
 type ContextShape = {
   toolbarState: ToolbarState;
-  updateToolbarState<Key extends ToolbarStateKey>(
-    key: Key,
-    value: ToolbarStateValue<Key>,
-  ): void;
+  updateToolbarState<Key extends ToolbarStateKey>(key: Key, value: ToolbarStateValue<Key>): void;
 };
 
 const Context = createContext<ContextShape | undefined>(undefined);
 
-export const ToolbarContext = ({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element => {
+export const ToolbarContext = ({ children }: { children: ReactNode }): JSX.Element => {
   const [toolbarState, setToolbarState] = useState(INITIAL_TOOLBAR_STATE);
   const selectionFontSize = toolbarState.fontSize;
 
@@ -105,7 +98,7 @@ export const ToolbarContext = ({
         [key]: value,
       }));
     },
-    [],
+    []
   );
 
   useEffect(() => {

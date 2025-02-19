@@ -14,9 +14,9 @@ import type {
   NodeKey,
   Spread,
 } from 'lexical';
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
-import {BlockWithAlignableContents} from '@lexical/react/LexicalBlockWithAlignableContents';
+import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents';
 import {
   DecoratorBlockNode,
   SerializedDecoratorBlockNode,
@@ -33,17 +33,9 @@ type FigmaComponentProps = Readonly<{
   documentID: string;
 }>;
 
-function FigmaComponent({
-  className,
-  format,
-  nodeKey,
-  documentID,
-}: FigmaComponentProps) {
+function FigmaComponent({ className, format, nodeKey, documentID }: FigmaComponentProps) {
   return (
-    <BlockWithAlignableContents
-      className={className}
-      format={format}
-      nodeKey={nodeKey}>
+    <BlockWithAlignableContents className={className} format={format} nodeKey={nodeKey}>
       <iframe
         width="560"
         height="315"
@@ -74,9 +66,7 @@ export class FigmaNode extends DecoratorBlockNode {
   }
 
   static importJSON(serializedNode: SerializedFigmaNode): FigmaNode {
-    return $createFigmaNode(serializedNode.documentID).updateFromJSON(
-      serializedNode,
-    );
+    return $createFigmaNode(serializedNode.documentID).updateFromJSON(serializedNode);
   }
 
   exportJSON(): SerializedFigmaNode {
@@ -101,7 +91,7 @@ export class FigmaNode extends DecoratorBlockNode {
 
   getTextContent(
     _includeInert?: boolean | undefined,
-    _includeDirectionless?: false | undefined,
+    _includeDirectionless?: false | undefined
   ): string {
     return `https://www.figma.com/file/${this.__id}`;
   }
@@ -127,8 +117,6 @@ export function $createFigmaNode(documentID: string): FigmaNode {
   return new FigmaNode(documentID);
 }
 
-export function $isFigmaNode(
-  node: FigmaNode | LexicalNode | null | undefined,
-): node is FigmaNode {
+export function $isFigmaNode(node: FigmaNode | LexicalNode | null | undefined): node is FigmaNode {
   return node instanceof FigmaNode;
 }

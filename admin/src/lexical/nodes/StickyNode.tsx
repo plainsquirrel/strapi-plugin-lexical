@@ -16,12 +16,12 @@ import type {
   SerializedLexicalNode,
   Spread,
 } from 'lexical';
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
-import {$setSelection, createEditor, DecoratorNode} from 'lexical';
+import { $setSelection, createEditor, DecoratorNode } from 'lexical';
 import * as React from 'react';
-import {Suspense} from 'react';
-import {createPortal} from 'react-dom';
+import { Suspense } from 'react';
+import { createPortal } from 'react-dom';
 
 const StickyComponent = React.lazy(() => import('./StickyComponent'));
 
@@ -48,25 +48,17 @@ export class StickyNode extends DecoratorNode<JSX.Element> {
   }
 
   static clone(node: StickyNode): StickyNode {
-    return new StickyNode(
-      node.__x,
-      node.__y,
-      node.__color,
-      node.__caption,
-      node.__key,
-    );
+    return new StickyNode(node.__x, node.__y, node.__color, node.__caption, node.__key);
   }
   static importJSON(serializedNode: SerializedStickyNode): StickyNode {
     return new StickyNode(
       serializedNode.xOffset,
       serializedNode.yOffset,
-      serializedNode.color,
+      serializedNode.color
     ).updateFromJSON(serializedNode);
   }
 
-  updateFromJSON(
-    serializedNode: LexicalUpdateJSON<SerializedStickyNode>,
-  ): this {
+  updateFromJSON(serializedNode: LexicalUpdateJSON<SerializedStickyNode>): this {
     const stickyNode = super.updateFromJSON(serializedNode);
     const caption = serializedNode.caption;
     const nestedEditor = stickyNode.__caption;
@@ -82,7 +74,7 @@ export class StickyNode extends DecoratorNode<JSX.Element> {
     y: number,
     color: 'pink' | 'yellow',
     caption?: LexicalEditor,
-    key?: NodeKey,
+    key?: NodeKey
   ) {
     super(key);
     this.__x = x;
@@ -134,7 +126,7 @@ export class StickyNode extends DecoratorNode<JSX.Element> {
           caption={this.__caption}
         />
       </Suspense>,
-      document.body,
+      document.body
     );
   }
 
@@ -143,15 +135,10 @@ export class StickyNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-export function $isStickyNode(
-  node: LexicalNode | null | undefined,
-): node is StickyNode {
+export function $isStickyNode(node: LexicalNode | null | undefined): node is StickyNode {
   return node instanceof StickyNode;
 }
 
-export function $createStickyNode(
-  xOffset: number,
-  yOffset: number,
-): StickyNode {
+export function $createStickyNode(xOffset: number, yOffset: number): StickyNode {
   return new StickyNode(xOffset, yOffset, 'yellow');
 }

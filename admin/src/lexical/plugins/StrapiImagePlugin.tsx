@@ -40,14 +40,22 @@ import {
 
 export type InsertStrapiImagePayload = Readonly<StrapiImagePayload>;
 
-export const INSERT_STRAPI_IMAGE_COMMAND: LexicalCommand<InsertStrapiImagePayload> = createCommand('INSERT_STRAPI_IMAGE_COMMAND');
+export const INSERT_STRAPI_IMAGE_COMMAND: LexicalCommand<InsertStrapiImagePayload> = createCommand(
+  'INSERT_STRAPI_IMAGE_COMMAND'
+);
 
-export function InsertStrapiImageDialog({ activeEditor, onClose, MediaLibraryDialog }: {
-  activeEditor: LexicalEditor; onClose: () => void; MediaLibraryDialog: React.ComponentType<{
+export function InsertStrapiImageDialog({
+  activeEditor,
+  onClose,
+  MediaLibraryDialog,
+}: {
+  activeEditor: LexicalEditor;
+  onClose: () => void;
+  MediaLibraryDialog: React.ComponentType<{
     allowedTypes: string[];
     onClose: () => void;
     onSelectAssets: (assets: any[]) => void;
-  }>
+  }>;
 }) {
   const handleSelectAssets = (assets: any[]) => {
     try {
@@ -55,15 +63,15 @@ export function InsertStrapiImageDialog({ activeEditor, onClose, MediaLibraryDia
         for (const asset of assets) {
           const imagePayload: InsertStrapiImagePayload = {
             documentId: asset.documentId,
-            src: asset.formats?.thumbnail?.url || asset.url
+            src: asset.formats?.thumbnail?.url || asset.url,
           };
           activeEditor.dispatchCommand(INSERT_STRAPI_IMAGE_COMMAND, imagePayload);
         }
         onClose();
       }
     } catch (err) {
-      console.log('Unable to insert images:')
-      console.log(err)
+      console.log('Unable to insert images:');
+      console.log(err);
     }
   };
 
@@ -84,36 +92,38 @@ export default function StrapiImagePlugin(): JSX.Element | null {
       throw new Error('StrapiImagePlugin:  StrapiImageNode not registered on editor');
     }
 
-    return mergeRegister(editor.registerCommand<InsertStrapiImagePayload>(
-      INSERT_STRAPI_IMAGE_COMMAND,
-      (payload) => {
-        const strapiImageNode = $createStrapiImageNode(payload);
-        $insertNodes([strapiImageNode]);
-        return true;
-      },
-      COMMAND_PRIORITY_EDITOR,
-    ),
+    return mergeRegister(
+      editor.registerCommand<InsertStrapiImagePayload>(
+        INSERT_STRAPI_IMAGE_COMMAND,
+        (payload) => {
+          const strapiImageNode = $createStrapiImageNode(payload);
+          $insertNodes([strapiImageNode]);
+          return true;
+        },
+        COMMAND_PRIORITY_EDITOR
+      ),
       editor.registerCommand<DragEvent>(
         DRAGSTART_COMMAND,
         (event) => {
           return $onDragStart(event);
         },
-        COMMAND_PRIORITY_HIGH,
+        COMMAND_PRIORITY_HIGH
       ),
       editor.registerCommand<DragEvent>(
         DRAGOVER_COMMAND,
         (event) => {
           return $onDragover(event);
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand<DragEvent>(
         DROP_COMMAND,
         (event) => {
           return $onDrop(event, editor);
         },
-        COMMAND_PRIORITY_HIGH,
-      ))
+        COMMAND_PRIORITY_HIGH
+      )
+    );
   }, [editor]);
 
   return null;
@@ -144,7 +154,7 @@ function $onDragStart(event: DragEvent): boolean {
         documentId: node.__documentId,
       },
       type: 'image',
-    }),
+    })
   );
 
   return true;

@@ -14,13 +14,13 @@ import type {
   SerializedElementNode,
 } from 'lexical';
 
-import {addClassNamesToElement} from '@lexical/utils';
-import {ElementNode} from 'lexical';
+import { addClassNamesToElement } from '@lexical/utils';
+import { ElementNode } from 'lexical';
 
 export type SerializedLayoutItemNode = SerializedElementNode;
 
 function $convertLayoutItemElement(): DOMConversionOutput | null {
-  return {node: $createLayoutItemNode()};
+  return { node: $createLayoutItemNode() };
 }
 
 export class LayoutItemNode extends ElementNode {
@@ -72,8 +72,6 @@ export function $createLayoutItemNode(): LayoutItemNode {
   return new LayoutItemNode();
 }
 
-export function $isLayoutItemNode(
-  node: LexicalNode | null | undefined,
-): node is LayoutItemNode {
+export function $isLayoutItemNode(node: LexicalNode | null | undefined): node is LayoutItemNode {
   return node instanceof LayoutItemNode;
 }

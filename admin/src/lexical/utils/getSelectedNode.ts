@@ -5,16 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import {$isAtNodeEnd} from '@lexical/selection';
-import {ElementNode, RangeSelection, TextNode} from 'lexical';
+import { $isAtNodeEnd } from '@lexical/selection';
+import { ElementNode, RangeSelection, TextNode } from 'lexical';
 
-export function getSelectedNode(
-  selection: RangeSelection,
-): TextNode | ElementNode {
+export function getSelectedNode(selection: RangeSelection): TextNode | ElementNode {
   const anchor = selection.anchor;
   const focus = selection.focus;
   const anchorNode = selection.anchor.getNode();
   const focusNode = selection.focus.getNode();
+
+  // foo
   if (anchorNode === focusNode) {
     return anchorNode;
   }
