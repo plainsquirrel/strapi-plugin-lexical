@@ -743,16 +743,6 @@ export default function ToolbarPlugin({
       >
         <i className="format redo" />
       </button>
-      <Divider />
-      <button
-        onClick={() => setIsStrapiImageDialogOpen(true)}
-        title={'Strapi Image'}
-        type="button"
-        className="toolbar-item"
-        aria-label="Insert Strapi Image"
-      >
-        <i className="icon image" /> Strapi Image
-      </button>
       {isStrapiImageDialogOpen && (
         <InsertStrapiImageDialog
           MediaLibraryDialog={MediaLibraryDialog}
@@ -793,7 +783,7 @@ export default function ToolbarPlugin({
         </DropDown>
       ) : (
         <>
-          <FontDropDown
+          {/* <FontDropDown
             disabled={!isEditable}
             style={'font-family'}
             value={toolbarState.fontFamily}
@@ -805,7 +795,7 @@ export default function ToolbarPlugin({
             editor={activeEditor}
             disabled={!isEditable}
           />
-          <Divider />
+          <Divider /> */}
           <button
             disabled={!isEditable}
             onClick={() => {
@@ -856,17 +846,7 @@ export default function ToolbarPlugin({
               <i className="format code" />
             </button>
           )}
-          <button
-            disabled={!isEditable}
-            onClick={insertLink}
-            className={'toolbar-item spaced ' + (toolbarState.isLink ? 'active' : '')}
-            aria-label="Insert link"
-            title={`Insert link (${SHORTCUTS.INSERT_LINK})`}
-            type="button"
-          >
-            <i className="format link" />
-          </button>
-          <DropdownColorPicker
+          {/* <DropdownColorPicker
             disabled={!isEditable}
             buttonClassName="toolbar-item color-picker"
             buttonAriaLabel="Formatting text color"
@@ -883,7 +863,7 @@ export default function ToolbarPlugin({
             color={toolbarState.bgColor}
             onChange={onBgColorSelect}
             title="bg color"
-          />
+          /> */}
           <DropDown
             disabled={!isEditable}
             buttonClassName="toolbar-item spaced"
@@ -988,6 +968,37 @@ export default function ToolbarPlugin({
               <span className="shortcut">{SHORTCUTS.CLEAR_FORMATTING}</span>
             </DropDownItem>
           </DropDown>
+
+          <Divider />
+
+          <button
+            disabled={!isEditable}
+            onClick={insertLink}
+            className={'toolbar-item spaced ' + (toolbarState.isLink ? 'active' : '')}
+            aria-label="Insert link"
+            title={`Insert link (${SHORTCUTS.INSERT_LINK})`}
+            type="button"
+          >
+            <i className="format link" />
+          </button>
+          <button
+            onClick={() => setIsStrapiImageDialogOpen(true)}
+            title={'Strapi Image'}
+            type="button"
+            className="toolbar-item"
+            aria-label="Insert Strapi Image"
+          >
+            <i className="format image" />
+          </button>
+
+          <Divider />
+
+          <ElementFormatDropdown
+            disabled={!isEditable}
+            value={toolbarState.elementFormat}
+            editor={activeEditor}
+            isRTL={toolbarState.isRTL}
+          />
           {canViewerSeeInsertDropdown && (
             <>
               <Divider />
@@ -1122,14 +1133,6 @@ export default function ToolbarPlugin({
           )}
         </>
       )}
-      <Divider />
-      <ElementFormatDropdown
-        disabled={!isEditable}
-        value={toolbarState.elementFormat}
-        editor={activeEditor}
-        isRTL={toolbarState.isRTL}
-      />
-
       {modal}
     </div>
   );
