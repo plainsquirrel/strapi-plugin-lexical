@@ -64,10 +64,12 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
 
           if (linkNodes.includes(node.type)) {
             const linkNode = node as unknown as SerializedLinkNode;
-            const [collectionName, documentId] = linkNode.url.replace('strapi://', '').split('/');
-            const currentLinksSet: Set<string> = collectionLinks.get(collectionName) || new Set();
-            currentLinksSet.add(documentId);
-            collectionLinks.set(collectionName, currentLinksSet);
+            if (linkNode.url.indexOf('strapi://') === 0) {
+              const [collectionName, documentId] = linkNode.url.replace('strapi://', '').split('/');
+              const currentLinksSet: Set<string> = collectionLinks.get(collectionName) || new Set();
+              currentLinksSet.add(documentId);
+              collectionLinks.set(collectionName, currentLinksSet);
+            }
           }
 
           if (node.children) {
