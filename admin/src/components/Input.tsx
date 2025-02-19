@@ -21,14 +21,6 @@ import { InputProps } from '@strapi/strapi/admin';
 import { SerializedStrapiImageNode } from 'src/lexical/nodes/StrapiImageNode';
 import { SerializedLinkNode } from '@lexical/link';
 
-const GlobalStyleVariables = createGlobalStyle`
-    :root {
-        /* colors */
-        --lexical-border: ${({ theme }) => theme.colors.neutral150};
-        --lexical-text: ${({ theme }) => theme.colors.neutral0};
-        --lexical-bg: ${({ theme }) => theme.colors.neutral800};
-    }
-`;
 interface CustomFieldsComponentProps {
   attribute: {
     type: string;
@@ -195,7 +187,6 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
         <Flex direction="column" alignItems="stretch" gap={1}>
           <Field.Label action={labelAction}>{label}</Field.Label>
           <div>
-            <GlobalStyleVariables />
             <FlashMessageContext>
               <LexicalComposer initialConfig={initialConfig}>
                 <TableContext>
