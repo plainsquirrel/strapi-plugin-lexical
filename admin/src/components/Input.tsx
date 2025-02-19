@@ -2,7 +2,8 @@ import * as React from "react";
 
 import {
   Field,
-  Flex} from '@strapi/design-system';
+  Flex
+} from '@strapi/design-system';
 import { useFetchClient } from '@strapi/strapi/admin';
 
 import { MessageDescriptor } from "react-intl";
@@ -60,21 +61,21 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
     const mediaNodes = ["strapiImage"]
     const linkNodes = ["link"]
 
-    const mediaDocumentsIds: string[] = []
-    const collectionLinks: Map<string, string[]>= new Map()
+    const mediaDocumentsIds: Set<string> = new Set()
+    const collectionLinks: Map<string, Set<string>> = new Map()
     const gatherStrapiRelations = (nodes: SerializedElementNode[]) => {
       for (const node of nodes) {
         if (mediaNodes.includes(node.type)) {
           const imageNode = node as unknown as SerializedStrapiImageNode
-          mediaDocumentsIds.push(imageNode.documentId)
+          mediaDocumentsIds.add(imageNode.documentId)
         }
 
         if (linkNodes.includes(node.type)) {
           const linkNode = node as unknown as SerializedLinkNode
           const [collectionName, documentId] = linkNode.url.replace("strapi://", "").split("/")
-          const currentLinks = collectionLinks.get(collectionName) || []
-          currentLinks.push(documentId)
-          collectionLinks.set(collectionName, currentLinks)
+          const currentLinksSet: Set<string> = collectionLinks.get(collectionName) || new Set()
+          currentLinksSet.add(documentId)
+          collectionLinks.set(collectionName, currentLinksSet)
         }
 
         if (node.children) {
@@ -85,16 +86,15 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
 
     gatherStrapiRelations(newValue.root.children as SerializedElementNode[])
 
-    console.dir({mediaDocumentsIds, collectionLinks})
-
     const dynamicZoneValue = []
+    let keyCounter = 0
 
-    if (mediaDocumentsIds.length > 0) {
+    if (mediaDocumentsIds.size > 0) {
       const resultFetchClient = await get(`/upload/files`, {
         params: {
           filters: {
             documentId: {
-              $in: mediaDocumentsIds,
+              $in: [...mediaDocumentsIds.values()],
             },
           }
         }
@@ -102,16 +102,19 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
 
       dynamicZoneValue.push({
         __component: 'lexical-links.media',
+        __temp_key__: `l${keyCounter}`,
         links: resultFetchClient.data.results
-      },)
+      })
+      keyCounter++
     }
 
     for (const [collectionName, documentIds] of collectionLinks.entries()) {
-      const resultFetchClient = await get(`/api/${collectionName}`, {
+      const resultIdentify = await get(`/lexical/identify/${collectionName}`)
+      const resultFetchClient = await get(`/content-manager/collection-types/${resultIdentify.data.collectionUID}`, {
         params: {
           filters: {
             documentId: {
-              $in: documentIds,
+              $in: [...documentIds.values()],
             },
           }
         }
@@ -119,11 +122,20 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
 
       dynamicZoneValue.push({
         __component: `lexical-links.${collectionName}`,
-        links: resultFetchClient.data.results
-      },)
+        __temp_key__: `l${keyCounter}`,
+        links: {
+          connect: resultFetchClient.data.results.map((result: { id: number, documentId: string, [key: string]: unknown }) => ({
+            apiData: result,
+            label: result['name'] || result['title'] || result['label'] || result['headline'],
+            id: result.id,
+            status: result.status,
+            href: `/content-manager/collection-types/${resultIdentify.data.collectionUID}/${result.documentId}`,
+          })),
+          // @todo we probably have to maintain disconnect array as well to avoid issues on long term. No time right now for that ;)
+        }
+      })
+      keyCounter++;
     }
-
-    console.dir({dynamicZoneValue})
 
     // Set value for dynamic zone field
     onChange({

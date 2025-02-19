@@ -228,7 +228,7 @@ function FloatingLinkEditor({
       const [collectionName, documentId] = strapiURI.replace("strapi://", "").split("/")
 
       const resultIdentify = await get(`/lexical/identify/${collectionName}`)
-      setLinkHref(`${location.protocol}//${location.host}/admin/content-manager/collection-types/${resultIdentify.data.collectionUID}/${documentId}`)
+      setLinkHref(`/admin/content-manager/collection-types/${resultIdentify.data.collectionUID}/${documentId}`)
     }
     const sanitized = sanitizeUrl(linkUrl)
     if (sanitized.indexOf("strapi://") === 0) {
