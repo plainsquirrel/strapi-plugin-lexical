@@ -27,11 +27,14 @@
     "build": "strapi-plugin build",
     "prebuild": "mkdir -p ./dist/src/images/ && cp -R ./admin/src/lexical/images/* ./dist/src/images/",
     "prepublishOnly": "npm run build",
+    "format": "prettier admin server --write",
+    "format:check": "npm run format -- --check",
     "watch": "strapi-plugin watch",
     "watch:link": "strapi-plugin watch:link",
     "verify": "strapi-plugin verify",
     "test:ts:front": "run -T tsc -p admin/tsconfig.json",
-    "test:ts:back": "run -T tsc -p server/tsconfig.json"
+    "test:ts:back": "run -T tsc -p server/tsconfig.json",
+    "prepare": "husky"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.17.6",
@@ -66,6 +69,8 @@
     "@types/prismjs": "^1.26.5",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "prettier": "^3.4.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -98,5 +103,8 @@
     "url": "https://github.com/hashbite/strapi-plugin-lexical/issues"
   },
   "homepage": "https://github.com/hashbite/strapi-plugin-lexical#readme",
-  "author": "Benedikt Rötsch <benedikt@hashbite.net>"
+  "author": "Benedikt Rötsch <benedikt@hashbite.net>",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": "prettier --write"
+  }
 }
