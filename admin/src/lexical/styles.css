@@ -588,8 +588,9 @@ i.page-break,
 
 .link-editor .link-view a {
   display: block;
-  word-break: break-word;
-  width: calc(100% - 33px);
+  white-space: nowrap;
+  width: calc(100% - 55px);
+  overflow: hidden;
 }
 
 .link-editor div.link-edit {

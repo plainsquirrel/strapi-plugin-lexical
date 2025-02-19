@@ -1,11 +1,26 @@
 export default [
   {
     method: 'GET',
-    path: '/',
-    // name of the controller file & the method.
-    handler: 'controller.index',
+    path: '/search/:model/:field',
+    handler: 'lexicalSearch.search',
     config: {
-      policies: [],
+      policies: ['admin::isAuthenticatedAdmin']
+    },
+  },
+  {
+    method: 'GET',
+    path: '/get/:collectionName/:documentId',
+    handler: 'lexicalSearch.get',
+    config: {
+      policies: ['admin::isAuthenticatedAdmin']
+    },
+  },
+  {
+    method: 'GET',
+    path: '/identify/:collectionName',
+    handler: 'lexicalSearch.identify',
+    config: {
+      policies: ['admin::isAuthenticatedAdmin']
     },
   },
 ];

@@ -51,7 +51,6 @@ export function DropDownItem({
 
   useEffect(() => {
     if (ref && ref.current) {
-      // @ts-expect-error we actually check for null here
       registerItem(ref);
     }
   }, [ref, registerItem]);

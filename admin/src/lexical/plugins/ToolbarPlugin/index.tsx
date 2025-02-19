@@ -91,6 +91,8 @@ import {
   formatParagraph,
   formatQuote,
 } from './utils';
+import { useStrapiApp } from '@strapi/strapi/admin';
+import { InsertStrapiImageDialog } from '../StrapiImagePlugin';
 
 const rootTypeToRootName = {
   root: 'Root',
@@ -730,6 +732,16 @@ export default function ToolbarPlugin({
   const canViewerSeeInsertDropdown = !toolbarState.isImageCaption;
   const canViewerSeeInsertCodeButton = !toolbarState.isImageCaption;
 
+  const [isStrapiImageDialogOpen, setIsStrapiImageDialogOpen] = useState(false)
+
+  const components = useStrapiApp('ImageDialog', (state) => state.components);
+
+  const MediaLibraryDialog = components['media-library'] as React.ComponentType<{
+    allowedTypes: string[];
+    onClose: () => void;
+    onSelectAssets: (assets: any[]) => void;
+  }>;
+
   return (
     <div className="toolbar">
       <button
@@ -754,6 +766,19 @@ export default function ToolbarPlugin({
         aria-label="Redo">
         <i className="format redo" />
       </button>
+      <Divider />
+      <button
+        onClick={() => setIsStrapiImageDialogOpen(true)}
+        title={'Strapi Image'}
+        type="button"
+        className="toolbar-item"
+        aria-label="Insert Strapi Image">
+        <i className="icon image" /> Strapi Image
+      </button>
+      {isStrapiImageDialogOpen && <InsertStrapiImageDialog
+        MediaLibraryDialog={MediaLibraryDialog}
+        activeEditor={activeEditor}
+        onClose={() => setIsStrapiImageDialogOpen(false)} />}
       <Divider />
       {toolbarState.blockType in blockTypeToBlockName &&
         activeEditor === editor && (

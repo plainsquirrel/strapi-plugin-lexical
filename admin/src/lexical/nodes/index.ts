@@ -25,7 +25,8 @@ import {AutocompleteNode} from './AutocompleteNode';
 import {EmojiNode} from './EmojiNode';
 import {EquationNode} from './EquationNode';
 import {FigmaNode} from './FigmaNode';
-import {ImageNode} from './ImageNode';
+import { ImageNode } from './ImageNode';
+import { StrapiImageNode } from './StrapiImageNode';
 import {InlineImageNode} from './InlineImageNode/InlineImageNode';
 import {KeywordNode} from './KeywordNode';
 import {LayoutContainerNode} from './LayoutContainerNode';
@@ -73,6 +74,7 @@ const Nodes: Array<Klass<LexicalNode>> = [
   LayoutContainerNode,
   LayoutItemNode,
   SpecialTextNode,
+  StrapiImageNode,
 ];
 
 export default Nodes;

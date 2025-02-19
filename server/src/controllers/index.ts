@@ -1,5 +1,5 @@
-import controller from './controller';
+import lexicalSearch from './lexical-search';
 
 export default {
-  controller,
+  lexicalSearch,
 };
