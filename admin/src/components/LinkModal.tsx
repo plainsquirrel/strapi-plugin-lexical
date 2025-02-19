@@ -52,11 +52,17 @@ const LinkModal = ({ fieldName, currentValue, setValue, open, setOpen }: {
   // Prepopulate with already selected item
   React.useEffect(() => {
     const loadCurrentSelected = async (currentSelectedItem: string) => {
-      const resultCurrentItem = await get(`/lexical/get/${currentSelectedItem}`);
-
-      if (resultCurrentItem.data) {
-        setSearchResults([resultCurrentItem.data])
+      try {
+        const resultCurrentItem = await get(`/lexical/get/${currentSelectedItem}`);
+        if (resultCurrentItem.data) {
+          setSearchResults([resultCurrentItem.data])
+          return
+        }
+      } catch (err) {
+        console.log('Failed to load selected item:');
+        console.error(err);
       }
+      setSearchResults([]);
     }
     if (currentValue.startsWith("strapi://")) {
       loadCurrentSelected(currentValue.replace("strapi://", ""))
@@ -67,9 +73,16 @@ const LinkModal = ({ fieldName, currentValue, setValue, open, setOpen }: {
     const userQuery = e.target.value.trim()
     if (userQuery.length) {
       setQ(userQuery)
-      const resultSearchLinkables = await get(`/lexical/search/${model}/${fieldName}?q=${userQuery}&locale=${locale}`);
-      setSearchResults(resultSearchLinkables.data)
-      return
+      try {
+        const resultSearchLinkables = await get(`/lexical/search/${model}/${fieldName}?q=${userQuery}&locale=${locale}`);
+        if (resultSearchLinkables.status !== 200) {
+          throw new Error(`Search failed:\n${JSON.stringify(resultSearchLinkables.data, null, 2)}`)
+        }
+        setSearchResults(resultSearchLinkables.data)
+        return
+      } catch (err) {
+        console.error(err)
+      }
     }
     setSearchResults([])
   }, [])

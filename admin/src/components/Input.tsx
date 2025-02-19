@@ -90,51 +90,61 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
     let keyCounter = 0
 
     if (mediaDocumentsIds.size > 0) {
-      const resultFetchClient = await get(`/upload/files`, {
-        params: {
-          filters: {
-            documentId: {
-              $in: [...mediaDocumentsIds.values()],
-            },
+      try {
+        const resultFetchClient = await get(`/upload/files`, {
+          params: {
+            filters: {
+              documentId: {
+                $in: [...mediaDocumentsIds.values()],
+              },
+            }
           }
-        }
-      });
+        });
 
-      dynamicZoneValue.push({
-        __component: 'lexical-links.media',
-        __temp_key__: `l${keyCounter}`,
-        links: resultFetchClient.data.results
-      })
-      keyCounter++
+        dynamicZoneValue.push({
+          __component: 'lexical-links.media',
+          __temp_key__: `l${keyCounter}`,
+          links: resultFetchClient.data.results
+        })
+        keyCounter++
+      } catch (err) {
+        alert("Failed to locate media used in the rich text. This may be due to a permission issue. Please contact your administrator or developer for assistance.");
+        console.error(err)
+      }
     }
 
-    for (const [collectionName, documentIds] of collectionLinks.entries()) {
-      const resultIdentify = await get(`/lexical/identify/${collectionName}`)
-      const resultFetchClient = await get(`/content-manager/collection-types/${resultIdentify.data.collectionUID}`, {
-        params: {
-          filters: {
-            documentId: {
-              $in: [...documentIds.values()],
-            },
+    try {
+      for (const [collectionName, documentIds] of collectionLinks.entries()) {
+        const resultIdentify = await get(`/lexical/identify/${collectionName}`)
+        const resultFetchClient = await get(`/content-manager/collection-types/${resultIdentify.data.collectionUID}`, {
+          params: {
+            filters: {
+              documentId: {
+                $in: [...documentIds.values()],
+              },
+            }
           }
-        }
-      });
+        });
 
-      dynamicZoneValue.push({
-        __component: `lexical-links.${collectionName}`,
-        __temp_key__: `l${keyCounter}`,
-        links: {
-          connect: resultFetchClient.data.results.map((result: { id: number, documentId: string, [key: string]: unknown }) => ({
-            apiData: result,
-            label: result['name'] || result['title'] || result['label'] || result['headline'],
-            id: result.id,
-            status: result.status,
-            href: `/content-manager/collection-types/${resultIdentify.data.collectionUID}/${result.documentId}`,
-          })),
-          // @todo we probably have to maintain disconnect array as well to avoid issues on long term. No time right now for that ;)
-        }
-      })
-      keyCounter++;
+        dynamicZoneValue.push({
+          __component: `lexical-links.${collectionName}`,
+          __temp_key__: `l${keyCounter}`,
+          links: {
+            connect: resultFetchClient.data.results.map((result: { id: number, documentId: string, [key: string]: unknown }) => ({
+              apiData: result,
+              label: result['name'] || result['title'] || result['label'] || result['headline'],
+              id: result.id,
+              status: result.status,
+              href: `/content-manager/collection-types/${resultIdentify.data.collectionUID}/${result.documentId}`,
+            })),
+            // @todo we probably have to maintain disconnect array as well to avoid issues on long term. No time right now for that ;)
+          }
+        })
+        keyCounter++;
+      }
+    } catch (err) {
+      alert("Failed to locate linked collection entries in the rich text. This may be due to a permission issue. Please contact your administrator or developer for assistance.");
+      console.error(err)
     }
 
     // Set value for dynamic zone field

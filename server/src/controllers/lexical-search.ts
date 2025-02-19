@@ -5,22 +5,23 @@ import querystring from 'node:querystring';
 // turns "companies" into "api::company:company"
 function findCollectionUID(strapi: Core.Strapi, collectionName: string) {
   const realCollectionName = collectionName.replace(/[- ]/g, '_');
-  const [collectionUID] = Object.entries(strapi.contentTypes).find(
-    ([, collectionType]) => {
-      return collectionType.collectionName === realCollectionName;
-    }
-  );
-  return collectionUID;
+  const found = Object.entries(strapi.contentTypes).find(([, collectionType]) => {
+    return collectionType.collectionName === realCollectionName;
+  });
+  if (!found) {
+    throw new Error(`Collection ${realCollectionName} not found`);
+  }
+  return found[0];
 }
 
 // @todo this is just a quick workaround, we probably should allow the user to configure which fields can be searched
 // we could do it similar to strapi-plugin-fuzzy-search or even integrate with the plugin itself (might be problematic?)
 function findTitleField(strapi: Core.Strapi, collectionTypeUID) {
-  const contentType = strapi.contentTypes[collectionTypeUID]
+  const contentType = strapi.contentTypes[collectionTypeUID];
   return Object.keys(contentType.attributes).find((fieldName) =>
     ['name', 'title', 'label', 'headline'].includes(fieldName)
   );
-}      
+}
 
 const lexicalSearch = ({ strapi }: { strapi: Core.Strapi }) => ({
   async search(ctx) {
@@ -53,7 +54,7 @@ const lexicalSearch = ({ strapi }: { strapi: Core.Strapi }) => ({
     }[] = [];
 
     for (const linkableComponent of linkableComponents) {
-      const fieldName = findTitleField(strapi, linkableComponent)
+      const fieldName = findTitleField(strapi, linkableComponent);
 
       if (fieldName) {
         const query = {

@@ -226,9 +226,13 @@ function FloatingLinkEditor({
   React.useEffect(() => {
     const findStrapiLink = async (strapiURI: string) => {
       const [collectionName, documentId] = strapiURI.replace("strapi://", "").split("/")
-
-      const resultIdentify = await get(`/lexical/identify/${collectionName}`)
-      setLinkHref(`/admin/content-manager/collection-types/${resultIdentify.data.collectionUID}/${documentId}`)
+      try {
+        const resultIdentify = await get(`/lexical/identify/${collectionName}`)
+        setLinkHref(`/admin/content-manager/collection-types/${resultIdentify.data.collectionUID}/${documentId}`)
+      } catch (err) {
+        console.info(`Unable to identify this public collection name: ${collectionName}`)
+        console.error(err)
+      }
     }
     const sanitized = sanitizeUrl(linkUrl)
     if (sanitized.indexOf("strapi://") === 0) {
