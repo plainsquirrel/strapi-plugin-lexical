@@ -4,7 +4,7 @@ export default [
     path: '/search/:model/:field',
     handler: 'lexicalSearch.search',
     config: {
-      auth: false, // Set to true if authentication is required
+      policies: ['admin::isAuthenticatedAdmin']
     },
   },
   {
@@ -12,7 +12,7 @@ export default [
     path: '/get/:collectionName/:documentId',
     handler: 'lexicalSearch.get',
     config: {
-      auth: false, // Set to true if authentication is required
+      policies: ['admin::isAuthenticatedAdmin']
     },
   },
   {
@@ -20,7 +20,7 @@ export default [
     path: '/identify/:collectionName',
     handler: 'lexicalSearch.identify',
     config: {
-      auth: false, // Set to true if authentication is required
+      policies: ['admin::isAuthenticatedAdmin']
     },
   },
 ];
