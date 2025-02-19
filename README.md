@@ -1,6 +1,9 @@
 # strapi-plugin-lexical
 
-Integrates the [Lexical WYSIWYG editor](https://lexical.dev/) as a custom field in Strapi.
+> Integrates the [Lexical WYSIWYG editor](https://lexical.dev/) as a custom field in Strapi.
+
+![screenshot-lexical](https://github.com/user-attachments/assets/e861401d-c850-404f-a5c0-9c6bee0a8456)
+
 
 [![https://nodei.co/npm/strapi-plugin-lexical.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/strapi-plugin-lexical.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/strapi-plugin-lexical)
 
@@ -125,16 +128,16 @@ On the data side, the `yourFieldLinks` field can be queried as a **regular dynam
 By maintaining these relationships, users can be notified when deleting content that is still referenced elsewhere, helping prevent accidental data loss.
 
 
-
 ## Roadmap
 
 ### v0 - Alpha
-- Implement basic functionality.
-- Port features from the Lexical playground as the initial foundation.
-- Create field presets:
+- [x] Implement basic functionality.
+- [x] Port features from the Lexical playground as the initial foundation.
+- [x] Integrate Strapi Media Assets and enable linking to Strapi Collection Entries
+- [ ] Create field presets:
   - **Simple**, **Complex**, and **Full** (selectable during field setup).
-- Gather community feedback.
-- Look for a potential co-maintainer.
+- [ ] Gather community feedback.
+- [ ] Look for a potential co-maintainer.
 
 ### v1 - Stable
 - Introduce plugin-based architecture:
