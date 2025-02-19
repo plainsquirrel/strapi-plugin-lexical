@@ -17,7 +17,8 @@
       "import": "./dist/server/index.mjs",
       "require": "./dist/server/index.js",
       "default": "./dist/server/index.js"
-    }
+    },
+    "./style.css": "./dist/style.css"
   },
   "files": [
     "dist"
@@ -49,18 +50,18 @@
     "@lexical/utils": "^0.23.1",
     "@strapi/design-system": "^2.0.0-rc.16",
     "@strapi/icons": "^2.0.0-rc.16",
-    "@strapi/pack-up": "^5.0.2",
+    "@strapi/pack-up": "^5.1.0",
     "katex": "^0.16.21",
     "lexical": "^0.23.1",
     "lodash-es": "^4.17.21",
     "react-error-boundary": "^5.0.0",
-    "react-intl": "^7.1.4",
+    "react-intl": "^7.1.6",
     "vite-plugin-prismjs": "^0.0.11"
   },
   "devDependencies": {
-    "@strapi/sdk-plugin": "^5.3.0",
-    "@strapi/strapi": "^5.8.1",
-    "@strapi/typescript-utils": "^5.8.1",
+    "@strapi/sdk-plugin": "^5.3.1",
+    "@strapi/strapi": "^5.10.2",
+    "@strapi/typescript-utils": "^5.10.2",
     "@types/lodash-es": "^4.17.12",
     "@types/prismjs": "^1.26.5",
     "@types/react": "^18.3.18",
@@ -69,7 +70,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.2",
-    "styled-components": "^6.1.14",
+    "styled-components": "^6.1.15",
     "typescript": "^5.7.3"
   },
   "peerDependencies": {

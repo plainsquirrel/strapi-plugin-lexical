@@ -60,10 +60,6 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
     const mediaNodes = ["strapiImage"]
     const linkNodes = ["link"]
 
-    // lets make it more stupid ;) make array of media components, and array of link components, default to what we have, later they have to be configurable
-    // type: link, property: "url=strapi://"
-
-    // @todo make set
     const mediaDocumentsIds: string[] = []
     const collectionLinks: Map<string, string[]>= new Map()
     const gatherStrapiRelations = (nodes: SerializedElementNode[]) => {
