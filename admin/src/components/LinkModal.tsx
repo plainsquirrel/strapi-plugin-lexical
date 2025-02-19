@@ -99,7 +99,7 @@ const LinkModal = ({
         const resultSearchLinkables = await get(
           `/lexical/search/${model}/${fieldName}?q=${userQuery}&locale=${locale}`
         );
-        if (resultSearchLinkables.status !== 200) {
+        if (resultSearchLinkables.status && resultSearchLinkables.status !== 200) {
           throw new Error(`Search failed:\n${JSON.stringify(resultSearchLinkables.data, null, 2)}`);
         }
         setSearchResults(resultSearchLinkables.data);
