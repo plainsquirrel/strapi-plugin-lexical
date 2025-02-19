@@ -5,7 +5,7 @@ import {
   Flex
 } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/strapi/admin';
-
+import { debounce } from "lodash";
 import { MessageDescriptor } from "react-intl";
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
@@ -46,13 +46,17 @@ interface CustomFieldsComponentProps {
 
 
 const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & InputProps>((props, ref) => {
-  const { attribute, disabled, name, onChange, required, value, error, hint, labelAction, label, ...rest } =
+  const { attribute, name, onChange, required, value, error, hint, labelAction, label } =
     props;
 
   const { get } = useFetchClient()
 
   const handleChange = async (newValue: SerializedEditorState<SerializedLexicalNode>) => {
-    // @todo add throtteling
+    // Avoid unnessecary draft/modified status of entry
+    if (JSON.stringify(value) === JSON.stringify(newValue)) {
+      return
+    }
+
     // Set value for lexical editor
     onChange({
       target: { name, type: attribute.type, value: newValue },
@@ -155,6 +159,13 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
     });
   };
 
+  const handleChangeCb = React.useCallback(
+    debounce(async (newValue: SerializedEditorState<SerializedLexicalNode>) => {
+      await handleChange(newValue);
+    }, 300, { maxWait: 1500 }),
+    [handleChange]
+  );
+
   const initialConfig = React.useMemo(() => ({
     editorState: value && value.root ? JSON.stringify(value) : null,
     namespace: 'Lexical',
@@ -175,7 +186,7 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
             <LexicalComposer initialConfig={initialConfig}>
               <TableContext>
                 <ToolbarContext>
-                  <LexicalEditor onChange={handleChange} ref={ref} fieldName={name} />
+                  <LexicalEditor onChange={handleChangeCb} ref={ref} fieldName={name} />
                 </ToolbarContext>
               </TableContext>
             </LexicalComposer>
