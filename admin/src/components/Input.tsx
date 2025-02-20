@@ -92,6 +92,10 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
                   $in: [...mediaDocumentsIds.values()],
                 },
               },
+              pagination: {
+                page: 1,
+                pageSize: mediaDocumentsIds.size,
+              },
             },
           });
 
@@ -120,6 +124,10 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
                   documentId: {
                     $in: [...documentIds.values()],
                   },
+                },
+                pagination: {
+                  page: 1,
+                  pageSize: documentIds.size,
                 },
               },
             }
