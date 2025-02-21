@@ -149,6 +149,160 @@ Benefit: only one API call, more control
 * inject the document from the strapi api response into the lexical node for later rendering
 * the data is now available when rendering the lexical node in your renderer
 
+**Example Renderer with NextJS:**
+```tsx
+// LexicalRenderer.tsx
+import Image from "next/image";
+import Link from "next/link";
+
+import type { Media_Plain } from "@strapi/common/schemas-to-ts/Media";
+import { Links_Plain } from "@strapi/components/links/interfaces/Links";
+
+import React from "react";
+
+import clsx from "clsx/lite";
+
+import { createPath } from "@/utils/paths";
+
+import type {
+  AbstractNode,
+  ElementRenderer,
+  ElementRenderers,
+  Node,
+  PayloadLexicalReactRendererContent,
+} from "lexical-renderer-atelier-disko";
+import {
+  defaultElementRenderers,
+  PayloadLexicalReactRenderer,
+} from "lexical-renderer-atelier-disko";
+
+type StrapiImageNode = {
+  documentId: string;
+  entity: Media_Plain;
+} & AbstractNode<"strapi-image">;
+
+type NodeAll = Node | StrapiImageNode;
+
+const elementRenderers: ElementRenderers & {
+  "strapi-image": ElementRenderer<StrapiImageNode>;
+} = {
+  ...defaultElementRenderers,
+  // Define your custom lexical nodes here
+  link: (element, children, parent, className) => (
+    <Link
+      href={element.url}
+      className={className}
+      target={element.newTab ? "_blank" : "_self"}
+    >
+      {children}
+    </Link>
+  ),
+  "strapi-image": (element, children, parent, className) => (
+    <Image
+      className={clsx("mx-auto", className)}
+      src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${element.entity.url}`}
+      alt={element.entity.alternativeText}
+      width={Math.floor(element.entity.width / 2)}
+      height={Math.floor(element.entity.height / 2)}
+      sizes={`(max-width: 768px) 100vw, ${Math.floor(
+        (element.entity.width / 2) * 1.25
+      )}px`}
+      loading="lazy"
+    />
+  ),
+};
+
+export function LexicalRenderer({
+  children,
+  classNames,
+  media,
+  links,
+}: {
+  children: PayloadLexicalReactRendererContent;
+  classNames?: { [key: string]: string };
+  media?: Media_Plain[];
+  links?: Links_Plain;
+}) {
+  // Inject media and links into our lexical document
+  const injectedDocument = React.useMemo(() => {
+    if (!children) {
+      return null;
+    }
+
+    if (media || links) {
+      const injectStrapiEntities = (nodes: NodeAll[]) => {
+        for (const node of nodes) {
+          // Media (Images only for now)
+          if (node.type === "strapi-image" && media?.length) {
+            const foundMedia = media.find(
+              // @ts-expect-error documentId is there. the ts schema plugin is just outdated :(
+              ({ documentId }) => documentId === node.documentId
+            );
+            if (foundMedia) {
+              node.entity = foundMedia;
+            }
+          }
+
+          // Links
+          if (
+            node.type === "link" &&
+            links &&
+            node.url.indexOf("strapi://") === 0
+          ) {
+            // Extract info from strapi link
+            const [collectionName, linkDocumentId] = (node.url as string)
+              .replace("strapi://", "")
+              .split("/") as [keyof Links_Plain, string];
+            if (links[collectionName]) {
+              // Find linked document
+              const foundCollectionDocument = links[collectionName].find(
+                ({ documentId }) => documentId === linkDocumentId
+              );
+              if (foundCollectionDocument) {
+                // Generate page link with helper function
+                node.url = createPath(
+                  collectionName,
+                  foundCollectionDocument.locale,
+                  foundCollectionDocument.slug
+                );
+              }
+            }
+          }
+          if (node.type !== "strapi-image" && node.children) {
+            injectStrapiEntities(node.children);
+          }
+        }
+      };
+
+      injectStrapiEntities(children.root.children);
+    }
+
+    return children;
+  }, [children, media, links]);
+
+  if (!children || !injectedDocument) {
+    return null;
+  }
+
+  return (
+    <PayloadLexicalReactRenderer
+      content={injectedDocument}
+      classNames={classNames}
+      elementRenderers={elementRenderers}
+    />
+  );
+}
+
+export const lexicalToPlaintext = (json: { root: Node }) => {
+  const traverse = (node: Node): string => {
+    if (node.type === "text" && node.text) return node.text;
+    if (node.children) return node.children.map(traverse).join(" ");
+    return "";
+  };
+  return traverse(json.root);
+};
+```
+
 ## Roadmap
 
 ### v0 - Alpha
