@@ -57,7 +57,7 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
       });
 
       // Parse lexical document for images and links
-      const mediaNodes = ['strapiImage'];
+      const mediaNodes = ['strapi-image'];
       const linkNodes = ['link'];
 
       const mediaDocumentsIds: Set<string> = new Set();

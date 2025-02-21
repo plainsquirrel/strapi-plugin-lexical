@@ -97,17 +97,18 @@ Media is stored as a custom Lexical nodes, while store relations to strapi conte
 
 ##### Media References
 
-- Images are stored as **`StrapiImage`** node in Lexical.
+- Images are stored as **`strapi-image`** node in Lexical.
 - Other file types are planned but not yet supported.
+- The structure is rather simple, as you can see:
 
-**StrapiImage Node Data Structure:**
+**strapi-image Lexical Node Data Structure:**
 ```json
 { "documentId": "id_of_media_asset" }
 ```
 
 ##### Internal Links
 
-- Internal links are stored using the regular **`Link`** node in Lexical.
+- Internal links are stored using the regular **`link`** node in Lexical.
 - The URL follows the format:  
   `strapi://collectionName/documentId`
   
