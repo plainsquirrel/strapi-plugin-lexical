@@ -1,7 +1,7 @@
-import { PLUGIN_ID } from './pluginId';
+import { StrapiApp } from '@strapi/strapi/admin';
 import { Initializer } from './components/Initializer';
 import { PluginIcon } from './components/PluginIcon';
-import { StrapiApp } from '@strapi/strapi/admin';
+import { PLUGIN_ID } from './pluginId';
 
 export default {
   register(app: StrapiApp) {
@@ -17,11 +17,11 @@ export default {
       pluginId: 'lexical',
       type: 'json',
       intlLabel: {
-        id: 'lexical.lexical.label',
+        id: 'lexical.plugin.label',
         defaultMessage: 'Lexical Editor',
       },
       intlDescription: {
-        id: 'lexical.lexical.description',
+        id: 'lexical.plugin.description',
         defaultMessage: 'Lexical advanced WYSIWYG editor',
       },
       icon: PluginIcon,
