@@ -225,6 +225,8 @@ export default function InlineImageComponent({
   width: 'inherit' | number;
   position: Position;
 }): JSX.Element {
+  const { formatMessage } = useIntl();
+
   const [modal, showModal] = useModal();
   const imageRef = useRef<null | HTMLImageElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -366,16 +368,25 @@ export default function InlineImageComponent({
               className="image-edit-button"
               ref={buttonRef}
               onClick={() => {
-                showModal('Update Inline Image', (onClose) => (
-                  <UpdateInlineImageDialog
-                    activeEditor={editor}
-                    nodeKey={nodeKey}
-                    onClose={onClose}
-                  />
-                ));
+                showModal(
+                  formatMessage({
+                    id: 'lexical.nodes.inline-image-component.update-inline-image',
+                    defaultMessage: 'Update Inline Image',
+                  }),
+                  (onClose) => (
+                    <UpdateInlineImageDialog
+                      activeEditor={editor}
+                      nodeKey={nodeKey}
+                      onClose={onClose}
+                    />
+                  )
+                );
               }}
             >
-              Edit
+              {formatMessage({
+                id: 'lexical.nodes.inline-image-component.edit-button',
+                defaultMessage: 'Edit',
+              })}
             </button>
           )}
           <LazyImage
@@ -398,7 +409,10 @@ export default function InlineImageComponent({
               <RichTextPlugin
                 contentEditable={
                   <ContentEditable
-                    placeholder="Enter a caption..."
+                    placeholder={formatMessage({
+                      id: 'lexical.nodes.inline-image-component.enter-caption',
+                      defaultMessage: 'Enter a caption...',
+                    })}
                     placeholderClassName="InlineImageNode__placeholder"
                     className="InlineImageNode__contentEditable"
                   />
