@@ -5,7 +5,7 @@ import { useFetchClient } from '@strapi/strapi/admin';
 import { debounce } from 'lodash';
 import { useIntl } from 'react-intl';
 
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { SerializedEditorState, SerializedElementNode, SerializedLexicalNode } from 'lexical';
 
 import LexicalEditor from '../lexical/Editor';
@@ -197,9 +197,10 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
       [handleChange]
     );
 
-    const initialConfig = React.useMemo(
+    const initialConfig = React.useMemo<InitialConfigType>(
       () => ({
-        editorState: value && value.root ? JSON.stringify(value) : null,
+        editorState:
+          value && value.root && value.root.children.length ? JSON.stringify(value) : undefined,
         namespace: 'Lexical',
         nodes: [...Nodes],
         onError: (error: Error) => {
