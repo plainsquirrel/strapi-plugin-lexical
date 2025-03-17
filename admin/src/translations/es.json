@@ -43,7 +43,7 @@
   "lexical.nodes.poll.option.remove": "Remove",
   "lexical.nodes.poll.option.add": "Add Option",
   "lexical.nodes.image.broken.alt": "Imagen rota",
-  "lexical.nodes.image.strapi.alt": "Strapi media library image",
+  "lexical.nodes.image.strapi.alt": "Imagen de la biblioteca de medios de Strapi",
   "lexical.nodes.youtube.iframe.title": "Vídeo de YouTube",
   "lexical.plugin.actions.speech.title": "Texto a Voz",
   "lexical.plugin.actions.speech.aria": "{state} speech to text",
