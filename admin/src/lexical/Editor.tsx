@@ -108,7 +108,7 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
     {
       id: 'lexical.editor.placeholder',
       defaultMessage:
-        'Enter some {state, select, collab {collaborative rich} rich {rich} plain {plain}} text...',
+        'Enter some {state, select, collab {collaborative rich} rich {rich} other {plain}} text...',
     },
     { state: isCollab ? 'collab' : isRichText ? 'rich' : 'plain' }
   );
