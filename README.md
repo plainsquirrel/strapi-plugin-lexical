@@ -340,7 +340,7 @@ We welcome contributions! Here’s how you can help:
 
 ---
 
-### 🛠️ Sponsored by [hashbite.net](https://hashbite.net) — support & custom development available
+### 🛠️ Sponsored by [hashbite.net](https://hashbite.net) | support & custom development available
 
 Everyone is welcome to fork this project and contribute via pull requests — we appreciate community involvement!
 
