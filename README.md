@@ -337,3 +337,16 @@ We welcome contributions! Here’s how you can help:
 - [Lexical Playground](https://playground.lexical.dev/)
 - [Payload Lexical React Renderer](https://github.com/atelierdisko/payload-lexical-react-renderer)
 - [Strapi Plugin Development Guide](https://docs.strapi.io/developer-docs/latest/plugin-development/introduction.html)
+
+---
+
+Absolutely — here's a revised section that encourages open-source contributions while clearly stating that Hashbite offers fast, paid customization:
+
+---
+
+### 🛠️ Sponsored by [hashbite.net](https://hashbite.net) — support & custom development available
+
+Everyone is welcome to fork this project and contribute via pull requests — we appreciate community involvement!
+
+If the contribution process feels too slow or complex for your needs, [hashbite.net](https://hashbite.net) can quickly implement features, fix bugs, or develop custom variations of this plugin on a paid basis.  
+Just reach out through their website for direct support.
