@@ -342,7 +342,6 @@ We welcome contributions! Here’s how you can help:
 
 ### 🛠️ Sponsored by [hashbite.net](https://hashbite.net) | support & custom development available
 
-Everyone is welcome to fork this project and contribute via pull requests — we appreciate community involvement!
+We welcome everyone to post issues, fork the project, and contribute via pull requests. Together we can make this a better tool for all of us!
 
-If the contribution process feels too slow or complex for your needs, [hashbite.net](https://hashbite.net) can quickly implement features, fix bugs, or develop custom variations of this plugin on a paid basis.  
-Just reach out through their website for direct support.
+If the contribution process feels too slow or complex for your needs, [hashbite.net](https://hashbite.net) can quickly implement features, fix bugs, or develop custom variations of this plugin on a paid basis. Just reach out through their website for direct support.
