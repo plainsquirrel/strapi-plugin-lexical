@@ -28,6 +28,7 @@ import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { useEffect, useState } from 'react';
 import { CAN_USE_DOM } from './utils/environment';
 
+import { EditorState, SerializedEditorState, SerializedLexicalNode } from 'lexical';
 import { useSharedHistoryContext } from './context/SharedHistoryContext';
 import ActionsPlugin from './plugins/ActionsPlugin';
 import AutocompletePlugin from './plugins/AutocompletePlugin';
@@ -59,6 +60,7 @@ import PollPlugin from './plugins/PollPlugin';
 import ShortcutsPlugin from './plugins/ShortcutsPlugin';
 import SpecialTextPlugin from './plugins/SpecialTextPlugin';
 import SpeechToTextPlugin from './plugins/SpeechToTextPlugin';
+import StrapiOnChangePlugin from './plugins/StrapiOnChangePlugin';
 import TabFocusPlugin from './plugins/TabFocusPlugin';
 import TableCellActionMenuPlugin from './plugins/TableActionMenuPlugin';
 import TableCellResizer from './plugins/TableCellResizer';
@@ -69,11 +71,10 @@ import TreeViewPlugin from './plugins/TreeViewPlugin';
 import TwitterPlugin from './plugins/TwitterPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
-import StrapiOnChangePlugin from './plugins/StrapiOnChangePlugin';
-import { EditorState, SerializedEditorState, SerializedLexicalNode } from 'lexical';
 
-import './styles.css';
+import { useIntl } from 'react-intl';
 import StrapiImagePlugin from './plugins/StrapiImagePlugin';
+import './styles.css';
 
 interface LexicalEditorProps {
   onChange: (newValue: SerializedEditorState<SerializedLexicalNode>) => void;
@@ -82,6 +83,7 @@ interface LexicalEditorProps {
 }
 
 export default function Editor(props: LexicalEditorProps): JSX.Element {
+  const { formatMessage } = useIntl();
   const { historyState } = useSharedHistoryContext();
 
   const isCollab = false;
@@ -102,11 +104,15 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
   const selectionAlwaysOnDisplay = false;
 
   const isEditable = useLexicalEditable();
-  const placeholder = isCollab
-    ? 'Enter some collaborative rich text...'
-    : isRichText
-      ? 'Enter some rich text...'
-      : 'Enter some plain text...';
+  const placeholder = formatMessage(
+    {
+      id: 'lexical.editor.placeholder',
+      defaultMessage:
+        'Enter some {state, select, collab {collaborative rich} rich {rich} other {plain}} text...',
+    },
+    { state: isCollab ? 'collab' : isRichText ? 'rich' : 'plain' }
+  );
+
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
   const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);
   const [editor] = useLexicalComposerContext();
