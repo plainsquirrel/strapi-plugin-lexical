@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Field, Flex } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/strapi/admin';
 import { debounce } from 'lodash';
-import { useIntl } from 'react-intl';
+import { MessageDescriptor, useIntl } from 'react-intl';
 
 import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { SerializedEditorState, SerializedElementNode, SerializedLexicalNode } from 'lexical';

@@ -6,7 +6,7 @@
  *
  */
 import { debounce } from 'lodash-es';
-import { useMemo, useRef } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 
 export function useDebounce<T extends (...args: never[]) => void>(
   fn: T,
@@ -30,11 +30,11 @@ export function useDebounce<T extends (...args: never[]) => void>(
     [ms, maxWait]
   );
 
-   useEffect(() => {
+  useEffect(() => {
     return () => {
-      debouncedFn.cancel();
+      debounceFn.cancel();
     };
-  }, [debouncedFn]);
+  }, [debounceFn]);
 
-  return debouncedFn;
+  return debounceFn;
 }
