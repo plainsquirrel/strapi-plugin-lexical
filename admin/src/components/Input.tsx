@@ -20,6 +20,8 @@ import { SerializedLinkNode } from '@lexical/link';
 import { InputProps } from '@strapi/strapi/admin';
 import { SerializedStrapiImageNode } from 'src/lexical/nodes/StrapiImageNode';
 
+import equal from 'fast-deep-equal';
+
 interface CustomFieldsComponentProps {
   attribute: {
     type: string;
@@ -47,7 +49,7 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
 
     const handleChange = async (newValue: SerializedEditorState<SerializedLexicalNode>) => {
       // Avoid unnecessary draft/modified status of entry
-      if (JSON.stringify(value) === JSON.stringify(newValue)) {
+      if (equal(value, newValue)) {
         return;
       }
 
