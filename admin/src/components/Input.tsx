@@ -47,6 +47,29 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
     const { formatMessage } = useIntl();
     const { get } = useFetchClient();
 
+    // Track if change is done by the user or by strapi, to support locale switching and locale prefilling
+    const [expectedEditorState, setExpectedEditorState] = React.useState<
+      SerializedEditorState<SerializedLexicalNode> | undefined
+    >(undefined);
+
+    const [flagUserInput, setFlagUserInput] = React.useState(false);
+
+    const [lastValue, setLastValue] =
+      React.useState<SerializedEditorState<SerializedLexicalNode>>(value);
+
+    // Detect value change from strapi ("outside")
+    React.useEffect(() => {
+      if (!equal(value, lastValue)) {
+        setLastValue(value);
+        if (flagUserInput) {
+          setFlagUserInput(false);
+          setExpectedEditorState(undefined);
+        } else {
+          setExpectedEditorState(value);
+        }
+      }
+    }, [value]);
+
     const handleChange = async (newValue: SerializedEditorState<SerializedLexicalNode>) => {
       // Avoid unnecessary draft/modified status of entry
       if (equal(value, newValue)) {
@@ -57,6 +80,7 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
       onChange({
         target: { name, type: attribute.type, value: newValue },
       });
+      setFlagUserInput(true);
 
       // Parse lexical document for images and links
       const mediaNodes = ['strapi-image'];
@@ -222,7 +246,12 @@ const Input = React.forwardRef<HTMLDivElement, CustomFieldsComponentProps & Inpu
               <LexicalComposer initialConfig={initialConfig}>
                 <TableContext>
                   <ToolbarContext>
-                    <LexicalEditor onChange={handleChangeCb} ref={ref} fieldName={name} />
+                    <LexicalEditor
+                      onChange={handleChangeCb}
+                      ref={ref}
+                      fieldName={name}
+                      expectedEditorState={expectedEditorState}
+                    />
                   </ToolbarContext>
                 </TableContext>
               </LexicalComposer>

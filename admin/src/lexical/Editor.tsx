@@ -80,6 +80,7 @@ interface LexicalEditorProps {
   onChange: (newValue: SerializedEditorState<SerializedLexicalNode>) => void;
   ref: React.ForwardedRef<HTMLDivElement>;
   fieldName: string;
+  expectedEditorState?: SerializedEditorState<SerializedLexicalNode>;
 }
 
 export default function Editor(props: LexicalEditorProps): JSX.Element {
@@ -258,7 +259,7 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
         />
       </div>
       {showTreeView && <TreeViewPlugin />}
-      <StrapiOnChangePlugin onChange={onChange} />
+      <StrapiOnChangePlugin onChange={onChange} expectedEditorState={props.expectedEditorState} />
       <StrapiImagePlugin />
     </>
   );
