@@ -1,5 +1,9 @@
 import React from 'react';
-import { IconProps } from './ icons/icon.types';
+
+export type IconProps = {
+  children?: never;
+  color?: string;
+} & React.SVGAttributes<SVGElement>;
 
 export const LexicalIcon = React.forwardRef<SVGSVGElement, IconProps>(
   ({ width = '30', height = '23', color = 'currentColor', className, ...props }, forwardedRef) => (
