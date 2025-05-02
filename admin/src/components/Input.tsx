@@ -18,7 +18,7 @@ import Nodes from '../lexical/nodes';
 
 import { SerializedLinkNode } from '@lexical/link';
 import { InputProps } from '@strapi/strapi/admin';
-import { SerializedStrapiImageNode } from 'src/lexical/nodes/StrapiImageNode';
+import { SerializedStrapiImageNode } from '../lexical/nodes/StrapiImageNode';
 
 import equal from 'fast-deep-equal';
 
