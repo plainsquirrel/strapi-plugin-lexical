@@ -35,7 +35,6 @@ import useModal from '../../hooks/useModal';
 import Button from '../../ui/Button';
 import { docFromHash, docToHash } from '../../utils/docSerialization';
 import { PLAYGROUND_TRANSFORMERS } from '../MarkdownTransformers';
-import { SPEECH_TO_TEXT_COMMAND, SUPPORT_SPEECH_RECOGNITION } from '../SpeechToTextPlugin';
 
 async function sendEditorState(editor: LexicalEditor): Promise<void> {
   const stringifiedEditorState = JSON.stringify(editor.getEditorState());
@@ -91,12 +90,9 @@ export default function ActionsPlugin({
   const { formatMessage } = useIntl();
   const [editor] = useLexicalComposerContext();
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
-  const [isSpeechToText, setIsSpeechToText] = useState(false);
-  const [connected, setConnected] = useState(false);
   const [isEditorEmpty, setIsEditorEmpty] = useState(true);
   const [modal, showModal] = useModal();
   const showFlashMessage = useFlashMessage();
-  const { isCollabActive } = useCollaborationContext();
 
   useEffect(() => {
     docFromHash(window.location.hash).then((doc) => {
@@ -166,25 +162,6 @@ export default function ActionsPlugin({
 
   return (
     <div className="actions">
-      {SUPPORT_SPEECH_RECOGNITION && (
-        <button
-          onClick={() => {
-            editor.dispatchCommand(SPEECH_TO_TEXT_COMMAND, !isSpeechToText);
-            setIsSpeechToText(!isSpeechToText);
-          }}
-          className={'action-button action-button-mic ' + (isSpeechToText ? 'active' : '')}
-          title={formatMessage({
-            id: 'lexical.plugin.actions.speech.title',
-            defaultMessage: 'Speech To Text',
-          })}
-          aria-label={formatMessage(
-            { id: 'lexical.plugin.actions.speech.aria', defaultMessage: '{state} speech to text' },
-            { state: isSpeechToText ? 'Disable' : 'Enable' }
-          )}
-        >
-          <i className="mic" />
-        </button>
-      )}
       <button
         className="action-button import"
         onClick={() => importFile(editor)}

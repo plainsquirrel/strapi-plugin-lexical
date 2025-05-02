@@ -45,8 +45,6 @@
   "lexical.nodes.image.broken.alt": "Defektes Bild",
   "lexical.nodes.image.strapi.alt": "Strapi-Medienbibliotheksbild",
   "lexical.nodes.youtube.iframe.title": "YouTube-Video",
-  "lexical.plugin.actions.speech.title": "Sprache zu Text",
-  "lexical.plugin.actions.speech.aria": "{state} sprache zu Text",
   "lexical.plugin.actions.import.title": "Importieren",
   "lexical.plugin.actions.import.aria": "Editor-Status aus JSON importieren",
   "lexical.plugin.actions.export.title": "Exportieren",

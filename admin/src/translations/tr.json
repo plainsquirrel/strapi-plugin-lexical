@@ -45,8 +45,6 @@
   "lexical.nodes.image.broken.alt": "Bozuk resim",
   "lexical.nodes.image.strapi.alt": "Strapi medya kütüphanesi resmi",
   "lexical.nodes.youtube.iframe.title": "YouTube videosu",
-  "lexical.plugin.actions.speech.title": "Metinden Sese",
-  "lexical.plugin.actions.speech.aria": "{state} metinden sese",
   "lexical.plugin.actions.import.title": "İçe Aktar",
   "lexical.plugin.actions.import.aria": "JSON'dan düzenleyici durumunu içe aktar",
   "lexical.plugin.actions.export.title": "Dışa Aktar",
