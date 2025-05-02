@@ -37,7 +37,6 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@excalidraw/excalidraw": "^0.17.6",
     "@lexical/code": "^0.23.1",
     "@lexical/file": "^0.23.1",
     "@lexical/hashtag": "^0.23.1",
@@ -59,8 +58,7 @@
     "lexical": "^0.23.1",
     "lodash-es": "^4.17.21",
     "react-error-boundary": "^5.0.0",
-    "react-intl": "^7.1.6",
-    "vite-plugin-prismjs": "^0.0.11"
+    "react-intl": "^7.1.6"
   },
   "devDependencies": {
     "@strapi/sdk-plugin": "^5.3.2",
