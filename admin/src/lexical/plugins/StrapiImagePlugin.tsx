@@ -15,6 +15,7 @@ import {
   $getSelection,
   $insertNodes,
   $isNodeSelection,
+  $isRangeSelection,
   $setSelection,
   COMMAND_PRIORITY_EDITOR,
   COMMAND_PRIORITY_HIGH,
@@ -63,7 +64,7 @@ export function InsertStrapiImageDialog({
         for (const asset of assets) {
           const imagePayload: InsertStrapiImagePayload = {
             documentId: asset.documentId,
-            src: asset.formats?.thumbnail?.url || asset.url,
+            src: asset.url || asset.formats?.thumbnail?.url,
           };
           activeEditor.dispatchCommand(INSERT_STRAPI_IMAGE_COMMAND, imagePayload);
         }
@@ -96,8 +97,15 @@ export default function StrapiImagePlugin(): JSX.Element | null {
       editor.registerCommand<InsertStrapiImagePayload>(
         INSERT_STRAPI_IMAGE_COMMAND,
         (payload) => {
+          const selection = $getSelection();
           const strapiImageNode = $createStrapiImageNode(payload);
-          $insertNodes([strapiImageNode]);
+          if ($isRangeSelection(selection)) {
+            selection.insertParagraph();
+            $insertNodes([strapiImageNode]);
+            selection.insertParagraph();
+          } else {
+            $insertNodes([strapiImageNode]);
+          }
           return true;
         },
         COMMAND_PRIORITY_EDITOR

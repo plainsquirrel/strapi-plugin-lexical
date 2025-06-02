@@ -92,13 +92,15 @@ export class StrapiImageNode extends DecoratorNode<JSX.Element> {
   // View
 
   createDOM(config: EditorConfig): HTMLElement {
-    const span = document.createElement('span');
+    const div = document.createElement('div');
     const theme = config.theme;
     const className = theme.image;
     if (className !== undefined) {
-      span.className = className;
+      div.className = className;
     }
-    return span;
+    div.style.display = 'block';
+    div.style.width = '100%';
+    return div;
   }
 
   updateDOM(): false {
