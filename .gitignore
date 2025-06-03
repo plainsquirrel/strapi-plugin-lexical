@@ -99,9 +99,7 @@ public/uploads/*
 # Build
 ############################
 
-dist/server
-dist/_chunks
-dist/admin
+dist
 build
 
 
