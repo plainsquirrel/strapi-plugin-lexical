@@ -41,3 +41,16 @@
 .image-control-wrapper--resizing {
   touch-action: none;
 }
+
+/* Strapi 이미지 중앙정렬 스타일 */
+div[data-lexical-decorator="true"] img {
+  margin: 0 auto;
+  display: block;
+}
+
+/* 선택된 이미지와 드래그 가능한 이미지도 중앙정렬 유지 */
+div[data-lexical-decorator="true"] img.focused,
+div[data-lexical-decorator="true"] img.draggable {
+  margin: 0 auto;
+  display: block;
+}
