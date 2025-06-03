@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "build": "strapi-plugin build",
-    "prebuild": "mkdir -p ./dist/src/images/ && cp -R ./admin/src/lexical/images/* ./dist/src/images/",
+    "prebuild": "if not exist \"./dist/src/images/\" mkdir \"./dist/src/images/\" && xcopy \"./admin/src/lexical/images\" \"./dist/src/images/\" /E /Y && if not exist \"./dist/\" mkdir \"./dist/\" && copy \"./admin/src/style.css\" \"./dist/style.css\"",
     "prepublishOnly": "npm run build",
     "format": "prettier admin server --write",
     "format:check": "npm run format -- --check",
