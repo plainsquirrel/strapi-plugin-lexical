@@ -201,20 +201,20 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
               hasHorizontalScroll={tableHorizontalScroll}
             />
             <TableCellResizer />
-            <ImagesPlugin />
-            <InlineImagePlugin />
+            {/* <ImagesPlugin />
+            <InlineImagePlugin /> */}
             <LinkPlugin hasLinkAttributes={hasLinkAttributes} />
-            <PollPlugin />
-            <TwitterPlugin />
+            {/* <PollPlugin />
+            <TwitterPlugin /> */}
             <YouTubePlugin />
-            <FigmaPlugin />
+            {/* <FigmaPlugin /> */}
             <ClickableLinkPlugin disabled={isEditable} />
             <HorizontalRulePlugin />
-            <EquationsPlugin />
+            {/* <EquationsPlugin /> */}
             <TabFocusPlugin />
             <TabIndentationPlugin maxIndent={7} />
             <CollapsiblePlugin />
-            <PageBreakPlugin />
+            {/* <PageBreakPlugin /> */}
             <LayoutPlugin />
             {floatingAnchorElem && !isSmallWidthViewport && (
               <>
