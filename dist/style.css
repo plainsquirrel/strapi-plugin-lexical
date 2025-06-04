@@ -7,34 +7,6 @@
  *
  */
 
-.FlashMessage__overlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  pointer-events: none;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-}
-.FlashMessage__alert {
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 20px;
-  font-size: 1.5rem;
-  border-radius: 1em;
-  padding: 0.5em 1.5em;
-}
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- *
- */
-
 .Modal__overlay {
   display: flex;
   justify-content: center;
@@ -283,47 +255,6 @@
  *
  */
 
-.KatexEquationAlterer_defaultRow {
-  display: flex;
-  flex-direction: row;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  justify-content: space-between;
-  overflow: hidden;
-}
-
-.KatexEquationAlterer_dialogActions {
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-  margin-top: 20px;
-  margin-bottom: 0;
-  justify-content: right;
-}
-
-.KatexEquationAlterer_centerRow {
-  display: flex;
-  flex-direction: 'row';
-  margin-top: 10px;
-  margin-bottom: 10px;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.KatexEquationAlterer_textArea {
-  width: 100%;
-  resize: none;
-  padding: 7px;
-}
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- *
- */
-
 .Input__wrapper {
   display: flex;
   flex-direction: row;
@@ -346,70 +277,6 @@
   font-size: 16px;
   border-radius: 5px;
   min-width: 0;
-}
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
-/* @import url('assets/styles/variables.css'); */
-
-[type='page-break'] {
-  position: relative;
-  display: block;
-  width: calc(100% + var(--editor-input-padding, 28px) * 2);
-  overflow: unset;
-  margin-left: calc(var(--editor-input-padding, 28px) * -1);
-  margin-top: var(--editor-input-padding, 28px);
-  margin-bottom: var(--editor-input-padding, 28px);
-
-  border: none;
-  border-top: 1px dashed var(--editor-color-secondary, #eeeeee);
-  border-bottom: 1px dashed var(--editor-color-secondary, #eeeeee);
-  background-color: var(--editor-color-secondary, #eeeeee);
-}
-
-[type='page-break']::before {
-  content: '';
-
-  position: absolute;
-  top: 50%;
-  left: calc(var(--editor-input-padding, 28px) + 12px);
-  transform: translateY(-50%);
-  opacity: 0.5;
-
-  background-size: cover;
-  background-image: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-scissors'%20viewBox='0%200%2016%2016'%20transform='matrix(-1,%200,%200,%201,%200,%200)rotate(270)'%3e%3cpath%20d='M3.5%203.5c-.614-.884-.074-1.962.858-2.5L8%207.226%2011.642%201c.932.538%201.472%201.616.858%202.5L8.81%208.61l1.556%202.661a2.5%202.5%200%201%201-.794.637L8%209.73l-1.572%202.177a2.5%202.5%200%201%201-.794-.637L7.19%208.61%203.5%203.5zm2.5%2010a1.5%201.5%200%201%200-3%200%201.5%201.5%200%200%200%203%200zm7%200a1.5%201.5%200%201%200-3%200%201.5%201.5%200%200%200%203%200z'/%3e%3c/svg%3e");
-  width: 16px;
-  height: 16px;
-}
-
-[type='page-break']::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  display: block;
-  padding: 2px 6px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-
-  content: 'PAGE BREAK';
-  font-size: 12px;
-  color: #000;
-  font-weight: 600;
-}
-
-.selected[type='page-break'] {
-  border-color: var(--editor-color-primary, #4766cb);
-}
-
-.selected[type='page-break']::before {
-  opacity: 1;
 }
 .draggable-block-menu {
   border-radius: 4px;
@@ -628,142 +495,6 @@
   .floating-text-format-popup button.insert-comment {
     display: none;
   }
-}
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- *
- */
-
-.InlineImageNode__contentEditable {
-  min-height: 20px;
-  border: 0px;
-  resize: none;
-  cursor: text;
-  caret-color: rgb(5, 5, 5);
-  display: block;
-  position: relative;
-  tab-size: 1;
-  outline: 0px;
-  padding: 10px;
-  user-select: text;
-  font-size: 14px;
-  line-height: 1.4em;
-  width: calc(100% - 20px);
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.InlineImageNode__placeholder {
-  font-size: 12px;
-  color: #888;
-  overflow: hidden;
-  position: absolute;
-  text-overflow: ellipsis;
-  bottom: 10px;
-  left: 10px;
-  user-select: none;
-  white-space: nowrap;
-  display: inline-block;
-  pointer-events: none;
-}
-
-.InlineImageNode_Checkbox:checked,
-.InlineImageNode_Checkbox:not(:checked) {
-  position: absolute;
-  left: -9999px;
-}
-
-.InlineImageNode_Checkbox:checked + label,
-.InlineImageNode_Checkbox:not(:checked) + label {
-  position: absolute;
-  padding-right: 55px;
-  cursor: pointer;
-  line-height: 20px;
-  display: inline-block;
-  color: #666;
-}
-
-.InlineImageNode_Checkbox:checked + label:before,
-.InlineImageNode_Checkbox:not(:checked) + label:before {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 18px;
-  height: 18px;
-  border: 1px solid #666;
-  background: #fff;
-}
-
-.InlineImageNode_Checkbox:checked + label:after,
-.InlineImageNode_Checkbox:not(:checked) + label:after {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: #222222;
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  -webkit-transition: all 0.2s ease;
-  transition: all 0.2s ease;
-}
-
-.InlineImageNode_Checkbox:not(:checked) + label:after {
-  opacity: 0;
-  -webkit-transform: scale(0);
-  transform: scale(0);
-}
-
-.InlineImageNode_Checkbox:checked + label:after {
-  opacity: 1;
-  -webkit-transform: scale(1);
-  transform: scale(1);
-}
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: transparent;
-  border: none;
-  padding: 0 1em 0 0;
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: inherit;
-  line-height: inherit;
-
-  z-index: 1;
-  outline: none;
-}
-
-:root {
-  --select-border: #393939;
-  --select-focus: #101484;
-  --select-arrow: var(--select-border);
-}
-
-.select {
-  min-width: 160px;
-  max-width: 290px;
-  border: 1px solid var(--select-border);
-  border-radius: 0.25em;
-  padding: 0.25em 0.5em;
-  font-size: 1rem;
-  cursor: pointer;
-  line-height: 1.4;
-  background: linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
 }
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -1046,6 +777,9 @@ select {
   outline: 0;
   z-index: 0;
   resize: vertical;
+  height: 100%;
+  max-height: 60vh;
+  overflow-y: scroll;
 }
 
 .editor {
@@ -1058,6 +792,7 @@ select {
   color: black;
   border: 1px solid #dcdce4;
   border-top: none;
+  height: 100%;
 }
 
 .test-recorder-output {
@@ -1432,6 +1167,10 @@ i.horizontal-rule {
 
 i.image {
   background-image: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-file-image'%3e%3cpath%20d='M8.002%205.5a1.5%201.5%200%201%201-3%200%201.5%201.5%200%200%201%203%200z'/%3e%3cpath%20d='M12%200H4a2%202%200%200%200-2%202v12a2%202%200%200%200%202%202h8a2%202%200%200%200%202-2V2a2%202%200%200%200-2-2zM3%202a1%201%200%200%201%201-1h8a1%201%200%200%201%201%201v8l-2.083-2.083a.5.5%200%200%200-.76.063L8%2011%205.835%209.7a.5.5%200%200%200-.611.076L3%2012V2z'/%3e%3c/svg%3e");
+}
+
+i.upload {
+  background-image: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-upload'%3e%3cpath%20d='M.5%209.9a.5.5%200%200%201%20.5.5v2.5a1%201%200%200%200%201%201h12a1%201%200%200%200%201-1v-2.5a.5.5%200%200%201%201%200v2.5a2%202%200%200%201-2%202H2a2%202%200%200%201-2-2v-2.5a.5.5%200%200%201%20.5-.5z'/%3e%3cpath%20d='M7.646%201.146a.5.5%200%200%201%20.708%200l3%203a.5.5%200%200%201-.708.708L8.5%202.707V11.5a.5.5%200%200%201-1%200V2.707L5.354%204.854a.5.5%200%201%201-.708-.708l3-3z'/%3e%3c/svg%3e");
 }
 
 i.table {
@@ -2753,6 +2492,34 @@ button.item.dropdown-item-active i {
  *
  *
  */
+
+.FlashMessage__overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  pointer-events: none;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+.FlashMessage__alert {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  font-size: 1.5rem;
+  border-radius: 1em;
+  padding: 0.5em 1.5em;
+}
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ *
+ */
 .PlaygroundEditorTheme__ltr {
   text-align: left;
 }
@@ -3319,6 +3086,192 @@ button.item.dropdown-item-active i {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
+ */
+
+/* @import url('assets/styles/variables.css'); */
+
+[type='page-break'] {
+  position: relative;
+  display: block;
+  width: calc(100% + var(--editor-input-padding, 28px) * 2);
+  overflow: unset;
+  margin-left: calc(var(--editor-input-padding, 28px) * -1);
+  margin-top: var(--editor-input-padding, 28px);
+  margin-bottom: var(--editor-input-padding, 28px);
+
+  border: none;
+  border-top: 1px dashed var(--editor-color-secondary, #eeeeee);
+  border-bottom: 1px dashed var(--editor-color-secondary, #eeeeee);
+  background-color: var(--editor-color-secondary, #eeeeee);
+}
+
+[type='page-break']::before {
+  content: '';
+
+  position: absolute;
+  top: 50%;
+  left: calc(var(--editor-input-padding, 28px) + 12px);
+  transform: translateY(-50%);
+  opacity: 0.5;
+
+  background-size: cover;
+  background-image: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20fill='currentColor'%20class='bi%20bi-scissors'%20viewBox='0%200%2016%2016'%20transform='matrix(-1,%200,%200,%201,%200,%200)rotate(270)'%3e%3cpath%20d='M3.5%203.5c-.614-.884-.074-1.962.858-2.5L8%207.226%2011.642%201c.932.538%201.472%201.616.858%202.5L8.81%208.61l1.556%202.661a2.5%202.5%200%201%201-.794.637L8%209.73l-1.572%202.177a2.5%202.5%200%201%201-.794-.637L7.19%208.61%203.5%203.5zm2.5%2010a1.5%201.5%200%201%200-3%200%201.5%201.5%200%200%200%203%200zm7%200a1.5%201.5%200%201%200-3%200%201.5%201.5%200%200%200%203%200z'/%3e%3c/svg%3e");
+  width: 16px;
+  height: 16px;
+}
+
+[type='page-break']::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: block;
+  padding: 2px 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+
+  content: 'PAGE BREAK';
+  font-size: 12px;
+  color: #000;
+  font-weight: 600;
+}
+
+.selected[type='page-break'] {
+  border-color: var(--editor-color-primary, #4766cb);
+}
+
+.selected[type='page-break']::before {
+  opacity: 1;
+}
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ *
+ */
+
+.StrapiImageNode__contentEditable {
+  min-height: 20px;
+  border: 0px;
+  resize: none;
+  cursor: text;
+  caret-color: rgb(5, 5, 5);
+  display: block;
+  position: relative;
+  outline: 0px;
+  padding: 10px;
+  user-select: text;
+  font-size: 12px;
+  width: calc(100% - 20px);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.StrapiImageNode__placeholder {
+  font-size: 12px;
+  color: #888;
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 10px;
+  left: 10px;
+  user-select: none;
+  white-space: nowrap;
+  display: inline-block;
+  pointer-events: none;
+}
+
+.image-control-wrapper--resizing {
+  touch-action: none;
+}
+
+div[data-lexical-decorator="true"] img {
+  margin: 0 auto;
+  display: block;
+}
+
+div[data-lexical-decorator="true"] img.focused,
+div[data-lexical-decorator="true"] img.draggable {
+  margin: 0 auto;
+  display: block;
+}
+
+/* Strapi Image Caption Styles */
+.strapi-image-container {
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.strapi-image-caption-container {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 8px;
+}
+
+.caption-edit-container {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.caption-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+  text-align: center;
+  background: #f5f5f5;
+}
+
+.caption-input:focus {
+  background: #f0f0f0;
+}
+
+.caption-display {
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.4;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  min-height: 20px;
+  cursor: pointer;
+}
+
+.caption-display.has-caption {
+  color: #333;
+  font-style: italic;
+  border: 1px solid transparent;
+}
+
+.caption-display.has-caption:hover {
+  background: #f6f6f9;
+  border-color: #ddd;
+}
+
+.caption-display.no-caption {
+  color: #888;
+  border: 1px dashed #ccc;
+}
+
+.caption-display.no-caption:hover {
+  background: #f9f9f9;
+  border-color: #999;
+}
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
  *
  */
 
@@ -3393,6 +3346,142 @@ button.item.dropdown-item-active i {
 
 .image-control-wrapper--resizing {
   touch-action: none;
+}
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ *
+ */
+
+.InlineImageNode__contentEditable {
+  min-height: 20px;
+  border: 0px;
+  resize: none;
+  cursor: text;
+  caret-color: rgb(5, 5, 5);
+  display: block;
+  position: relative;
+  tab-size: 1;
+  outline: 0px;
+  padding: 10px;
+  user-select: text;
+  font-size: 14px;
+  line-height: 1.4em;
+  width: calc(100% - 20px);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.InlineImageNode__placeholder {
+  font-size: 12px;
+  color: #888;
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  bottom: 10px;
+  left: 10px;
+  user-select: none;
+  white-space: nowrap;
+  display: inline-block;
+  pointer-events: none;
+}
+
+.InlineImageNode_Checkbox:checked,
+.InlineImageNode_Checkbox:not(:checked) {
+  position: absolute;
+  left: -9999px;
+}
+
+.InlineImageNode_Checkbox:checked + label,
+.InlineImageNode_Checkbox:not(:checked) + label {
+  position: absolute;
+  padding-right: 55px;
+  cursor: pointer;
+  line-height: 20px;
+  display: inline-block;
+  color: #666;
+}
+
+.InlineImageNode_Checkbox:checked + label:before,
+.InlineImageNode_Checkbox:not(:checked) + label:before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #666;
+  background: #fff;
+}
+
+.InlineImageNode_Checkbox:checked + label:after,
+.InlineImageNode_Checkbox:not(:checked) + label:after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #222222;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+.InlineImageNode_Checkbox:not(:checked) + label:after {
+  opacity: 0;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+
+.InlineImageNode_Checkbox:checked + label:after {
+  opacity: 1;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+
+  z-index: 1;
+  outline: none;
+}
+
+:root {
+  --select-border: #393939;
+  --select-focus: #101484;
+  --select-arrow: var(--select-border);
+}
+
+.select {
+  min-width: 160px;
+  max-width: 290px;
+  border: 1px solid var(--select-border);
+  border-radius: 0.25em;
+  padding: 0.25em 0.5em;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1.4;
+  background: linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
 }
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -3608,57 +3697,4 @@ button.item.dropdown-item-active i {
 .StickyEditorTheme__paragraph {
   margin: 0;
   position: 'relative';
-}
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- *
- */
-
-.StrapiImageNode__contentEditable {
-  min-height: 20px;
-  border: 0px;
-  resize: none;
-  cursor: text;
-  caret-color: rgb(5, 5, 5);
-  display: block;
-  position: relative;
-  outline: 0px;
-  padding: 10px;
-  user-select: text;
-  font-size: 12px;
-  width: calc(100% - 20px);
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.StrapiImageNode__placeholder {
-  font-size: 12px;
-  color: #888;
-  overflow: hidden;
-  position: absolute;
-  text-overflow: ellipsis;
-  top: 10px;
-  left: 10px;
-  user-select: none;
-  white-space: nowrap;
-  display: inline-block;
-  pointer-events: none;
-}
-
-.image-control-wrapper--resizing {
-  touch-action: none;
-}
-div[data-lexical-decorator="true"] img {
-  margin: 0 auto;
-  display: block;
-}
-
-div[data-lexical-decorator="true"] img.focused,
-div[data-lexical-decorator="true"] img.draggable {
-  margin: 0 auto;
-  display: block;
 }

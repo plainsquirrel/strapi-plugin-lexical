@@ -41,11 +41,11 @@ import useModal from '../../hooks/useModal';
 import catTypingGif from '../../images/cat-typing.gif';
 import { EmbedConfigs } from '../AutoEmbedPlugin';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
-import { InsertEquationDialog } from '../EquationsPlugin';
-import { INSERT_IMAGE_COMMAND, InsertImageDialog } from '../ImagesPlugin';
+// import { InsertEquationDialog } from '../EquationsPlugin';
+// import { INSERT_IMAGE_COMMAND, InsertImageDialog } from '../ImagesPlugin';
 import InsertLayoutDialog from '../LayoutPlugin/InsertLayoutDialog';
-import { INSERT_PAGE_BREAK } from '../PageBreakPlugin';
-import { InsertPollDialog } from '../PollPlugin';
+// import { INSERT_PAGE_BREAK } from '../PageBreakPlugin';
+// import { InsertPollDialog } from '../PollPlugin';
 import { InsertTableDialog } from '../TablePlugin';
 
 class ComponentPickerOption extends MenuOption {
@@ -231,19 +231,19 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
       keywords: ['horizontal rule', 'divider', 'hr'],
       onSelect: () => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
     }),
-    new ComponentPickerOption('Page Break', {
-      icon: <i className="icon page-break" />,
-      keywords: ['page break', 'divider'],
-      onSelect: () => editor.dispatchCommand(INSERT_PAGE_BREAK, undefined),
-    }),
-    new ComponentPickerOption('Poll', {
-      icon: <i className="icon poll" />,
-      keywords: ['poll', 'vote'],
-      onSelect: () =>
-        showModal('Insert Poll', (onClose) => (
-          <InsertPollDialog activeEditor={editor} onClose={onClose} />
-        )),
-    }),
+    // new ComponentPickerOption('Page Break', {
+    //   icon: <i className="icon page-break" />,
+    //   keywords: ['page break', 'divider'],
+    //   onSelect: () => editor.dispatchCommand(INSERT_PAGE_BREAK, undefined),
+    // }),
+    // new ComponentPickerOption('Poll', {
+    //   icon: <i className="icon poll" />,
+    //   keywords: ['poll', 'vote'],
+    //   onSelect: () =>
+    //     showModal('Insert Poll', (onClose) => (
+    //       <InsertPollDialog activeEditor={editor} onClose={onClose} />
+    //     )),
+    // }),
     ...EmbedConfigs.map(
       (embedConfig) =>
         new ComponentPickerOption(`Embed ${embedConfig.contentName}`, {
@@ -252,31 +252,31 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
           onSelect: () => editor.dispatchCommand(INSERT_EMBED_COMMAND, embedConfig.type),
         })
     ),
-    new ComponentPickerOption('Equation', {
-      icon: <i className="icon equation" />,
-      keywords: ['equation', 'latex', 'math'],
-      onSelect: () =>
-        showModal('Insert Equation', (onClose) => (
-          <InsertEquationDialog activeEditor={editor} onClose={onClose} />
-        )),
-    }),
-    new ComponentPickerOption('GIF', {
-      icon: <i className="icon gif" />,
-      keywords: ['gif', 'animate', 'image', 'file'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-          altText: 'Cat typing on a laptop',
-          src: catTypingGif,
-        }),
-    }),
-    new ComponentPickerOption('Image', {
-      icon: <i className="icon image" />,
-      keywords: ['image', 'photo', 'picture', 'file'],
-      onSelect: () =>
-        showModal('Insert Image', (onClose) => (
-          <InsertImageDialog activeEditor={editor} onClose={onClose} />
-        )),
-    }),
+    // new ComponentPickerOption('Equation', {
+    //   icon: <i className="icon equation" />,
+    //   keywords: ['equation', 'latex', 'math'],
+    //   onSelect: () =>
+    //     showModal('Insert Equation', (onClose) => (
+    //       <InsertEquationDialog activeEditor={editor} onClose={onClose} />
+    //     )),
+    // }),
+    // new ComponentPickerOption('GIF', {
+    //   icon: <i className="icon gif" />,
+    //   keywords: ['gif', 'animate', 'image', 'file'],
+    //   onSelect: () =>
+    //     editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+    //       altText: 'Cat typing on a laptop',
+    //       src: catTypingGif,
+    //     }),
+    // }),
+    // new ComponentPickerOption('Image', {
+    //   icon: <i className="icon image" />,
+    //   keywords: ['image', 'photo', 'picture', 'file'],
+    //   onSelect: () =>
+    //     showModal('Insert Image', (onClose) => (
+    //       <InsertImageDialog activeEditor={editor} onClose={onClose} />
+    //     )),
+    // }),
     new ComponentPickerOption('Collapsible', {
       icon: <i className="icon caret-right" />,
       keywords: ['collapse', 'collapsible', 'toggle'],

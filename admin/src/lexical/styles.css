@@ -38,6 +38,9 @@
   outline: 0;
   z-index: 0;
   resize: vertical;
+  height: 100%;
+  max-height: 60vh;
+  overflow-y: scroll;
 }
 
 .editor {
@@ -50,6 +53,7 @@
   color: black;
   border: 1px solid #dcdce4;
   border-top: none;
+  height: 100%;
 }
 
 .test-recorder-output {
@@ -424,6 +428,10 @@ i.horizontal-rule {
 
 i.image {
   background-image: url(images/icons/file-image.svg);
+}
+
+i.upload {
+  background-image: url(images/icons/upload.svg);
 }
 
 i.table {

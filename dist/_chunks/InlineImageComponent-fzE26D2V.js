@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const jsxRuntime = require("react/jsx-runtime");
-const Input = require("./Input-C7frcQrM.js");
 const LexicalAutoFocusPlugin = require("@lexical/react/LexicalAutoFocusPlugin");
 const LexicalComposerContext = require("@lexical/react/LexicalComposerContext");
 const LexicalErrorBoundary = require("@lexical/react/LexicalErrorBoundary");
@@ -13,6 +12,13 @@ const utils = require("@lexical/utils");
 const lexical = require("lexical");
 const React = require("react");
 const reactIntl = require("react-intl");
+const Input = require("./Input-FblUDcP6.js");
+function Select({ children, label, className, ...other }) {
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "Input__wrapper", children: [
+    /* @__PURE__ */ jsxRuntime.jsx("label", { style: { marginTop: "-1em" }, className: "Input__label", children: label }),
+    /* @__PURE__ */ jsxRuntime.jsx("select", { ...other, className: className || "select", children })
+  ] });
+}
 const imageCache = /* @__PURE__ */ new Set();
 function useSuspenseImage(src) {
   if (!imageCache.has(src)) {
@@ -97,7 +103,7 @@ function UpdateInlineImageDialog({
       }
     ) }),
     /* @__PURE__ */ jsxRuntime.jsxs(
-      Input.Select,
+      Select,
       {
         style: { marginBottom: "1em", width: "208px" },
         value: position,

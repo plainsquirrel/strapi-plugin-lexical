@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const en = {
   "lexical.plugin.label": "Lexical Editor",
   "lexical.plugin.description": "Lexical advanced WYSIWYG editor",
@@ -44,8 +42,11 @@ const en = {
   "lexical.nodes.poll.option.placeholder": "Option {number}",
   "lexical.nodes.poll.option.remove": "Remove",
   "lexical.nodes.poll.option.add": "Add Option",
-  "lexical.nodes.image.broken.alt": "Broken image",
   "lexical.nodes.image.strapi.alt": "Strapi media library image",
+  "lexical.nodes.image.broken.alt": "Broken image",
+  "lexical.nodes.image.caption.placeholder": "Enter caption...",
+  "lexical.nodes.image.caption.edit": "Click to edit caption",
+  "lexical.nodes.image.caption.add": "Add caption...",
   "lexical.nodes.youtube.iframe.title": "YouTube video",
   "lexical.plugin.actions.import.title": "Import",
   "lexical.plugin.actions.import.aria": "Import editor state from JSON",
@@ -214,6 +215,8 @@ const en = {
   "lexical.plugin.toolbar.insert.link.aria": "Insert link",
   "lexical.plugin.toolbar.insert.strapiimage.title": "Strapi Image",
   "lexical.plugin.toolbar.insert.strapiimage.aria": "Insert Strapi Image",
+  "lexical.plugin.toolbar.upload.image.title": "Upload Image",
+  "lexical.plugin.toolbar.upload.image.aria": "Upload Image",
   "lexical.plugin.toolbar.insert.button.text": "Insert",
   "lexical.plugin.toolbar.insert.button.aria": "Insert specialized editor node",
   "lexical.plugin.toolbar.insert.horizontalrule.text": "Horizontal Rule",
@@ -253,6 +256,10 @@ const en = {
   "lexical.ui.katex.visualization.label": "Visualization",
   "lexical.ui.katex.confirm.button": "Confirm",
   "lexical.ui.modal.dialog.aria": "Modal dialog",
-  "lexical.ui.modal.close.aria": "Close modal"
+  "lexical.ui.modal.close.aria": "Close modal",
+  "lexical.toolbar.image.upload": "Upload Image",
+  "lexical.toolbar.image.upload.tooltip": "Upload image from your computer"
 };
-exports.default = en;
+export {
+  en as default
+};

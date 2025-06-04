@@ -30,7 +30,7 @@ import { CAN_USE_DOM } from './utils/environment';
 
 import { EditorState, SerializedEditorState, SerializedLexicalNode } from 'lexical';
 import { useSharedHistoryContext } from './context/SharedHistoryContext';
-import ActionsPlugin from './plugins/ActionsPlugin';
+// import ActionsPlugin from './plugins/ActionsPlugin';
 import AutocompletePlugin from './plugins/AutocompletePlugin';
 import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
@@ -55,7 +55,7 @@ import LinkPlugin from './plugins/LinkPlugin';
 import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
 import { MaxLengthPlugin } from './plugins/MaxLengthPlugin';
 import MentionsPlugin from './plugins/MentionsPlugin';
-import PageBreakPlugin from './plugins/PageBreakPlugin';
+// import PageBreakPlugin from './plugins/PageBreakPlugin';
 import PollPlugin from './plugins/PollPlugin';
 import ShortcutsPlugin from './plugins/ShortcutsPlugin';
 import SpecialTextPlugin from './plugins/SpecialTextPlugin';
@@ -67,12 +67,13 @@ import TableHoverActionsPlugin from './plugins/TableHoverActionsPlugin';
 import TableOfContentsPlugin from './plugins/TableOfContentsPlugin';
 import ToolbarPlugin from './plugins/ToolbarPlugin';
 import TreeViewPlugin from './plugins/TreeViewPlugin';
-import TwitterPlugin from './plugins/TwitterPlugin';
+// import TwitterPlugin from './plugins/TwitterPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
 
 import { useIntl } from 'react-intl';
 import StrapiImagePlugin from './plugins/StrapiImagePlugin';
+import StrapiImageUploadPlugin from './plugins/StrapiImageUploadPlugin';
 import './styles.css';
 
 interface LexicalEditorProps {
@@ -251,14 +252,15 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
         {shouldAllowHighlightingWithBrackets && <SpecialTextPlugin />}
-        <ActionsPlugin
+        {/* <ActionsPlugin
           isRichText={isRichText}
           shouldPreserveNewLinesInMarkdown={shouldPreserveNewLinesInMarkdown}
-        />
+        /> */}
       </div>
       {showTreeView && <TreeViewPlugin />}
       <StrapiOnChangePlugin onChange={onChange} expectedEditorState={props.expectedEditorState} />
       <StrapiImagePlugin />
+      <StrapiImageUploadPlugin folder="post" />
     </>
   );
 }

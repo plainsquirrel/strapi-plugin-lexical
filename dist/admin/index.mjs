@@ -81,7 +81,7 @@ const index = {
           // @ts-expect-error its fine and works, the typing of the props seems to be wrong at the moment
           import(
             /* webpackChunkName: "lexical-input-component" */
-            "../_chunks/Input-DNl-nh7O.mjs"
+            "../_chunks/Input-BCdc383H.mjs"
           ).then((n) => n.I)
         )
       },
@@ -94,7 +94,7 @@ const index = {
     return Promise.all(
       locales.map(async (locale) => {
         try {
-          const { default: data } = await __variableDynamicImportRuntimeHelper(/* @__PURE__ */ Object.assign({ "./translations/de.json": () => import("../_chunks/de-fY25gBQp.mjs"), "./translations/en.json": () => import("../_chunks/en-C6l2T95J.mjs"), "./translations/es.json": () => import("../_chunks/es-CjZUsrMd.mjs"), "./translations/tr.json": () => import("../_chunks/tr-DAftqLij.mjs") }), `./translations/${locale}.json`, 3);
+          const { default: data } = await __variableDynamicImportRuntimeHelper(/* @__PURE__ */ Object.assign({ "./translations/de.json": () => import("../_chunks/de-fY25gBQp.mjs"), "./translations/en.json": () => import("../_chunks/en-D9ALSMhL.mjs"), "./translations/es.json": () => import("../_chunks/es-CjZUsrMd.mjs"), "./translations/ko.json": () => import("../_chunks/ko-RBdEZpsl.mjs"), "./translations/tr.json": () => import("../_chunks/tr-DAftqLij.mjs") }), `./translations/${locale}.json`, 3);
           return { data, locale };
         } catch {
           return { data: {}, locale };

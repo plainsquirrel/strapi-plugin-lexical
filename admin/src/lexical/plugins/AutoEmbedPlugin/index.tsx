@@ -23,8 +23,8 @@ import * as ReactDOM from 'react-dom';
 import useModal from '../../hooks/useModal';
 import Button from '../../ui/Button';
 import { DialogActions } from '../../ui/Dialog';
-import { INSERT_FIGMA_COMMAND } from '../FigmaPlugin';
-import { INSERT_TWEET_COMMAND } from '../TwitterPlugin';
+// import { INSERT_FIGMA_COMMAND } from '../FigmaPlugin';
+// import { INSERT_TWEET_COMMAND } from '../TwitterPlugin';
 import { INSERT_YOUTUBE_COMMAND } from '../YouTubePlugin';
 
 import { useIntl } from 'react-intl';
@@ -79,72 +79,38 @@ export const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
   type: 'youtube-video',
 };
 
-export const TwitterEmbedConfig: PlaygroundEmbedConfig = {
-  // e.g. Tweet or Google Map.
-  contentName: 'Tweet',
+// export const FigmaEmbedConfig: PlaygroundEmbedConfig = {
+//   contentName: 'Figma Document',
 
-  exampleUrl: 'https://twitter.com/jack/status/20',
+//   exampleUrl: 'https://www.figma.com/file/LKQ4FJ4bTnCSjedbRpk931/Sample-File',
 
-  // Icon for display.
-  icon: <i className="icon tweet" />,
+//   icon: <i className="icon figma" />,
 
-  // Create the Lexical embed node from the url data.
-  insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => {
-    editor.dispatchCommand(INSERT_TWEET_COMMAND, result.id);
-  },
+//   insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => {
+//     editor.dispatchCommand(INSERT_FIGMA_COMMAND, result.id);
+//   },
 
-  // For extra searching.
-  keywords: ['tweet', 'twitter'],
+//   keywords: ['figma', 'figma.com', 'mock-up'],
 
-  // Determine if a given URL is a match and return url data.
-  parseUrl: (text: string) => {
-    const match = /^https:\/\/(twitter|x)\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)/.exec(text);
+//   // Determine if a given URL is a match and return url data.
+//   parseUrl: (text: string) => {
+//     const match =
+//       /https:\/\/([\w.-]+\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/.exec(text);
 
-    if (match != null) {
-      return {
-        id: match[5],
-        url: match[1],
-      };
-    }
+//     if (match != null) {
+//       return {
+//         id: match[3],
+//         url: match[0],
+//       };
+//     }
 
-    return null;
-  },
+//     return null;
+//   },
 
-  type: 'tweet',
-};
+//   type: 'figma',
+// };
 
-export const FigmaEmbedConfig: PlaygroundEmbedConfig = {
-  contentName: 'Figma Document',
-
-  exampleUrl: 'https://www.figma.com/file/LKQ4FJ4bTnCSjedbRpk931/Sample-File',
-
-  icon: <i className="icon figma" />,
-
-  insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => {
-    editor.dispatchCommand(INSERT_FIGMA_COMMAND, result.id);
-  },
-
-  keywords: ['figma', 'figma.com', 'mock-up'],
-
-  // Determine if a given URL is a match and return url data.
-  parseUrl: (text: string) => {
-    const match =
-      /https:\/\/([\w.-]+\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/.exec(text);
-
-    if (match != null) {
-      return {
-        id: match[3],
-        url: match[0],
-      };
-    }
-
-    return null;
-  },
-
-  type: 'figma',
-};
-
-export const EmbedConfigs = [TwitterEmbedConfig, YoutubeEmbedConfig, FigmaEmbedConfig];
+export const EmbedConfigs = [YoutubeEmbedConfig];
 
 function AutoEmbedMenuItem({
   index,

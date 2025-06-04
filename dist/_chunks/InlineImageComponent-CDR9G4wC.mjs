@@ -1,5 +1,4 @@
-import { jsxs, Fragment, jsx } from "react/jsx-runtime";
-import { f as useModal, g as $isInlineImageNode, L as LinkPlugin, e as LexicalContentEditable, T as TextInput, S as Select, D as DialogActions, B as Button } from "./Input-DNl-nh7O.mjs";
+import { jsxs, jsx, Fragment } from "react/jsx-runtime";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
@@ -11,6 +10,13 @@ import { mergeRegister } from "@lexical/utils";
 import { $getSelection, $isNodeSelection, $setSelection, SELECTION_CHANGE_COMMAND, COMMAND_PRIORITY_LOW, CLICK_COMMAND, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_BACKSPACE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, $getNodeByKey } from "lexical";
 import { useRef, useState, useCallback, useEffect, Suspense } from "react";
 import { useIntl } from "react-intl";
+import { f as useModal, g as $isInlineImageNode, L as LinkPlugin, d as LexicalContentEditable, T as TextInput, D as DialogActions, B as Button } from "./Input-BCdc383H.mjs";
+function Select({ children, label, className, ...other }) {
+  return /* @__PURE__ */ jsxs("div", { className: "Input__wrapper", children: [
+    /* @__PURE__ */ jsx("label", { style: { marginTop: "-1em" }, className: "Input__label", children: label }),
+    /* @__PURE__ */ jsx("select", { ...other, className: className || "select", children })
+  ] });
+}
 const imageCache = /* @__PURE__ */ new Set();
 function useSuspenseImage(src) {
   if (!imageCache.has(src)) {

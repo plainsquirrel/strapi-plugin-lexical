@@ -12,34 +12,40 @@ import { isMimeType, mediaFileReader } from '@lexical/utils';
 import { COMMAND_PRIORITY_LOW } from 'lexical';
 import { useEffect } from 'react';
 
-import { INSERT_IMAGE_COMMAND } from '../ImagesPlugin';
+// Import Strapi image upload functionality instead of regular image plugin
+import { UPLOAD_IMAGE_COMMAND } from '../StrapiImageUploadPlugin';
+import { isValidImageFile } from '../../utils/uploadImage';
 
-const ACCEPTABLE_IMAGE_TYPES = ['image/', 'image/heic', 'image/heif', 'image/gif', 'image/webp'];
+const ACCEPTABLE_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+];
 
 export default function DragDropPaste(): null {
   const [editor] = useLexicalComposerContext();
+
   useEffect(() => {
     return editor.registerCommand(
       DRAG_DROP_PASTE,
       (files) => {
-        (async () => {
-          const filesResult = await mediaFileReader(
-            files,
-            [ACCEPTABLE_IMAGE_TYPES].flatMap((x) => x)
-          );
-          for (const { file, result } of filesResult) {
-            if (isMimeType(file, ACCEPTABLE_IMAGE_TYPES)) {
-              editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-                altText: file.name,
-                src: result,
-              });
-            }
-          }
-        })();
-        return true;
+        const fileArray = Array.from(files);
+        const imageFiles = fileArray.filter(isValidImageFile);
+
+        if (imageFiles.length > 0) {
+          // Use Strapi image upload command instead of regular image command
+          editor.dispatchCommand(UPLOAD_IMAGE_COMMAND, imageFiles);
+          return true;
+        }
+
+        return false;
       },
       COMMAND_PRIORITY_LOW
     );
   }, [editor]);
+
   return null;
 }

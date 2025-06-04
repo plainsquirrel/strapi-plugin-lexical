@@ -60,18 +60,18 @@ import { IS_APPLE } from '../../utils/environment';
 import { useStrapiApp } from '@strapi/strapi/admin';
 import { blockTypeToBlockName, useToolbarState } from '../../context/ToolbarContext';
 import useModal from '../../hooks/useModal';
-import { $createStickyNode } from '../../nodes/StickyNode';
+// import { $createStickyNode } from '../../nodes/StickyNode';
 import DropDown, { DropDownItem } from '../../ui/DropDown';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { sanitizeUrl } from '../../utils/url';
 import { EmbedConfigs } from '../AutoEmbedPlugin';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
-import { InsertEquationDialog } from '../EquationsPlugin';
-import { INSERT_IMAGE_COMMAND, InsertImageDialog, InsertImagePayload } from '../ImagesPlugin';
-import { InsertInlineImageDialog } from '../InlineImagePlugin';
+// import { InsertEquationDialog } from '../EquationsPlugin';
+// import { INSERT_IMAGE_COMMAND, InsertImageDialog, InsertImagePayload } from '../ImagesPlugin';
+// import { InsertInlineImageDialog } from '../InlineImagePlugin';
 import InsertLayoutDialog from '../LayoutPlugin/InsertLayoutDialog';
-import { INSERT_PAGE_BREAK } from '../PageBreakPlugin';
-import { InsertPollDialog } from '../PollPlugin';
+// import { INSERT_PAGE_BREAK } from '../PageBreakPlugin';
+// import { InsertPollDialog } from '../PollPlugin';
 import { SHORTCUTS } from '../ShortcutsPlugin/shortcuts';
 import { InsertStrapiImageDialog } from '../StrapiImagePlugin';
 import { InsertTableDialog } from '../TablePlugin';
@@ -85,6 +85,7 @@ import {
   formatParagraph,
   formatQuote,
 } from './utils';
+import { triggerImageUpload } from '../StrapiImageUploadPlugin';
 
 const rootTypeToRootName = {
   root: 'Root',
@@ -809,9 +810,10 @@ export default function ToolbarPlugin({
     },
     [activeEditor, selectedElementKey]
   );
-  const insertGifOnClick = (payload: InsertImagePayload) => {
-    activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
-  };
+
+  // const insertGifOnClick = (payload: InsertImagePayload) => {
+  //   activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
+  // };
 
   const canViewerSeeInsertDropdown = !toolbarState.isImageCaption;
   const canViewerSeeInsertCodeButton = !toolbarState.isImageCaption;
@@ -1242,6 +1244,22 @@ export default function ToolbarPlugin({
           >
             <i className="format image" />
           </button>
+          <button
+            disabled={!isEditable}
+            onClick={triggerImageUpload}
+            title={formatMessage({
+              id: 'lexical.plugin.toolbar.upload.image.title',
+              defaultMessage: 'Upload Image',
+            })}
+            type="button"
+            className="toolbar-item"
+            aria-label={formatMessage({
+              id: 'lexical.plugin.toolbar.upload.image.aria',
+              defaultMessage: 'Upload Image',
+            })}
+          >
+            <i className="format upload" />
+          </button>
 
           <Divider />
 
@@ -1281,7 +1299,7 @@ export default function ToolbarPlugin({
                     })}
                   </span>
                 </DropDownItem>
-                <DropDownItem
+                {/* <DropDownItem
                   onClick={() => {
                     activeEditor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
                   }}
@@ -1294,51 +1312,9 @@ export default function ToolbarPlugin({
                       defaultMessage: 'Page Break',
                     })}
                   </span>
-                </DropDownItem>
-                <DropDownItem
-                  onClick={() => {
-                    showModal(
-                      formatMessage({
-                        id: 'lexical.plugin.toolbar.insert.image.modal.title',
-                        defaultMessage: 'Insert Image',
-                      }),
-                      (onClose) => (
-                        <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />
-                      )
-                    );
-                  }}
-                  className="item"
-                >
-                  <i className="icon image" />
-                  <span className="text">
-                    {formatMessage({
-                      id: 'lexical.plugin.toolbar.insert.image.text',
-                      defaultMessage: 'Image',
-                    })}
-                  </span>
-                </DropDownItem>
-                <DropDownItem
-                  onClick={() => {
-                    showModal(
-                      formatMessage({
-                        id: 'lexical.plugin.toolbar.insert.inlineimage.modal.title',
-                        defaultMessage: 'Insert Inline Image',
-                      }),
-                      (onClose) => (
-                        <InsertInlineImageDialog activeEditor={activeEditor} onClose={onClose} />
-                      )
-                    );
-                  }}
-                  className="item"
-                >
-                  <i className="icon image" />
-                  <span className="text">
-                    {formatMessage({
-                      id: 'lexical.plugin.toolbar.insert.inlineimage.text',
-                      defaultMessage: 'Inline Image',
-                    })}
-                  </span>
-                </DropDownItem>
+                </DropDownItem> */}
+                {/* <DropDownItem
+                </code_block_to_apply_changes_from> */}
                 <DropDownItem
                   onClick={() => {
                     showModal(
@@ -1361,7 +1337,7 @@ export default function ToolbarPlugin({
                     })}
                   </span>
                 </DropDownItem>
-                <DropDownItem
+                {/* <DropDownItem
                   onClick={() => {
                     showModal(
                       formatMessage({
@@ -1382,7 +1358,7 @@ export default function ToolbarPlugin({
                       defaultMessage: 'Poll',
                     })}
                   </span>
-                </DropDownItem>
+                </DropDownItem> */}
                 <DropDownItem
                   onClick={() => {
                     showModal(
@@ -1405,7 +1381,7 @@ export default function ToolbarPlugin({
                     })}
                   </span>
                 </DropDownItem>
-                <DropDownItem
+                {/* <DropDownItem
                   onClick={() => {
                     showModal(
                       formatMessage({
@@ -1426,8 +1402,8 @@ export default function ToolbarPlugin({
                       defaultMessage: 'Equation',
                     })}
                   </span>
-                </DropDownItem>
-                <DropDownItem
+                </DropDownItem> */}
+                {/* <DropDownItem
                   onClick={() => {
                     editor.update(() => {
                       const root = $getRoot();
@@ -1444,7 +1420,7 @@ export default function ToolbarPlugin({
                       defaultMessage: 'Sticky Note',
                     })}
                   </span>
-                </DropDownItem>
+                </DropDownItem> */}
                 <DropDownItem
                   onClick={() => {
                     editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined);

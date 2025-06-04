@@ -16,6 +16,7 @@ import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
 import {
+  $getNodeByKey,
   $getSelection,
   $isNodeSelection,
   $isRangeSelection,
@@ -34,6 +35,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import brokenImage from '../images/image-broken.svg';
 import { $isImageNode } from './ImageNode';
+import { $isStrapiImageNode, StrapiImageNode } from './StrapiImageNode';
 
 const imageCache = new Set();
 
@@ -104,21 +106,73 @@ function BrokenImage(): JSX.Element {
 export default function StrapiImageComponent({
   documentId,
   src,
+  caption,
   nodeKey,
 }: {
   documentId: string;
   nodeKey: NodeKey;
   src: string;
+  caption: string;
 }): JSX.Element {
   const imageRef = useRef<null | HTMLImageElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const captionInputRef = useRef<HTMLInputElement | null>(null);
   const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey);
   const [isResizing, setIsResizing] = useState<boolean>(false);
+  const [isEditingCaption, setIsEditingCaption] = useState<boolean>(false);
+  const [captionText, setCaptionText] = useState<string>(caption);
   const [editor] = useLexicalComposerContext();
   const [selection, setSelection] = useState<BaseSelection | null>(null);
   const activeEditorRef = useRef<LexicalEditor | null>(null);
   const [isLoadError, setIsLoadError] = useState<boolean>(false);
   const isEditable = useLexicalEditable();
+  const { formatMessage } = useIntl();
+
+  // Update caption text when prop changes
+  useEffect(() => {
+    setCaptionText(caption);
+  }, [caption]);
+
+  const updateCaptionInNode = useCallback(
+    (newCaption: string) => {
+      editor.update(() => {
+        const node = $getNodeByKey(nodeKey);
+        if ($isStrapiImageNode(node)) {
+          node.setCaption(newCaption);
+        }
+      });
+    },
+    [editor, nodeKey]
+  );
+
+  const handleCaptionSubmit = useCallback(() => {
+    updateCaptionInNode(captionText);
+    setIsEditingCaption(false);
+  }, [captionText, updateCaptionInNode]);
+
+  const handleCaptionChange = useCallback(
+    (value: string) => {
+      setCaptionText(value);
+      updateCaptionInNode(value);
+    },
+    [updateCaptionInNode]
+  );
+
+  const handleCaptionKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      setIsEditingCaption(false);
+      captionInputRef.current?.blur();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setIsEditingCaption(false);
+      captionInputRef.current?.blur();
+    }
+  }, []);
+
+  const handleCaptionBlur = useCallback(() => {
+    setIsEditingCaption(false);
+  }, []);
 
   const $onDelete = useCallback(
     (payload: KeyboardEvent) => {
@@ -127,7 +181,7 @@ export default function StrapiImageComponent({
         const event: KeyboardEvent = payload;
         event.preventDefault();
         deleteSelection.getNodes().forEach((node) => {
-          if ($isImageNode(node)) {
+          if ($isImageNode(node) || $isStrapiImageNode(node)) {
             node.remove();
           }
         });
@@ -214,6 +268,14 @@ export default function StrapiImageComponent({
     [editor]
   );
 
+  // Focus caption input when editing starts
+  useEffect(() => {
+    if (isEditingCaption && captionInputRef.current) {
+      captionInputRef.current.focus();
+      captionInputRef.current.select();
+    }
+  }, [isEditingCaption]);
+
   useEffect(() => {
     let isMounted = true;
     const rootElement = editor.getRootElement();
@@ -282,7 +344,7 @@ export default function StrapiImageComponent({
 
   return (
     <Suspense fallback={null}>
-      <>
+      <div className="strapi-image-container">
         <div draggable={draggable}>
           {isLoadError ? (
             <BrokenImage />
@@ -297,7 +359,49 @@ export default function StrapiImageComponent({
             />
           )}
         </div>
-      </>
+
+        {/* Caption section */}
+        <div className="strapi-image-caption-container">
+          {isEditingCaption ? (
+            <div className="caption-edit-container">
+              <input
+                ref={captionInputRef}
+                type="text"
+                value={captionText}
+                onChange={(e) => handleCaptionChange(e.target.value)}
+                onKeyDown={handleCaptionKeyDown}
+                onBlur={handleCaptionBlur}
+                placeholder={formatMessage({
+                  id: 'lexical.nodes.image.caption.placeholder',
+                  defaultMessage: 'Enter caption...',
+                })}
+                className="caption-input"
+              />
+            </div>
+          ) : (
+            <div
+              className={`caption-display ${captionText ? 'has-caption' : 'no-caption'}`}
+              onClick={() => isEditable && setIsEditingCaption(true)}
+              title={
+                isEditable
+                  ? formatMessage({
+                      id: 'lexical.nodes.image.caption.edit',
+                      defaultMessage: 'Click to edit caption',
+                    })
+                  : undefined
+              }
+            >
+              {captionText ||
+                (isEditable
+                  ? formatMessage({
+                      id: 'lexical.nodes.image.caption.add',
+                      defaultMessage: 'Add caption...',
+                    })
+                  : '')}
+            </div>
+          )}
+        </div>
+      </div>
     </Suspense>
   );
 }

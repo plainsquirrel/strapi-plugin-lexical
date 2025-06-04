@@ -26,12 +26,14 @@ const StrapiImageComponent = React.lazy(() => import('./StrapiImageComponent'));
 export interface StrapiImagePayload {
   documentId: string;
   src: string;
+  caption?: string;
 }
 
 export type SerializedStrapiImageNode = Spread<
   {
     documentId: string;
     src: string;
+    caption?: string;
   },
   SerializedLexicalNode
 >;
@@ -46,39 +48,44 @@ export type SerializedLinkNode = Spread<
 export class StrapiImageNode extends DecoratorNode<JSX.Element> {
   __documentId: string;
   __src: string;
+  __caption: string;
 
   static getType(): string {
     return 'strapi-image';
   }
 
   static clone(node: StrapiImageNode): StrapiImageNode {
-    return new StrapiImageNode(node.__documentId, node.__src, node.__key);
+    return new StrapiImageNode(node.__documentId, node.__src, node.__caption, node.__key);
   }
 
   static importJSON(serializedNode: SerializedStrapiImageNode): StrapiImageNode {
-    const { documentId, src } = serializedNode;
+    const { documentId, src, caption = '' } = serializedNode;
     return $createStrapiImageNode({
       documentId,
       src,
+      caption,
     }).updateFromJSON(serializedNode);
   }
 
   updateFromJSON(serializedNode: LexicalUpdateJSON<SerializedStrapiImageNode>): this {
     const node = super.updateFromJSON(serializedNode);
-
     return node;
   }
 
   exportDOM(): DOMExportOutput {
     const element = document.createElement('img');
     element.setAttribute('src', this.__src);
+    if (this.__caption) {
+      element.setAttribute('alt', this.__caption);
+    }
     return { element };
   }
 
-  constructor(documentId: string, src: string, key?: NodeKey) {
+  constructor(documentId: string, src: string, caption?: string, key?: NodeKey) {
     super(key);
     this.__documentId = documentId;
     this.__src = src;
+    this.__caption = caption || '';
   }
 
   exportJSON(): SerializedStrapiImageNode {
@@ -86,7 +93,17 @@ export class StrapiImageNode extends DecoratorNode<JSX.Element> {
       ...super.exportJSON(),
       documentId: this.__documentId,
       src: this.__src,
+      caption: this.__caption,
     };
+  }
+
+  setCaption(caption: string): void {
+    const writable = this.getWritable();
+    writable.__caption = caption;
+  }
+
+  getCaption(): string {
+    return this.__caption;
   }
 
   // View
@@ -113,6 +130,7 @@ export class StrapiImageNode extends DecoratorNode<JSX.Element> {
         <StrapiImageComponent
           documentId={this.__documentId}
           src={this.__src}
+          caption={this.__caption}
           nodeKey={this.__key}
         />
       </Suspense>
@@ -120,8 +138,12 @@ export class StrapiImageNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-export function $createStrapiImageNode({ documentId, src }: StrapiImagePayload): StrapiImageNode {
-  return $applyNodeReplacement(new StrapiImageNode(documentId, src));
+export function $createStrapiImageNode({
+  documentId,
+  src,
+  caption,
+}: StrapiImagePayload): StrapiImageNode {
+  return $applyNodeReplacement(new StrapiImageNode(documentId, src, caption));
 }
 
 export function $isStrapiImageNode(node: LexicalNode | null | undefined): node is StrapiImageNode {

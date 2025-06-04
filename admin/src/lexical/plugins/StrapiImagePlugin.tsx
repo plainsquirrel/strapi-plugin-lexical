@@ -65,6 +65,7 @@ export function InsertStrapiImageDialog({
           const imagePayload: InsertStrapiImagePayload = {
             documentId: asset.documentId,
             src: asset.url || asset.formats?.thumbnail?.url,
+            caption: asset.alternativeText || asset.name?.split('.')[0] || '',
           };
           activeEditor.dispatchCommand(INSERT_STRAPI_IMAGE_COMMAND, imagePayload);
         }

@@ -24,6 +24,11 @@
       - [Rendering Strapi media and links](#rendering-strapi-media-and-links)
         - [Fetch while rendering](#fetch-while-rendering)
         - [Prefetch and inject for rendering](#prefetch-and-inject-for-rendering)
+    - [Image Upload Features](#image-upload-features)
+      - [Automatic Media Library Upload](#automatic-media-library-upload)
+      - [Multiple Upload Methods](#multiple-upload-methods)
+      - [Custom Strapi Image Nodes](#custom-strapi-image-nodes)
+      - [User Experience Features](#user-experience-features)
   - [Roadmap](#roadmap)
     - [v0 - Alpha](#v0---alpha)
     - [v1 - Stable](#v1---stable)
@@ -94,6 +99,84 @@
 - Currently, it supports features migrated from the [Lexical playground](https://playground.lexical.dev/).
 - For rendering content on your frontend, consider using libraries like [payload-lexical-react-renderer](https://github.com/atelierdisko/payload-lexical-react-renderer) or similar tools.
 
+### Image Upload Features
+
+This plugin includes comprehensive image upload functionality that automatically integrates with Strapi's media library:
+
+#### Automatic Media Library Upload
+- Images added to the editor are automatically uploaded to Strapi's media library
+- Uses the `/api/upload` endpoint for seamless integration
+- Uploaded images are stored in the `post` folder by default (configurable)
+
+#### Multiple Upload Methods
+- **Drag & Drop**: Simply drag image files into the editor
+- **Clipboard Paste**: Copy and paste images using Ctrl+V (or Cmd+V on Mac)
+- **File Selection**: Click the upload button in the toolbar to select files
+
+#### Custom Strapi Image Nodes
+- Compatible with existing plugin structure
+- Uses `documentId` for media management
+- Maintains relationships between rich text content and media assets
+- Supports all standard image formats (JPEG, PNG, GIF, WebP, SVG)
+
+#### User Experience Features
+- Real-time upload progress feedback
+- Intelligent error handling with user-friendly messages
+- Prevents duplicate uploads during processing
+- Automatic file type validation
+- **Interactive Image Captions**: Click on any uploaded image to add or edit captions
+- **Inline Caption Editing**: Edit captions directly in the editor with Enter/Escape keyboard shortcuts
+- **Auto-generated Filenames**: UUID v4 naming for images from clipboard or drag & drop
+
+#### Authentication & Security
+- Automatically detects and uses Strapi admin authentication tokens
+- Supports multiple token storage methods (localStorage, sessionStorage)
+- Includes CSRF protection for secure uploads
+- Debug function available: `window.debugStrapiAuth()` in browser console
+
+#### Troubleshooting Upload Issues
+
+If you encounter 403 Forbidden errors or upload failures:
+
+**Step 1: Check Authentication Status**
+Open browser console (F12) and run:
+```javascript
+window.debugStrapiAuth()
+```
+
+**Step 2: Understanding API Types**
+Strapi has two separate API systems:
+- **Admin API** (`/upload`): Used within admin panel, requires admin JWT token from cookies
+- **Content API** (`/api/upload`): External API, requires API tokens or regular user JWT
+
+This plugin uses the **Admin API** (`/upload`) since it operates within the Strapi admin panel.
+
+**Step 3: Common Solutions for 401 Unauthorized Errors**
+1. **Admin API vs Content API Mismatch**: 
+   - ✅ Plugin now correctly uses `/upload` (Admin API)
+   - ❌ Previously used `/api/upload` (Content API) which caused 401 errors
+2. **Re-login to Strapi Admin**: Log out and log back into the admin panel (cookies may be expired)
+3. **Check Cookies**: Strapi admin primarily uses cookies for authentication
+   - Open DevTools (F12) → **Application** → **Cookies** → **localhost:1337**
+   - Look for cookies like `jwtToken`, `strapi-jwt`, `jwt`, or `token`
+4. **Verify Admin Permissions**: Check that upload permissions are enabled in Strapi admin settings
+5. **Clear Browser Data**: Clear cookies and cache, then re-login
+
+**Step 4: Cookie Troubleshooting**
+- **Enable Cookies**: Ensure your browser allows cookies for localhost:1337
+- **Check Cookie Settings**: Some ad-blockers or privacy extensions block cookies
+- **CORS Issues**: Verify `credentials: 'include'` is working properly
+
+**Step 5: Network Issues**
+- Ensure Strapi backend is running on `localhost:1337`
+- Check browser console for CORS errors
+- Verify you're accessing the admin panel via the correct URL
+- Confirm admin upload permissions are properly configured
+
+**Debug Function Available**
+The plugin includes a comprehensive debug function accessible via:
+`window.debugStrapiAuth()` - Shows detailed authentication status with cookie analysis, API endpoint information, and troubleshooting tips.
+
 ### Handling Media and Internal Links
 
 This plugin ensures reliable rendering of images and internal links by maintaining relationships between rich text content and referenced entities. By using a regular media field and **automatically generated or your own link components** we can ensure that all referenced media and internal links are readily available for your frontend, always reflecting the latest data.
@@ -129,7 +212,7 @@ Media is stored as a custom Lexical nodes, while store relations to strapi conte
 - The URL follows the format:  
   `strapi://collectionName/documentId`
   
-  This ensures that even if a page’s slug changes, links remain valid.
+  This ensures that even if a page's slug changes, links remain valid.
 
 #### Rendering Strapi media and links
 
@@ -320,7 +403,6 @@ export const lexicalToPlaintext = (json: { root: Node }) => {
   };
   return traverse(json.root);
 };
-```
 
 ## Roadmap
 
@@ -329,6 +411,7 @@ export const lexicalToPlaintext = (json: { root: Node }) => {
 - [x] Implement basic functionality.
 - [x] Port features from the Lexical playground as the initial foundation.
 - [x] Integrate Strapi Media Assets and enable linking to Strapi Collection Entries
+- [x] Add comprehensive image upload functionality (drag & drop, paste, file selection)
 - [ ] Create field presets:
   - **Simple**, **Complex**, and **Full** (selectable during field setup).
 - [ ] Gather community feedback.
@@ -345,11 +428,11 @@ export const lexicalToPlaintext = (json: { root: Node }) => {
 
 ## Contributing
 
-We welcome contributions! Here’s how you can help:
+We welcome contributions! Here's how you can help:
 
 - Report bugs or suggest features via the [issue tracker](https://github.com/hashbite/strapi-plugin-lexical/issues).
 - Submit pull requests to improve functionality or documentation.
-- Share your feedback and ideas to shape the plugin’s future.
+- Share your feedback and ideas to shape the plugin's future.
 
 ---
 
