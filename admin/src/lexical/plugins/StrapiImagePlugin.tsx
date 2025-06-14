@@ -101,9 +101,7 @@ export default function StrapiImagePlugin(): JSX.Element | null {
           const selection = $getSelection();
           const strapiImageNode = $createStrapiImageNode(payload);
           if ($isRangeSelection(selection)) {
-            selection.insertParagraph();
             $insertNodes([strapiImageNode]);
-            selection.insertParagraph();
           } else {
             $insertNodes([strapiImageNode]);
           }
