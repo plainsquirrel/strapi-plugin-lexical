@@ -8,7 +8,7 @@ const lexical = require("lexical");
 const React = require("react");
 const reactErrorBoundary = require("react-error-boundary");
 const katex = require("katex");
-const Input = require("./Input-FblUDcP6.js");
+const Input = require("./Input-DyyOOVmy.js");
 const _interopDefault = (e) => e && e.__esModule ? e : { default: e };
 const katex__default = /* @__PURE__ */ _interopDefault(katex);
 function EquationEditor({ equation, setEquation, inline }, forwardedRef) {

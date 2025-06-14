@@ -84,7 +84,7 @@ const index = {
           // @ts-expect-error its fine and works, the typing of the props seems to be wrong at the moment
           Promise.resolve().then(() => require(
             /* webpackChunkName: "lexical-input-component" */
-            "../_chunks/Input-FblUDcP6.js"
+            "../_chunks/Input-DyyOOVmy.js"
           )).then((n) => n.Input)
         )
       },
@@ -97,7 +97,7 @@ const index = {
     return Promise.all(
       locales.map(async (locale) => {
         try {
-          const { default: data } = await __variableDynamicImportRuntimeHelper(/* @__PURE__ */ Object.assign({ "./translations/de.json": () => Promise.resolve().then(() => require("../_chunks/de-DAQiBh7d.js")), "./translations/en.json": () => Promise.resolve().then(() => require("../_chunks/en-bniN_Eaz.js")), "./translations/es.json": () => Promise.resolve().then(() => require("../_chunks/es-CDMpEXDj.js")), "./translations/ko.json": () => Promise.resolve().then(() => require("../_chunks/ko-Ctnkwqr6.js")), "./translations/tr.json": () => Promise.resolve().then(() => require("../_chunks/tr-6MVmtfQ4.js")) }), `./translations/${locale}.json`, 3);
+          const { default: data } = await __variableDynamicImportRuntimeHelper(/* @__PURE__ */ Object.assign({ "./translations/de.json": () => Promise.resolve().then(() => require("../_chunks/de-DAQiBh7d.js")), "./translations/en.json": () => Promise.resolve().then(() => require("../_chunks/en-bniN_Eaz.js")), "./translations/es.json": () => Promise.resolve().then(() => require("../_chunks/es-CDMpEXDj.js")), "./translations/tr.json": () => Promise.resolve().then(() => require("../_chunks/tr-6MVmtfQ4.js")) }), `./translations/${locale}.json`, 3);
           return { data, locale };
         } catch {
           return { data: {}, locale };

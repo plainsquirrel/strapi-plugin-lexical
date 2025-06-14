@@ -6,7 +6,7 @@ import { isHTMLElement, $getNodeByKey, SELECTION_CHANGE_COMMAND, COMMAND_PRIORIT
 import { forwardRef, useRef, useEffect, useState, useCallback } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import katex from "katex";
-import { $ as $isEquationNode } from "./Input-BCdc383H.mjs";
+import { $ as $isEquationNode } from "./Input-CA25Z8Pt.mjs";
 function EquationEditor({ equation, setEquation, inline }, forwardedRef) {
   const onChange = (event) => {
     setEquation(event.target.value);
