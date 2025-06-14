@@ -1370,6 +1370,491 @@ function CollapsiblePlugin() {
   }, [editor]);
   return null;
 }
+function TextInput({
+  label,
+  value,
+  onChange,
+  placeholder = "",
+  "data-test-id": dataTestId,
+  type = "text"
+}) {
+  return /* @__PURE__ */ jsxs("div", { className: "Input__wrapper", children: [
+    /* @__PURE__ */ jsx("label", { className: "Input__label", children: label }),
+    /* @__PURE__ */ jsx(
+      "input",
+      {
+        type,
+        className: "Input__input",
+        placeholder,
+        value,
+        onChange: (e) => {
+          onChange(e.target.value);
+        },
+        "data-test-id": dataTestId
+      }
+    )
+  ] });
+}
+const PRESET_COLORS$1 = [
+  "#3b82f6",
+  // Blue
+  "#ef4444",
+  // Red
+  "#10b981",
+  // Green
+  "#f59e0b",
+  // Yellow
+  "#8b5cf6",
+  // Purple
+  "#f97316",
+  // Orange
+  "#06b6d4",
+  // Cyan
+  "#84cc16",
+  // Lime
+  "#ec4899",
+  // Pink
+  "#6b7280",
+  // Gray
+  "#1f2937",
+  // Dark Gray
+  "#000000"
+  // Black
+];
+function SimpleColorPicker({ color, onChange, label }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [customColor, setCustomColor] = useState(color);
+  const handleColorSelect = (selectedColor) => {
+    onChange(selectedColor);
+    setCustomColor(selectedColor);
+    setIsOpen(false);
+  };
+  const handleCustomColorChange = (e) => {
+    const newColor = e.target.value;
+    setCustomColor(newColor);
+    onChange(newColor);
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "simple-color-picker", children: [
+    label && /* @__PURE__ */ jsx("label", { className: "simple-color-picker__label", children: label }),
+    /* @__PURE__ */ jsxs("div", { className: "simple-color-picker__container", children: [
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          className: "simple-color-picker__trigger",
+          onClick: () => setIsOpen(!isOpen),
+          style: { backgroundColor: color },
+          "aria-label": "Select color",
+          children: /* @__PURE__ */ jsx("span", { className: "simple-color-picker__preview", style: { backgroundColor: color } })
+        }
+      ),
+      isOpen && /* @__PURE__ */ jsxs("div", { className: "simple-color-picker__dropdown", children: [
+        /* @__PURE__ */ jsx("div", { className: "simple-color-picker__presets", children: PRESET_COLORS$1.map((presetColor) => /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            className: `simple-color-picker__preset ${color === presetColor ? "simple-color-picker__preset--active" : ""}`,
+            style: { backgroundColor: presetColor },
+            onClick: () => handleColorSelect(presetColor),
+            "aria-label": `Select ${presetColor}`
+          },
+          presetColor
+        )) }),
+        /* @__PURE__ */ jsxs("div", { className: "simple-color-picker__custom", children: [
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: "color",
+              value: customColor,
+              onChange: handleCustomColorChange,
+              className: "simple-color-picker__input"
+            }
+          ),
+          /* @__PURE__ */ jsx("span", { className: "simple-color-picker__custom-label", children: "Custom" })
+        ] })
+      ] })
+    ] }),
+    isOpen && /* @__PURE__ */ jsx("div", { className: "simple-color-picker__overlay", onClick: () => setIsOpen(false) })
+  ] });
+}
+function CTAButtonComponent({
+  className,
+  format,
+  nodeKey,
+  text,
+  subText,
+  url,
+  color
+}) {
+  const [editor] = useLexicalComposerContext();
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const buttonRef = useRef(null);
+  const buttonStyle = {
+    backgroundColor: color,
+    borderColor: color,
+    color: "#ffffff"
+  };
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenuPosition({ x: e.clientX, y: e.clientY });
+    setShowContextMenu(true);
+  };
+  const handleEdit = () => {
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if (node && $isCTAButtonNode(node)) {
+        const event = new CustomEvent("editCTAButton", {
+          detail: {
+            nodeKey,
+            text: node.getText(),
+            subText: node.getSubText(),
+            url: node.getURL(),
+            color: node.getColor()
+          }
+        });
+        window.dispatchEvent(event);
+      }
+    });
+    setShowContextMenu(false);
+  };
+  const handleDelete = () => {
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if (node) {
+        node.remove();
+      }
+    });
+    setShowContextMenu(false);
+  };
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setShowContextMenu(false);
+    };
+    if (showContextMenu) {
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
+    }
+  }, [showContextMenu]);
+  return /* @__PURE__ */ jsx(BlockWithAlignableContents, { className, format, nodeKey, children: /* @__PURE__ */ jsxs("div", { className: "cta-button-container", children: [
+    /* @__PURE__ */ jsx(
+      "a",
+      {
+        ref: buttonRef,
+        href: url,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        className: "cta-button",
+        style: buttonStyle,
+        onContextMenu: handleContextMenu,
+        children: /* @__PURE__ */ jsxs("div", { className: "cta-button-content", children: [
+          /* @__PURE__ */ jsx("span", { className: "cta-button-text", children: text }),
+          subText && /* @__PURE__ */ jsx("span", { className: "cta-button-subtext", children: subText })
+        ] })
+      }
+    ),
+    showContextMenu && /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "cta-button-context-menu",
+        style: {
+          position: "fixed",
+          left: contextMenuPosition.x,
+          top: contextMenuPosition.y
+        },
+        children: [
+          /* @__PURE__ */ jsx("button", { className: "cta-button-context-menu-item", onClick: handleEdit, children: "Edit" }),
+          /* @__PURE__ */ jsx("button", { className: "cta-button-context-menu-item", onClick: handleDelete, children: "Delete" })
+        ]
+      }
+    )
+  ] }) });
+}
+function $convertCTAButtonElement(domNode) {
+  const text = domNode.textContent || "";
+  const url = domNode.getAttribute("data-url") || "";
+  const subText = domNode.getAttribute("data-subtext") || void 0;
+  const color = domNode.getAttribute("data-color") || "#3b82f6";
+  if (text && url) {
+    const node = $createCTAButtonNode({ text, subText, url, color });
+    return { node };
+  }
+  return null;
+}
+class CTAButtonNode extends DecoratorBlockNode {
+  __text;
+  __subText;
+  __url;
+  __color;
+  static getType() {
+    return "cta-button";
+  }
+  static clone(node) {
+    return new CTAButtonNode(
+      node.__text,
+      node.__subText,
+      node.__url,
+      node.__color,
+      node.__format,
+      node.__key
+    );
+  }
+  static importJSON(serializedNode) {
+    const { text, subText, url, color } = serializedNode;
+    const node = $createCTAButtonNode({
+      text,
+      subText,
+      url,
+      color
+    });
+    return node.updateFromJSON(serializedNode);
+  }
+  exportJSON() {
+    return {
+      ...super.exportJSON(),
+      text: this.getText(),
+      subText: this.getSubText(),
+      url: this.getURL(),
+      color: this.getColor()
+    };
+  }
+  constructor(text, subText, url, color, format, key) {
+    super(format, key);
+    this.__text = text;
+    this.__subText = subText;
+    this.__url = url;
+    this.__color = color;
+  }
+  exportDOM() {
+    const element = document.createElement("div");
+    element.setAttribute("data-lexical-cta-button", "true");
+    element.setAttribute("data-url", this.__url);
+    element.setAttribute("data-color", this.__color);
+    if (this.__subText) {
+      element.setAttribute("data-subtext", this.__subText);
+    }
+    element.textContent = this.__text;
+    return { element };
+  }
+  static importDOM() {
+    return {
+      div: (domNode) => {
+        if (!domNode.hasAttribute("data-lexical-cta-button")) {
+          return null;
+        }
+        return {
+          conversion: $convertCTAButtonElement,
+          priority: 1
+        };
+      }
+    };
+  }
+  updateDOM() {
+    return false;
+  }
+  getText() {
+    return this.__text;
+  }
+  getSubText() {
+    return this.__subText;
+  }
+  getURL() {
+    return this.__url;
+  }
+  getColor() {
+    return this.__color;
+  }
+  setTextContent(text) {
+    const writable = this.getWritable();
+    writable.__text = text;
+  }
+  setSubText(subText) {
+    const writable = this.getWritable();
+    writable.__subText = subText;
+  }
+  setURL(url) {
+    const writable = this.getWritable();
+    writable.__url = url;
+  }
+  setColor(color) {
+    const writable = this.getWritable();
+    writable.__color = color;
+  }
+  getTextContent(_includeInert, _includeDirectionless) {
+    return `${this.__text}${this.__subText ? ` - ${this.__subText}` : ""} (${this.__url})`;
+  }
+  decorate(_editor, config) {
+    const embedBlockTheme = config.theme.embedBlock || {};
+    const className = {
+      base: embedBlockTheme.base || "",
+      focus: embedBlockTheme.focus || ""
+    };
+    return /* @__PURE__ */ jsx(
+      CTAButtonComponent,
+      {
+        className,
+        format: this.__format,
+        nodeKey: this.getKey(),
+        text: this.__text,
+        subText: this.__subText,
+        url: this.__url,
+        color: this.__color
+      }
+    );
+  }
+}
+function $createCTAButtonNode({
+  text,
+  subText,
+  url,
+  color = "#3b82f6"
+}) {
+  return new CTAButtonNode(text, subText, url, color);
+}
+function $isCTAButtonNode(node) {
+  return node instanceof CTAButtonNode;
+}
+const INSERT_CTA_BUTTON_COMMAND = createCommand(
+  "INSERT_CTA_BUTTON_COMMAND"
+);
+function CTAButtonPlugin() {
+  const [editor] = useLexicalComposerContext();
+  const [modal, showModal] = useModal();
+  useEffect(() => {
+    if (!editor.hasNodes([CTAButtonNode])) {
+      throw new Error("CTAButtonPlugin: CTAButtonNode not registered on editor");
+    }
+    const handleEditCTAButton = (event) => {
+      const { nodeKey, text, subText, url, color } = event.detail;
+      showModal("Edit CTA Button", (onClose) => /* @__PURE__ */ jsx(
+        InsertCTAButtonDialog,
+        {
+          activeEditor: editor,
+          onClose,
+          initialData: { nodeKey, text, subText, url, color }
+        }
+      ));
+    };
+    window.addEventListener("editCTAButton", handleEditCTAButton);
+    const unregisterCommand = editor.registerCommand(
+      INSERT_CTA_BUTTON_COMMAND,
+      (payload) => {
+        const ctaButtonNode = $createCTAButtonNode(payload);
+        $insertNodeToNearestRoot(ctaButtonNode);
+        return true;
+      },
+      COMMAND_PRIORITY_EDITOR
+    );
+    return () => {
+      window.removeEventListener("editCTAButton", handleEditCTAButton);
+      unregisterCommand();
+    };
+  }, [editor, showModal]);
+  return /* @__PURE__ */ jsx(Fragment, { children: modal });
+}
+function InsertCTAButtonDialog({
+  activeEditor,
+  onClose,
+  initialData
+}) {
+  const { formatMessage } = useIntl();
+  const [text, setText] = useState(initialData?.text || "");
+  const [subText, setSubText] = useState(initialData?.subText || "");
+  const [url, setUrl] = useState(initialData?.url || "");
+  const [color, setColor] = useState(initialData?.color || "#3b82f6");
+  const onClick = () => {
+    if (text.trim() && url.trim()) {
+      if (initialData?.nodeKey) {
+        activeEditor.update(() => {
+          const { $getNodeByKey: $getNodeByKey2 } = require("lexical");
+          const { $isCTAButtonNode: $isCTAButtonNode2 } = require("../../nodes/CTAButtonNode");
+          const node = $getNodeByKey2(initialData.nodeKey);
+          if (node && $isCTAButtonNode2(node)) {
+            node.setTextContent(text.trim());
+            node.setSubText(subText.trim() || void 0);
+            node.setURL(url.trim());
+            node.setColor(color);
+          }
+        });
+      } else {
+        activeEditor.dispatchCommand(INSERT_CTA_BUTTON_COMMAND, {
+          text: text.trim(),
+          subText: subText.trim() || void 0,
+          url: url.trim(),
+          color
+        });
+      }
+      onClose();
+    }
+  };
+  const isDisabled = !text.trim() || !url.trim();
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
+      TextInput,
+      {
+        label: formatMessage({
+          id: "lexical.plugin.cta-button.insert.text.label",
+          defaultMessage: "Button Text"
+        }),
+        placeholder: formatMessage({
+          id: "lexical.plugin.cta-button.insert.text.placeholder",
+          defaultMessage: "Enter button text..."
+        }),
+        value: text,
+        onChange: setText,
+        "data-test-id": "cta-button-text"
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      TextInput,
+      {
+        label: formatMessage({
+          id: "lexical.plugin.cta-button.insert.subtext.label",
+          defaultMessage: "Sub Text (Optional)"
+        }),
+        placeholder: formatMessage({
+          id: "lexical.plugin.cta-button.insert.subtext.placeholder",
+          defaultMessage: "Enter sub text..."
+        }),
+        value: subText,
+        onChange: setSubText,
+        "data-test-id": "cta-button-subtext"
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      TextInput,
+      {
+        label: formatMessage({
+          id: "lexical.plugin.cta-button.insert.url.label",
+          defaultMessage: "URL"
+        }),
+        placeholder: formatMessage({
+          id: "lexical.plugin.cta-button.insert.url.placeholder",
+          defaultMessage: "https://example.com"
+        }),
+        value: url,
+        onChange: setUrl,
+        "data-test-id": "cta-button-url"
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { style: { marginBottom: "16px" }, children: /* @__PURE__ */ jsx(
+      SimpleColorPicker,
+      {
+        color,
+        onChange: setColor,
+        label: formatMessage({
+          id: "lexical.plugin.cta-button.insert.color.label",
+          defaultMessage: "Button Color"
+        })
+      }
+    ) }),
+    /* @__PURE__ */ jsx(DialogActions, { "data-test-id": "cta-button-modal-confirm-insert", children: /* @__PURE__ */ jsx(Button, { disabled: isDisabled, onClick, children: formatMessage({
+      id: initialData?.nodeKey ? "lexical.plugin.cta-button.update.confirm" : "lexical.plugin.cta-button.insert.confirm",
+      defaultMessage: initialData?.nodeKey ? "Update CTA Button" : "Insert CTA Button"
+    }) }) })
+  ] });
+}
 const DropDownContext = React.createContext(null);
 const dropDownPadding = 4;
 function DropDownItem({
@@ -1848,31 +2333,6 @@ function InsertLayoutDialog({
     }) })
   ] });
 }
-function TextInput({
-  label,
-  value,
-  onChange,
-  placeholder = "",
-  "data-test-id": dataTestId,
-  type = "text"
-}) {
-  return /* @__PURE__ */ jsxs("div", { className: "Input__wrapper", children: [
-    /* @__PURE__ */ jsx("label", { className: "Input__label", children: label }),
-    /* @__PURE__ */ jsx(
-      "input",
-      {
-        type,
-        className: "Input__input",
-        placeholder,
-        value,
-        onChange: (e) => {
-          onChange(e.target.value);
-        },
-        "data-test-id": dataTestId
-      }
-    )
-  ] });
-}
 const CellContext = createContext({
   cellEditorConfig: null,
   cellEditorPlugins: null,
@@ -2163,6 +2623,11 @@ function getBaseOptions(editor, showModal) {
       keywords: ["collapse", "collapsible", "toggle"],
       onSelect: () => editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, void 0)
     }),
+    new ComponentPickerOption("CTA Button", {
+      icon: /* @__PURE__ */ jsx("i", { className: "icon link" }),
+      keywords: ["cta", "button", "call to action", "link"],
+      onSelect: () => showModal("Insert CTA Button", (onClose) => /* @__PURE__ */ jsx(InsertCTAButtonDialog, { activeEditor: editor, onClose }))
+    }),
     new ComponentPickerOption("Columns Layout", {
       icon: /* @__PURE__ */ jsx("i", { className: "icon columns" }),
       keywords: ["columns", "layout", "grid"],
@@ -2239,7 +2704,7 @@ function ComponentPickerMenuPlugin() {
     )
   ] });
 }
-const StrapiImageComponent = React.lazy(() => import("./StrapiImageComponent-B34Xi5cI.mjs"));
+const StrapiImageComponent = React.lazy(() => import("./StrapiImageComponent-DTnSXSUU.mjs"));
 class StrapiImageNode extends DecoratorNode {
   __documentId;
   __src;
@@ -4197,7 +4662,7 @@ function LinkPlugin({ hasLinkAttributes = false }) {
     }
   );
 }
-const EquationComponent = React.lazy(() => import("./EquationComponent-ELlpY-VZ.mjs"));
+const EquationComponent = React.lazy(() => import("./EquationComponent-DMecV_Fo.mjs"));
 function $convertEquationElement(domNode) {
   let equation = domNode.getAttribute("data-lexical-equation");
   const inline = domNode.getAttribute("data-lexical-inline") === "true";
@@ -4301,7 +4766,7 @@ function $createEquationNode(equation = "", inline = false) {
 function $isEquationNode(node) {
   return node instanceof EquationNode;
 }
-const ImageComponent = React.lazy(() => import("./ImageComponent-Bw3Ocn1M.mjs"));
+const ImageComponent = React.lazy(() => import("./ImageComponent-DhRqf_q8.mjs"));
 function isGoogleDocCheckboxImg(img2) {
   return img2.parentElement != null && img2.parentElement.tagName === "LI" && img2.previousSibling === null && img2.getAttribute("aria-roledescription") === "checkbox";
 }
@@ -22603,71 +23068,63 @@ function TabFocusPlugin() {
   return null;
 }
 let skipAddingToHistoryStack = false;
-const basicColors = [
-  "#d0021b",
-  "#f5a623",
-  "#f8e71c",
-  "#8b572a",
-  "#7ed321",
-  "#417505",
-  "#bd10e0",
-  "#9013fe",
-  "#4a90e2",
-  "#50e3c2",
-  "#b8e986",
-  "#000000",
-  "#4a4a4a",
-  "#9b9b9b",
-  "#ffffff"
-];
 const WIDTH = 214;
 const HEIGHT = 150;
-function ColorPicker({ color, onChange }) {
+const PRESET_COLORS = [
+  "#3b82f6",
+  // Blue
+  "#ef4444",
+  // Red
+  "#10b981",
+  // Green
+  "#f59e0b",
+  // Yellow
+  "#8b5cf6",
+  // Purple
+  "#f97316",
+  // Orange
+  "#06b6d4",
+  // Cyan
+  "#84cc16",
+  // Lime
+  "#ec4899",
+  // Pink
+  "#6b7280",
+  // Gray
+  "#1f2937",
+  // Dark Gray
+  "#000000"
+  // Black
+];
+function ColorPicker({ color, onChange, label }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [customColor, setCustomColor] = useState(color);
   const [selfColor, setSelfColor] = useState(transformColor("hex", color));
   const [inputColor, setInputColor] = useState(color);
-  const innerDivRef = useRef(null);
-  const saturationPosition = useMemo(
+  useRef(null);
+  useMemo(
     () => ({
       x: selfColor.hsv.s / 100 * WIDTH,
       y: (100 - selfColor.hsv.v) / 100 * HEIGHT
     }),
     [selfColor.hsv.s, selfColor.hsv.v]
   );
-  const huePosition = useMemo(
+  useMemo(
     () => ({
       x: selfColor.hsv.h / 360 * WIDTH
     }),
     [selfColor.hsv]
   );
-  const onSetHex = (hex) => {
-    setInputColor(hex);
-    if (/^#[0-9A-Fa-f]{6}$/i.test(hex)) {
-      const newColor = transformColor("hex", hex);
-      setSelfColor(newColor);
-    }
+  const handleColorSelect = (selectedColor) => {
+    onChange?.(selectedColor, skipAddingToHistoryStack);
+    setCustomColor(selectedColor);
+    setIsOpen(false);
   };
-  const onMoveSaturation = ({ x, y }) => {
-    const newHsv = {
-      ...selfColor.hsv,
-      s: x / WIDTH * 100,
-      v: 100 - y / HEIGHT * 100
-    };
-    const newColor = transformColor("hsv", newHsv);
-    setSelfColor(newColor);
-    setInputColor(newColor.hex);
+  const handleCustomColorChange = (e) => {
+    const newColor = e.target.value;
+    setCustomColor(newColor);
+    onChange?.(newColor, skipAddingToHistoryStack);
   };
-  const onMoveHue = ({ x }) => {
-    const newHsv = { ...selfColor.hsv, h: x / WIDTH * 360 };
-    const newColor = transformColor("hsv", newHsv);
-    setSelfColor(newColor);
-    setInputColor(newColor.hex);
-  };
-  useEffect(() => {
-    if (innerDivRef.current !== null && onChange) {
-      onChange(selfColor.hex, skipAddingToHistoryStack);
-      setInputColor(selfColor.hex);
-    }
-  }, [selfColor, onChange]);
   useEffect(() => {
     if (color === void 0) {
       return;
@@ -22676,91 +23133,48 @@ function ColorPicker({ color, onChange }) {
     setSelfColor(newColor);
     setInputColor(newColor.hex);
   }, [color]);
-  return /* @__PURE__ */ jsxs("div", { className: "color-picker-wrapper", style: { width: WIDTH }, ref: innerDivRef, children: [
-    /* @__PURE__ */ jsx(TextInput, { label: "Hex", onChange: onSetHex, value: inputColor }),
-    /* @__PURE__ */ jsx("div", { className: "color-picker-basic-color", children: basicColors.map((basicColor) => /* @__PURE__ */ jsx(
-      "button",
-      {
-        className: basicColor === selfColor.hex ? " active" : "",
-        style: { backgroundColor: basicColor },
-        onClick: () => {
-          setInputColor(basicColor);
-          setSelfColor(transformColor("hex", basicColor));
+  return /* @__PURE__ */ jsxs("div", { className: "color-picker", children: [
+    label && /* @__PURE__ */ jsx("label", { className: "color-picker__label", children: label }),
+    /* @__PURE__ */ jsxs("div", { className: "color-picker__container", children: [
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          className: "color-picker__trigger",
+          onClick: () => setIsOpen(!isOpen),
+          style: { backgroundColor: color },
+          "aria-label": "Select color",
+          children: /* @__PURE__ */ jsx("span", { className: "color-picker__preview", style: { backgroundColor: color } })
         }
-      },
-      basicColor
-    )) }),
-    /* @__PURE__ */ jsx(
-      MoveWrapper,
-      {
-        className: "color-picker-saturation",
-        style: { backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)` },
-        onChange: onMoveSaturation,
-        children: /* @__PURE__ */ jsx(
-          "div",
+      ),
+      isOpen && /* @__PURE__ */ jsxs("div", { className: "color-picker__dropdown", children: [
+        /* @__PURE__ */ jsx("div", { className: "color-picker__presets", children: PRESET_COLORS.map((presetColor) => /* @__PURE__ */ jsx(
+          "button",
           {
-            className: "color-picker-saturation_cursor",
-            style: {
-              backgroundColor: selfColor.hex,
-              left: saturationPosition.x,
-              top: saturationPosition.y
+            type: "button",
+            className: `color-picker__preset ${color === presetColor ? "color-picker__preset--active" : ""}`,
+            style: { backgroundColor: presetColor },
+            onClick: () => handleColorSelect(presetColor),
+            "aria-label": `Select ${presetColor}`
+          },
+          presetColor
+        )) }),
+        /* @__PURE__ */ jsxs("div", { className: "color-picker__custom", children: [
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: "color",
+              value: customColor,
+              onChange: handleCustomColorChange,
+              className: "color-picker__input"
             }
-          }
-        )
-      }
-    ),
-    /* @__PURE__ */ jsx(MoveWrapper, { className: "color-picker-hue", onChange: onMoveHue, children: /* @__PURE__ */ jsx(
-      "div",
-      {
-        className: "color-picker-hue_cursor",
-        style: {
-          backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)`,
-          left: huePosition.x
-        }
-      }
-    ) }),
-    /* @__PURE__ */ jsx("div", { className: "color-picker-color", style: { backgroundColor: selfColor.hex } })
+          ),
+          /* @__PURE__ */ jsx("span", { className: "color-picker__custom-label", children: "Custom" })
+        ] })
+      ] })
+    ] }),
+    isOpen && /* @__PURE__ */ jsx("div", { className: "color-picker__overlay", onClick: () => setIsOpen(false) })
   ] });
-}
-function MoveWrapper({ className, style, onChange, children }) {
-  const divRef = useRef(null);
-  const draggedRef = useRef(false);
-  const move = (e) => {
-    if (divRef.current) {
-      const { current: div } = divRef;
-      const { width, height, left, top } = div.getBoundingClientRect();
-      const zoom = calculateZoomLevel(div);
-      const x = clamp(e.clientX / zoom - left, width, 0);
-      const y = clamp(e.clientY / zoom - top, height, 0);
-      onChange({ x, y });
-    }
-  };
-  const onMouseDown = (e) => {
-    if (e.button !== 0) {
-      return;
-    }
-    move(e);
-    const onMouseMove = (_e) => {
-      draggedRef.current = true;
-      skipAddingToHistoryStack = true;
-      move(_e);
-    };
-    const onMouseUp = (_e) => {
-      if (draggedRef.current) {
-        skipAddingToHistoryStack = false;
-      }
-      document.removeEventListener("mousemove", onMouseMove, false);
-      document.removeEventListener("mouseup", onMouseUp, false);
-      move(_e);
-      draggedRef.current = false;
-    };
-    document.addEventListener("mousemove", onMouseMove, false);
-    document.addEventListener("mouseup", onMouseUp, false);
-  };
-  return /* @__PURE__ */ jsx("div", { ref: divRef, className, style, onMouseDown, children });
-}
-function clamp(value, max, min) {
-  return value > max ? max : value < min ? min : value;
 }
 function toHex(value) {
   if (!value.startsWith("#")) {
@@ -22797,42 +23211,15 @@ function rgb2hsv({ r, g, b }) {
   const v = max * 100;
   return { h, s, v };
 }
-function hsv2rgb({ h, s, v }) {
-  s /= 100;
-  v /= 100;
-  const i = ~~(h / 60);
-  const f = h / 60 - i;
-  const p = v * (1 - s);
-  const q = v * (1 - s * f);
-  const t = v * (1 - s * (1 - f));
-  const index = i % 6;
-  const r = Math.round([v, q, p, p, t, v][index] * 255);
-  const g = Math.round([t, v, v, q, p, p][index] * 255);
-  const b = Math.round([p, p, t, v, v, q][index] * 255);
-  return { b, g, r };
-}
-function rgb2hex({ b, g, r }) {
-  return "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
-}
 function transformColor(format, color) {
   let hex = toHex("#121212");
   let rgb = hex2rgb(hex);
   let hsv = rgb2hsv(rgb);
-  if (format === "hex") {
+  {
     const value = color;
     hex = toHex(value);
     rgb = hex2rgb(hex);
     hsv = rgb2hsv(rgb);
-  } else if (format === "rgb") {
-    const value = color;
-    rgb = value;
-    hex = rgb2hex(rgb);
-    hsv = rgb2hsv(rgb);
-  } else if (format === "hsv") {
-    const value = color;
-    hsv = value;
-    rgb = hsv2rgb(hsv);
-    hex = rgb2hex(rgb);
   }
   return { hex, hsv, rgb };
 }
@@ -25156,6 +25543,28 @@ function ToolbarPlugin({
                   onClick: () => {
                     showModal(
                       formatMessage({
+                        id: "lexical.plugin.toolbar.insert.cta-button.modal.title",
+                        defaultMessage: "Insert CTA Button"
+                      }),
+                      (onClose) => /* @__PURE__ */ jsx(InsertCTAButtonDialog, { activeEditor, onClose })
+                    );
+                  },
+                  className: "item",
+                  children: [
+                    /* @__PURE__ */ jsx("i", { className: "icon link" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
+                      id: "lexical.plugin.toolbar.insert.cta-button.text",
+                      defaultMessage: "CTA Button"
+                    }) })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxs(
+                DropDownItem,
+                {
+                  onClick: () => {
+                    showModal(
+                      formatMessage({
                         id: "lexical.plugin.toolbar.insert.columns.modal.title",
                         defaultMessage: "Insert Columns Layout"
                       }),
@@ -25335,6 +25744,7 @@ function Editor(props) {
             /* @__PURE__ */ jsx(TabIndentationPlugin, { maxIndent: 7 }),
             /* @__PURE__ */ jsx(CollapsiblePlugin, {}),
             /* @__PURE__ */ jsx(LayoutPlugin, {}),
+            /* @__PURE__ */ jsx(CTAButtonPlugin, {}),
             floatingAnchorElem && !isSmallWidthViewport && /* @__PURE__ */ jsxs(Fragment, { children: [
               /* @__PURE__ */ jsx(DraggableBlockPlugin, { anchorElem: floatingAnchorElem }),
               /* @__PURE__ */ jsx(CodeActionMenuPlugin, { anchorElem: floatingAnchorElem }),
@@ -25573,7 +25983,7 @@ class FigmaNode extends DecoratorBlockNode {
 function $createFigmaNode(documentID) {
   return new FigmaNode(documentID);
 }
-const InlineImageComponent = React.lazy(() => import("./InlineImageComponent-DIv03xHv.mjs"));
+const InlineImageComponent = React.lazy(() => import("./InlineImageComponent-DRfqVsV5.mjs"));
 function $convertInlineImageElement(domNode) {
   if (isHTMLElement(domNode) && domNode.nodeName === "IMG") {
     const { alt: altText, src, width, height } = domNode;
@@ -25857,7 +26267,7 @@ function $createPageBreakNode() {
 function $isPageBreakNode(node) {
   return node instanceof PageBreakNode;
 }
-const PollComponent = React.lazy(() => import("./PollComponent--Q2pWyvj.mjs"));
+const PollComponent = React.lazy(() => import("./PollComponent-CzCHwuGv.mjs"));
 function createUID() {
   return Math.random().toString(36).replace(/[^a-z]+/g, "").slice(0, 5);
 }
@@ -25984,7 +26394,7 @@ function $createPollNode(question, options) {
 function $isPollNode(node) {
   return node instanceof PollNode;
 }
-const StickyComponent = React.lazy(() => import("./StickyComponent-Bz3WA6W4.mjs"));
+const StickyComponent = React.lazy(() => import("./StickyComponent-LhtF3XHD.mjs"));
 class StickyNode extends DecoratorNode {
   __x;
   __y;
@@ -26104,7 +26514,8 @@ const Nodes = [
   LayoutContainerNode,
   LayoutItemNode,
   SpecialTextNode,
-  StrapiImageNode
+  StrapiImageNode,
+  CTAButtonNode
 ];
 const Input = React.forwardRef(
   (props, ref) => {
