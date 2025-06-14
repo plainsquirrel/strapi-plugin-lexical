@@ -75,6 +75,7 @@ import InsertLayoutDialog from '../LayoutPlugin/InsertLayoutDialog';
 import { SHORTCUTS } from '../ShortcutsPlugin/shortcuts';
 import { InsertStrapiImageDialog } from '../StrapiImagePlugin';
 import { InsertTableDialog } from '../TablePlugin';
+import { InsertCTAButtonDialog } from '../CTAButtonPlugin/InsertCTAButtonDialog';
 import {
   clearFormatting,
   formatBulletList,
@@ -1313,8 +1314,6 @@ export default function ToolbarPlugin({
                     })}
                   </span>
                 </DropDownItem> */}
-                {/* <DropDownItem
-                </code_block_to_apply_changes_from> */}
                 <DropDownItem
                   onClick={() => {
                     showModal(
@@ -1334,6 +1333,28 @@ export default function ToolbarPlugin({
                     {formatMessage({
                       id: 'lexical.plugin.toolbar.insert.table.text',
                       defaultMessage: 'Table',
+                    })}
+                  </span>
+                </DropDownItem>
+                <DropDownItem
+                  onClick={() => {
+                    showModal(
+                      formatMessage({
+                        id: 'lexical.plugin.toolbar.insert.cta-button.modal.title',
+                        defaultMessage: 'Insert CTA Button',
+                      }),
+                      (onClose) => (
+                        <InsertCTAButtonDialog activeEditor={activeEditor} onClose={onClose} />
+                      )
+                    );
+                  }}
+                  className="item"
+                >
+                  <i className="icon link" />
+                  <span className="text">
+                    {formatMessage({
+                      id: 'lexical.plugin.toolbar.insert.cta-button.text',
+                      defaultMessage: 'CTA Button',
                     })}
                   </span>
                 </DropDownItem>

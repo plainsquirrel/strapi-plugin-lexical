@@ -41,6 +41,8 @@ import useModal from '../../hooks/useModal';
 import catTypingGif from '../../images/cat-typing.gif';
 import { EmbedConfigs } from '../AutoEmbedPlugin';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
+import { INSERT_CTA_BUTTON_COMMAND } from '../CTAButtonPlugin';
+import { InsertCTAButtonDialog } from '../CTAButtonPlugin/InsertCTAButtonDialog';
 // import { InsertEquationDialog } from '../EquationsPlugin';
 // import { INSERT_IMAGE_COMMAND, InsertImageDialog } from '../ImagesPlugin';
 import InsertLayoutDialog from '../LayoutPlugin/InsertLayoutDialog';
@@ -281,6 +283,14 @@ function getBaseOptions(editor: LexicalEditor, showModal: ShowModal) {
       icon: <i className="icon caret-right" />,
       keywords: ['collapse', 'collapsible', 'toggle'],
       onSelect: () => editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
+    }),
+    new ComponentPickerOption('CTA Button', {
+      icon: <i className="icon link" />,
+      keywords: ['cta', 'button', 'call to action', 'link'],
+      onSelect: () =>
+        showModal('Insert CTA Button', (onClose) => (
+          <InsertCTAButtonDialog activeEditor={editor} onClose={onClose} />
+        )),
     }),
     new ComponentPickerOption('Columns Layout', {
       icon: <i className="icon columns" />,

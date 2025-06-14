@@ -22,6 +22,7 @@ import { CollapsibleContainerNode } from '../plugins/CollapsiblePlugin/Collapsib
 import { CollapsibleContentNode } from '../plugins/CollapsiblePlugin/CollapsibleContentNode';
 import { CollapsibleTitleNode } from '../plugins/CollapsiblePlugin/CollapsibleTitleNode';
 import { AutocompleteNode } from './AutocompleteNode';
+import { CTAButtonNode } from './CTAButtonNode';
 import { EmojiNode } from './EmojiNode';
 import { EquationNode } from './EquationNode';
 import { FigmaNode } from './FigmaNode';
@@ -75,6 +76,7 @@ const Nodes: Array<Klass<LexicalNode>> = [
   LayoutItemNode,
   SpecialTextNode,
   StrapiImageNode,
+  CTAButtonNode,
 ];
 
 export default Nodes;

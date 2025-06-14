@@ -39,6 +39,7 @@ import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import CollapsiblePlugin from './plugins/CollapsiblePlugin';
 import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
 import ContextMenuPlugin from './plugins/ContextMenuPlugin';
+import CTAButtonPlugin from './plugins/CTAButtonPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
 import EmojiPickerPlugin from './plugins/EmojiPickerPlugin';
@@ -217,6 +218,7 @@ export default function Editor(props: LexicalEditorProps): JSX.Element {
             <CollapsiblePlugin />
             {/* <PageBreakPlugin /> */}
             <LayoutPlugin />
+            <CTAButtonPlugin />
             {floatingAnchorElem && !isSmallWidthViewport && (
               <>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
