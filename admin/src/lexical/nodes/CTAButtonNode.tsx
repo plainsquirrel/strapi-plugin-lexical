@@ -16,14 +16,17 @@ import {
   DecoratorBlockNode,
   SerializedDecoratorBlockNode,
 } from '@lexical/react/LexicalDecoratorBlockNode';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $getNodeByKey } from 'lexical';
+import { useState, useRef, useEffect } from 'react';
 
 import './CTAButtonNode.css';
 
 export interface CTAButtonPayload {
   text: string;
+  subText?: string;
   url: string;
-  variant: 'primary' | 'secondary' | 'outline';
-  size: 'small' | 'medium' | 'large';
+  color: string;
   key?: NodeKey;
 }
 
@@ -35,9 +38,9 @@ type CTAButtonComponentProps = Readonly<{
   format: ElementFormatType | null;
   nodeKey: NodeKey;
   text: string;
+  subText?: string;
   url: string;
-  variant: 'primary' | 'secondary' | 'outline';
-  size: 'small' | 'medium' | 'large';
+  color: string;
 }>;
 
 function CTAButtonComponent({
@@ -45,18 +48,104 @@ function CTAButtonComponent({
   format,
   nodeKey,
   text,
+  subText,
   url,
-  variant,
-  size,
+  color,
 }: CTAButtonComponentProps) {
-  const buttonClasses = ['cta-button', `cta-button--${variant}`, `cta-button--${size}`].join(' ');
+  const [editor] = useLexicalComposerContext();
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const buttonRef = useRef<HTMLAnchorElement>(null);
+
+  const buttonStyle = {
+    backgroundColor: color,
+    borderColor: color,
+    color: '#ffffff',
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenuPosition({ x: e.clientX, y: e.clientY });
+    setShowContextMenu(true);
+  };
+
+  const handleEdit = () => {
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if (node && $isCTAButtonNode(node)) {
+        // Dispatch custom event to open edit modal
+        const event = new CustomEvent('editCTAButton', {
+          detail: {
+            nodeKey,
+            text: node.getText(),
+            subText: node.getSubText(),
+            url: node.getURL(),
+            color: node.getColor(),
+          },
+        });
+        window.dispatchEvent(event);
+      }
+    });
+    setShowContextMenu(false);
+  };
+
+  const handleDelete = () => {
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if (node) {
+        node.remove();
+      }
+    });
+    setShowContextMenu(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setShowContextMenu(false);
+    };
+
+    if (showContextMenu) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showContextMenu]);
 
   return (
     <BlockWithAlignableContents className={className} format={format} nodeKey={nodeKey}>
       <div className="cta-button-container">
-        <a href={url} target="_blank" rel="noopener noreferrer" className={buttonClasses}>
-          {text}
+        <a
+          ref={buttonRef}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cta-button"
+          style={buttonStyle}
+          onContextMenu={handleContextMenu}
+        >
+          <div className="cta-button-content">
+            <span className="cta-button-text">{text}</span>
+            {subText && <span className="cta-button-subtext">{subText}</span>}
+          </div>
         </a>
+
+        {showContextMenu && (
+          <div
+            className="cta-button-context-menu"
+            style={{
+              position: 'fixed',
+              left: contextMenuPosition.x,
+              top: contextMenuPosition.y,
+            }}
+          >
+            <button className="cta-button-context-menu-item" onClick={handleEdit}>
+              Edit
+            </button>
+            <button className="cta-button-context-menu-item" onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+        )}
       </div>
     </BlockWithAlignableContents>
   );
@@ -65,9 +154,9 @@ function CTAButtonComponent({
 export type SerializedCTAButtonNode = Spread<
   {
     text: string;
+    subText?: string;
     url: string;
-    variant: 'primary' | 'secondary' | 'outline';
-    size: 'small' | 'medium' | 'large';
+    color: string;
   },
   SerializedDecoratorBlockNode
 >;
@@ -75,12 +164,11 @@ export type SerializedCTAButtonNode = Spread<
 function $convertCTAButtonElement(domNode: HTMLElement): null | DOMConversionOutput {
   const text = domNode.textContent || '';
   const url = domNode.getAttribute('data-url') || '';
-  const variant =
-    (domNode.getAttribute('data-variant') as CTAButtonPayload['variant']) || 'primary';
-  const size = (domNode.getAttribute('data-size') as CTAButtonPayload['size']) || 'medium';
+  const subText = domNode.getAttribute('data-subtext') || undefined;
+  const color = domNode.getAttribute('data-color') || '#3b82f6';
 
   if (text && url) {
-    const node = $createCTAButtonNode({ text, url, variant, size });
+    const node = $createCTAButtonNode({ text, subText, url, color });
     return { node };
   }
   return null;
@@ -88,9 +176,9 @@ function $convertCTAButtonElement(domNode: HTMLElement): null | DOMConversionOut
 
 export class CTAButtonNode extends DecoratorBlockNode {
   __text: string;
+  __subText?: string;
   __url: string;
-  __variant: 'primary' | 'secondary' | 'outline';
-  __size: 'small' | 'medium' | 'large';
+  __color: string;
 
   static getType(): string {
     return 'cta-button';
@@ -99,21 +187,21 @@ export class CTAButtonNode extends DecoratorBlockNode {
   static clone(node: CTAButtonNode): CTAButtonNode {
     return new CTAButtonNode(
       node.__text,
+      node.__subText,
       node.__url,
-      node.__variant,
-      node.__size,
+      node.__color,
       node.__format,
       node.__key
     );
   }
 
   static importJSON(serializedNode: SerializedCTAButtonNode): CTAButtonNode {
-    const { text, url, variant, size } = serializedNode;
+    const { text, subText, url, color } = serializedNode;
     const node = $createCTAButtonNode({
       text,
+      subText,
       url,
-      variant,
-      size,
+      color,
     });
     return node.updateFromJSON(serializedNode);
   }
@@ -122,33 +210,35 @@ export class CTAButtonNode extends DecoratorBlockNode {
     return {
       ...super.exportJSON(),
       text: this.getText(),
+      subText: this.getSubText(),
       url: this.getURL(),
-      variant: this.getVariant(),
-      size: this.getSize(),
+      color: this.getColor(),
     };
   }
 
   constructor(
     text: string,
+    subText: string | undefined,
     url: string,
-    variant: 'primary' | 'secondary' | 'outline',
-    size: 'small' | 'medium' | 'large',
+    color: string,
     format?: ElementFormatType,
     key?: NodeKey
   ) {
     super(format, key);
     this.__text = text;
+    this.__subText = subText;
     this.__url = url;
-    this.__variant = variant;
-    this.__size = size;
+    this.__color = color;
   }
 
   exportDOM(): DOMExportOutput {
     const element = document.createElement('div');
     element.setAttribute('data-lexical-cta-button', 'true');
     element.setAttribute('data-url', this.__url);
-    element.setAttribute('data-variant', this.__variant);
-    element.setAttribute('data-size', this.__size);
+    element.setAttribute('data-color', this.__color);
+    if (this.__subText) {
+      element.setAttribute('data-subtext', this.__subText);
+    }
     element.textContent = this.__text;
     return { element };
   }
@@ -175,16 +265,16 @@ export class CTAButtonNode extends DecoratorBlockNode {
     return this.__text;
   }
 
+  getSubText(): string | undefined {
+    return this.__subText;
+  }
+
   getURL(): string {
     return this.__url;
   }
 
-  getVariant(): 'primary' | 'secondary' | 'outline' {
-    return this.__variant;
-  }
-
-  getSize(): 'small' | 'medium' | 'large' {
-    return this.__size;
+  getColor(): string {
+    return this.__color;
   }
 
   setTextContent(text: string): void {
@@ -192,26 +282,26 @@ export class CTAButtonNode extends DecoratorBlockNode {
     writable.__text = text;
   }
 
+  setSubText(subText: string | undefined): void {
+    const writable = this.getWritable();
+    writable.__subText = subText;
+  }
+
   setURL(url: string): void {
     const writable = this.getWritable();
     writable.__url = url;
   }
 
-  setVariant(variant: 'primary' | 'secondary' | 'outline'): void {
+  setColor(color: string): void {
     const writable = this.getWritable();
-    writable.__variant = variant;
-  }
-
-  setSize(size: 'small' | 'medium' | 'large'): void {
-    const writable = this.getWritable();
-    writable.__size = size;
+    writable.__color = color;
   }
 
   getTextContent(
     _includeInert?: boolean | undefined,
     _includeDirectionless?: false | undefined
   ): string {
-    return `${this.__text} (${this.__url})`;
+    return `${this.__text}${this.__subText ? ` - ${this.__subText}` : ''} (${this.__url})`;
   }
 
   decorate(_editor: LexicalEditor, config: EditorConfig): JSX.Element {
@@ -226,9 +316,9 @@ export class CTAButtonNode extends DecoratorBlockNode {
         format={this.__format}
         nodeKey={this.getKey()}
         text={this.__text}
+        subText={this.__subText}
         url={this.__url}
-        variant={this.__variant}
-        size={this.__size}
+        color={this.__color}
       />
     );
   }
@@ -236,11 +326,11 @@ export class CTAButtonNode extends DecoratorBlockNode {
 
 export function $createCTAButtonNode({
   text,
+  subText,
   url,
-  variant = 'primary',
-  size = 'medium',
+  color = '#3b82f6',
 }: CTAButtonPayload): CTAButtonNode {
-  return new CTAButtonNode(text, url, variant, size);
+  return new CTAButtonNode(text, subText, url, color);
 }
 
 export function $isCTAButtonNode(

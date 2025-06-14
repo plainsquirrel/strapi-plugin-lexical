@@ -7,11 +7,12 @@
  */
 
 import type { JSX } from 'react';
+import { useState } from 'react';
 
 import './ColorPicker.css';
 
 import { calculateZoomLevel } from '@lexical/utils';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import * as React from 'react';
 
 import TextInput from './TextInput';
@@ -21,6 +22,7 @@ let skipAddingToHistoryStack = false;
 interface ColorPickerProps {
   color: string;
   onChange?: (value: string, skipHistoryStack: boolean) => void;
+  label?: string;
 }
 
 export function parseAllowedColor(input: string) {
@@ -48,7 +50,24 @@ const basicColors = [
 const WIDTH = 214;
 const HEIGHT = 150;
 
-export default function ColorPicker({ color, onChange }: Readonly<ColorPickerProps>): JSX.Element {
+const PRESET_COLORS = [
+  '#3b82f6', // Blue
+  '#ef4444', // Red
+  '#10b981', // Green
+  '#f59e0b', // Yellow
+  '#8b5cf6', // Purple
+  '#f97316', // Orange
+  '#06b6d4', // Cyan
+  '#84cc16', // Lime
+  '#ec4899', // Pink
+  '#6b7280', // Gray
+  '#1f2937', // Dark Gray
+  '#000000', // Black
+];
+
+export default function ColorPicker({ color, onChange, label }: ColorPickerProps): JSX.Element {
+  const [isOpen, setIsOpen] = useState(false);
+  const [customColor, setCustomColor] = useState(color);
   const [selfColor, setSelfColor] = useState(transformColor('hex', color));
   const [inputColor, setInputColor] = useState(color);
   const innerDivRef = useRef(null);
@@ -68,40 +87,17 @@ export default function ColorPicker({ color, onChange }: Readonly<ColorPickerPro
     [selfColor.hsv]
   );
 
-  const onSetHex = (hex: string) => {
-    setInputColor(hex);
-    if (/^#[0-9A-Fa-f]{6}$/i.test(hex)) {
-      const newColor = transformColor('hex', hex);
-      setSelfColor(newColor);
-    }
+  const handleColorSelect = (selectedColor: string) => {
+    onChange?.(selectedColor, skipAddingToHistoryStack);
+    setCustomColor(selectedColor);
+    setIsOpen(false);
   };
 
-  const onMoveSaturation = ({ x, y }: Position) => {
-    const newHsv = {
-      ...selfColor.hsv,
-      s: (x / WIDTH) * 100,
-      v: 100 - (y / HEIGHT) * 100,
-    };
-    const newColor = transformColor('hsv', newHsv);
-    setSelfColor(newColor);
-    setInputColor(newColor.hex);
+  const handleCustomColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = e.target.value;
+    setCustomColor(newColor);
+    onChange?.(newColor, skipAddingToHistoryStack);
   };
-
-  const onMoveHue = ({ x }: Position) => {
-    const newHsv = { ...selfColor.hsv, h: (x / WIDTH) * 360 };
-    const newColor = transformColor('hsv', newHsv);
-
-    setSelfColor(newColor);
-    setInputColor(newColor.hex);
-  };
-
-  useEffect(() => {
-    // Check if the dropdown is actually active
-    if (innerDivRef.current !== null && onChange) {
-      onChange(selfColor.hex, skipAddingToHistoryStack);
-      setInputColor(selfColor.hex);
-    }
-  }, [selfColor, onChange]);
 
   useEffect(() => {
     if (color === undefined) {
@@ -113,45 +109,47 @@ export default function ColorPicker({ color, onChange }: Readonly<ColorPickerPro
   }, [color]);
 
   return (
-    <div className="color-picker-wrapper" style={{ width: WIDTH }} ref={innerDivRef}>
-      <TextInput label="Hex" onChange={onSetHex} value={inputColor} />
-      <div className="color-picker-basic-color">
-        {basicColors.map((basicColor) => (
-          <button
-            className={basicColor === selfColor.hex ? ' active' : ''}
-            key={basicColor}
-            style={{ backgroundColor: basicColor }}
-            onClick={() => {
-              setInputColor(basicColor);
-              setSelfColor(transformColor('hex', basicColor));
-            }}
-          />
-        ))}
+    <div className="color-picker">
+      {label && <label className="color-picker__label">{label}</label>}
+      <div className="color-picker__container">
+        <button
+          type="button"
+          className="color-picker__trigger"
+          onClick={() => setIsOpen(!isOpen)}
+          style={{ backgroundColor: color }}
+          aria-label="Select color"
+        >
+          <span className="color-picker__preview" style={{ backgroundColor: color }} />
+        </button>
+
+        {isOpen && (
+          <div className="color-picker__dropdown">
+            <div className="color-picker__presets">
+              {PRESET_COLORS.map((presetColor) => (
+                <button
+                  key={presetColor}
+                  type="button"
+                  className={`color-picker__preset ${color === presetColor ? 'color-picker__preset--active' : ''}`}
+                  style={{ backgroundColor: presetColor }}
+                  onClick={() => handleColorSelect(presetColor)}
+                  aria-label={`Select ${presetColor}`}
+                />
+              ))}
+            </div>
+            <div className="color-picker__custom">
+              <input
+                type="color"
+                value={customColor}
+                onChange={handleCustomColorChange}
+                className="color-picker__input"
+              />
+              <span className="color-picker__custom-label">Custom</span>
+            </div>
+          </div>
+        )}
       </div>
-      <MoveWrapper
-        className="color-picker-saturation"
-        style={{ backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)` }}
-        onChange={onMoveSaturation}
-      >
-        <div
-          className="color-picker-saturation_cursor"
-          style={{
-            backgroundColor: selfColor.hex,
-            left: saturationPosition.x,
-            top: saturationPosition.y,
-          }}
-        />
-      </MoveWrapper>
-      <MoveWrapper className="color-picker-hue" onChange={onMoveHue}>
-        <div
-          className="color-picker-hue_cursor"
-          style={{
-            backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)`,
-            left: huePosition.x,
-          }}
-        />
-      </MoveWrapper>
-      <div className="color-picker-color" style={{ backgroundColor: selfColor.hex }} />
+
+      {isOpen && <div className="color-picker__overlay" onClick={() => setIsOpen(false)} />}
     </div>
   );
 }

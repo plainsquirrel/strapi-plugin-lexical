@@ -1,11 +1,11 @@
 import { LexicalEditor } from 'lexical';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 import Button from '../../ui/Button';
 import { DialogActions } from '../../ui/Dialog';
-import DropDown, { DropDownItem } from '../../ui/DropDown';
 import TextInput from '../../ui/TextInput';
+import SimpleColorPicker from '../../ui/SimpleColorPicker';
 
 import { CTAButtonPayload } from '../../nodes/CTAButtonNode';
 import { INSERT_CTA_BUTTON_COMMAND } from './index';
@@ -13,73 +13,56 @@ import { INSERT_CTA_BUTTON_COMMAND } from './index';
 export interface InsertCTAButtonDialogProps {
   activeEditor: LexicalEditor;
   onClose: () => void;
+  initialData?: {
+    nodeKey?: string;
+    text: string;
+    subText?: string;
+    url: string;
+    color: string;
+  };
 }
 
 export function InsertCTAButtonDialog({
   activeEditor,
   onClose,
+  initialData,
 }: InsertCTAButtonDialogProps): JSX.Element {
   const { formatMessage } = useIntl();
-  const [text, setText] = useState('');
-  const [url, setUrl] = useState('');
-  const [variant, setVariant] = useState<CTAButtonPayload['variant']>('primary');
-  const [size, setSize] = useState<CTAButtonPayload['size']>('medium');
+  const [text, setText] = useState(initialData?.text || '');
+  const [subText, setSubText] = useState(initialData?.subText || '');
+  const [url, setUrl] = useState(initialData?.url || '');
+  const [color, setColor] = useState(initialData?.color || '#3b82f6');
 
   const onClick = () => {
     if (text.trim() && url.trim()) {
-      activeEditor.dispatchCommand(INSERT_CTA_BUTTON_COMMAND, {
-        text: text.trim(),
-        url: url.trim(),
-        variant,
-        size,
-      });
+      if (initialData?.nodeKey) {
+        // Edit existing button
+        activeEditor.update(() => {
+          const { $getNodeByKey } = require('lexical');
+          const { $isCTAButtonNode } = require('../../nodes/CTAButtonNode');
+
+          const node = $getNodeByKey(initialData.nodeKey);
+          if (node && $isCTAButtonNode(node)) {
+            node.setTextContent(text.trim());
+            node.setSubText(subText.trim() || undefined);
+            node.setURL(url.trim());
+            node.setColor(color);
+          }
+        });
+      } else {
+        // Create new button
+        activeEditor.dispatchCommand(INSERT_CTA_BUTTON_COMMAND, {
+          text: text.trim(),
+          subText: subText.trim() || undefined,
+          url: url.trim(),
+          color,
+        });
+      }
       onClose();
     }
   };
 
   const isDisabled = !text.trim() || !url.trim();
-
-  const variantOptions = [
-    {
-      value: 'primary',
-      label: formatMessage({
-        id: 'lexical.plugin.cta-button.variant.primary',
-        defaultMessage: 'Primary',
-      }),
-    },
-    {
-      value: 'secondary',
-      label: formatMessage({
-        id: 'lexical.plugin.cta-button.variant.secondary',
-        defaultMessage: 'Secondary',
-      }),
-    },
-    {
-      value: 'outline',
-      label: formatMessage({
-        id: 'lexical.plugin.cta-button.variant.outline',
-        defaultMessage: 'Outline',
-      }),
-    },
-  ];
-
-  const sizeOptions = [
-    {
-      value: 'small',
-      label: formatMessage({ id: 'lexical.plugin.cta-button.size.small', defaultMessage: 'Small' }),
-    },
-    {
-      value: 'medium',
-      label: formatMessage({
-        id: 'lexical.plugin.cta-button.size.medium',
-        defaultMessage: 'Medium',
-      }),
-    },
-    {
-      value: 'large',
-      label: formatMessage({ id: 'lexical.plugin.cta-button.size.large', defaultMessage: 'Large' }),
-    },
-  ];
 
   return (
     <>
@@ -98,6 +81,19 @@ export function InsertCTAButtonDialog({
       />
       <TextInput
         label={formatMessage({
+          id: 'lexical.plugin.cta-button.insert.subtext.label',
+          defaultMessage: 'Sub Text (Optional)',
+        })}
+        placeholder={formatMessage({
+          id: 'lexical.plugin.cta-button.insert.subtext.placeholder',
+          defaultMessage: 'Enter sub text...',
+        })}
+        value={subText}
+        onChange={setSubText}
+        data-test-id="cta-button-subtext"
+      />
+      <TextInput
+        label={formatMessage({
           id: 'lexical.plugin.cta-button.insert.url.label',
           defaultMessage: 'URL',
         })}
@@ -109,59 +105,23 @@ export function InsertCTAButtonDialog({
         onChange={setUrl}
         data-test-id="cta-button-url"
       />
-      <div style={{ display: 'flex', gap: '16px' }}>
-        <div style={{ flex: 1 }}>
-          <label className="Input__label">
-            {formatMessage({
-              id: 'lexical.plugin.cta-button.insert.variant.label',
-              defaultMessage: 'Style',
-            })}
-          </label>
-          <DropDown
-            buttonClassName="toolbar-item"
-            buttonLabel={variantOptions.find((opt) => opt.value === variant)?.label || 'Primary'}
-            buttonAriaLabel="Select button style"
-          >
-            {variantOptions.map((option) => (
-              <DropDownItem
-                key={option.value}
-                onClick={() => setVariant(option.value as CTAButtonPayload['variant'])}
-                className={variant === option.value ? 'active' : ''}
-              >
-                {option.label}
-              </DropDownItem>
-            ))}
-          </DropDown>
-        </div>
-        <div style={{ flex: 1 }}>
-          <label className="Input__label">
-            {formatMessage({
-              id: 'lexical.plugin.cta-button.insert.size.label',
-              defaultMessage: 'Size',
-            })}
-          </label>
-          <DropDown
-            buttonClassName="toolbar-item"
-            buttonLabel={sizeOptions.find((opt) => opt.value === size)?.label || 'Medium'}
-            buttonAriaLabel="Select button size"
-          >
-            {sizeOptions.map((option) => (
-              <DropDownItem
-                key={option.value}
-                onClick={() => setSize(option.value as CTAButtonPayload['size'])}
-                className={size === option.value ? 'active' : ''}
-              >
-                {option.label}
-              </DropDownItem>
-            ))}
-          </DropDown>
-        </div>
+      <div style={{ marginBottom: '16px' }}>
+        <SimpleColorPicker
+          color={color}
+          onChange={setColor}
+          label={formatMessage({
+            id: 'lexical.plugin.cta-button.insert.color.label',
+            defaultMessage: 'Button Color',
+          })}
+        />
       </div>
       <DialogActions data-test-id="cta-button-modal-confirm-insert">
         <Button disabled={isDisabled} onClick={onClick}>
           {formatMessage({
-            id: 'lexical.plugin.cta-button.insert.confirm',
-            defaultMessage: 'Insert CTA Button',
+            id: initialData?.nodeKey
+              ? 'lexical.plugin.cta-button.update.confirm'
+              : 'lexical.plugin.cta-button.insert.confirm',
+            defaultMessage: initialData?.nodeKey ? 'Update CTA Button' : 'Insert CTA Button',
           })}
         </Button>
       </DialogActions>
