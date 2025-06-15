@@ -8,7 +8,7 @@ const utils = require("@lexical/utils");
 const lexical = require("lexical");
 const React = require("react");
 const reactIntl = require("react-intl");
-const Input = require("./Input-DgVT_sKo.js");
+const Input = require("./Input-BFtYFOHC.js");
 function getTotalVotes(options) {
   return options.reduce((totalVotes, next) => {
     return totalVotes + next.votes.length;

@@ -1767,10 +1767,8 @@ function InsertCTAButtonDialog({
     if (text.trim() && url.trim()) {
       if (initialData?.nodeKey) {
         activeEditor.update(() => {
-          const { $getNodeByKey: $getNodeByKey2 } = require("lexical");
-          const { $isCTAButtonNode: $isCTAButtonNode2 } = require("../../nodes/CTAButtonNode");
-          const node = $getNodeByKey2(initialData.nodeKey);
-          if (node && $isCTAButtonNode2(node)) {
+          const node = $getNodeByKey(initialData.nodeKey);
+          if (node && $isCTAButtonNode(node)) {
             node.setTextContent(text.trim());
             node.setSubText(subText.trim() || void 0);
             node.setURL(url.trim());
@@ -2704,7 +2702,7 @@ function ComponentPickerMenuPlugin() {
     )
   ] });
 }
-const StrapiImageComponent = React.lazy(() => import("./StrapiImageComponent-DTnSXSUU.mjs"));
+const StrapiImageComponent = React.lazy(() => import("./StrapiImageComponent-B_52i0Zn.mjs"));
 class StrapiImageNode extends DecoratorNode {
   __documentId;
   __src;
@@ -4662,7 +4660,7 @@ function LinkPlugin({ hasLinkAttributes = false }) {
     }
   );
 }
-const EquationComponent = React.lazy(() => import("./EquationComponent-DMecV_Fo.mjs"));
+const EquationComponent = React.lazy(() => import("./EquationComponent-TF3pyeyG.mjs"));
 function $convertEquationElement(domNode) {
   let equation = domNode.getAttribute("data-lexical-equation");
   const inline = domNode.getAttribute("data-lexical-inline") === "true";
@@ -4766,7 +4764,7 @@ function $createEquationNode(equation = "", inline = false) {
 function $isEquationNode(node) {
   return node instanceof EquationNode;
 }
-const ImageComponent = React.lazy(() => import("./ImageComponent-DhRqf_q8.mjs"));
+const ImageComponent = React.lazy(() => import("./ImageComponent-LhoSPoS4.mjs"));
 function isGoogleDocCheckboxImg(img2) {
   return img2.parentElement != null && img2.parentElement.tagName === "LI" && img2.previousSibling === null && img2.getAttribute("aria-roledescription") === "checkbox";
 }
@@ -25983,7 +25981,7 @@ class FigmaNode extends DecoratorBlockNode {
 function $createFigmaNode(documentID) {
   return new FigmaNode(documentID);
 }
-const InlineImageComponent = React.lazy(() => import("./InlineImageComponent-DRfqVsV5.mjs"));
+const InlineImageComponent = React.lazy(() => import("./InlineImageComponent-D0zeedfW.mjs"));
 function $convertInlineImageElement(domNode) {
   if (isHTMLElement(domNode) && domNode.nodeName === "IMG") {
     const { alt: altText, src, width, height } = domNode;
@@ -26267,7 +26265,7 @@ function $createPageBreakNode() {
 function $isPageBreakNode(node) {
   return node instanceof PageBreakNode;
 }
-const PollComponent = React.lazy(() => import("./PollComponent-CzCHwuGv.mjs"));
+const PollComponent = React.lazy(() => import("./PollComponent-BxNjSnOt.mjs"));
 function createUID() {
   return Math.random().toString(36).replace(/[^a-z]+/g, "").slice(0, 5);
 }
@@ -26394,7 +26392,7 @@ function $createPollNode(question, options) {
 function $isPollNode(node) {
   return node instanceof PollNode;
 }
-const StickyComponent = React.lazy(() => import("./StickyComponent-LhtF3XHD.mjs"));
+const StickyComponent = React.lazy(() => import("./StickyComponent-C6gHxpab.mjs"));
 class StickyNode extends DecoratorNode {
   __x;
   __y;

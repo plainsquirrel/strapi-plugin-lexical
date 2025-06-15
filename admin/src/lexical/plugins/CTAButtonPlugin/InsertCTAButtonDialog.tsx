@@ -1,13 +1,14 @@
 import { LexicalEditor } from 'lexical';
 import { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
+import { $getNodeByKey } from 'lexical';
 
 import Button from '../../ui/Button';
 import { DialogActions } from '../../ui/Dialog';
 import TextInput from '../../ui/TextInput';
 import SimpleColorPicker from '../../ui/SimpleColorPicker';
 
-import { CTAButtonPayload } from '../../nodes/CTAButtonNode';
+import { CTAButtonPayload, $isCTAButtonNode } from '../../nodes/CTAButtonNode';
 import { INSERT_CTA_BUTTON_COMMAND } from './index';
 
 export interface InsertCTAButtonDialogProps {
@@ -38,9 +39,6 @@ export function InsertCTAButtonDialog({
       if (initialData?.nodeKey) {
         // Edit existing button
         activeEditor.update(() => {
-          const { $getNodeByKey } = require('lexical');
-          const { $isCTAButtonNode } = require('../../nodes/CTAButtonNode');
-
           const node = $getNodeByKey(initialData.nodeKey);
           if (node && $isCTAButtonNode(node)) {
             node.setTextContent(text.trim());
