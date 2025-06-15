@@ -176,19 +176,31 @@ export default function StrapiImageComponent({
 
   const $onDelete = useCallback(
     (payload: KeyboardEvent) => {
+      if (isEditingCaption) {
+        return false;
+      }
+
       const deleteSelection = $getSelection();
       if (isSelected && $isNodeSelection(deleteSelection)) {
-        const event: KeyboardEvent = payload;
-        event.preventDefault();
-        deleteSelection.getNodes().forEach((node) => {
-          if ($isImageNode(node) || $isStrapiImageNode(node)) {
-            node.remove();
-          }
-        });
+        const selectedNodes = deleteSelection.getNodes();
+        const isCurrentImageSelected = selectedNodes.some(
+          (node) => node.getKey() === nodeKey && ($isImageNode(node) || $isStrapiImageNode(node))
+        );
+
+        if (isCurrentImageSelected) {
+          const event: KeyboardEvent = payload;
+          event.preventDefault();
+          selectedNodes.forEach((node) => {
+            if ($isImageNode(node) || $isStrapiImageNode(node)) {
+              node.remove();
+            }
+          });
+          return true;
+        }
       }
       return false;
     },
-    [isSelected]
+    [isSelected, nodeKey, isEditingCaption]
   );
 
   const $onEnter = useCallback(
