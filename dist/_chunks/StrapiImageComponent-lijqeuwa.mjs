@@ -6,7 +6,7 @@ import { mergeRegister } from "@lexical/utils";
 import { $getNodeByKey, $getSelection, $isNodeSelection, $setSelection, $isRangeSelection, SELECTION_CHANGE_COMMAND, COMMAND_PRIORITY_LOW, CLICK_COMMAND, DRAGSTART_COMMAND, KEY_DELETE_COMMAND, KEY_BACKSPACE_COMMAND, KEY_ENTER_COMMAND, KEY_ESCAPE_COMMAND, createCommand } from "lexical";
 import { useRef, useState, useEffect, useCallback, Suspense } from "react";
 import { b as brokenImage } from "./image-broken-D4ACHRbi.mjs";
-import { e as $isStrapiImageNode, a as $isImageNode } from "./Input-BEQbITyc.mjs";
+import { e as $isStrapiImageNode, a as $isImageNode } from "./Input-pHAbGbg2.mjs";
 import { useIntl } from "react-intl";
 const imageCache = /* @__PURE__ */ new Set();
 const RIGHT_CLICK_STRAPI_IMAGE_COMMAND = createCommand(
@@ -124,19 +124,29 @@ function StrapiImageComponent({
   }, []);
   const $onDelete = useCallback(
     (payload) => {
+      if (isEditingCaption) {
+        return false;
+      }
       const deleteSelection = $getSelection();
       if (isSelected && $isNodeSelection(deleteSelection)) {
-        const event = payload;
-        event.preventDefault();
-        deleteSelection.getNodes().forEach((node) => {
-          if ($isImageNode(node) || $isStrapiImageNode(node)) {
-            node.remove();
-          }
-        });
+        const selectedNodes = deleteSelection.getNodes();
+        const isCurrentImageSelected = selectedNodes.some(
+          (node) => node.getKey() === nodeKey && ($isImageNode(node) || $isStrapiImageNode(node))
+        );
+        if (isCurrentImageSelected) {
+          const event = payload;
+          event.preventDefault();
+          selectedNodes.forEach((node) => {
+            if ($isImageNode(node) || $isStrapiImageNode(node)) {
+              node.remove();
+            }
+          });
+          return true;
+        }
       }
       return false;
     },
-    [isSelected]
+    [isSelected, nodeKey, isEditingCaption]
   );
   const $onEnter = useCallback(
     (event) => {

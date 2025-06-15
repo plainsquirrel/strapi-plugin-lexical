@@ -1,87 +1,66 @@
-"use strict";
-const jsxRuntime = require("react/jsx-runtime");
-const React = require("react");
-const designSystem = require("@strapi/design-system");
-const admin = require("@strapi/strapi/admin");
-const lodash = require("lodash");
-const reactIntl = require("react-intl");
-const LexicalComposer = require("@lexical/react/LexicalComposer");
-const LexicalAutoFocusPlugin = require("@lexical/react/LexicalAutoFocusPlugin");
-require("@lexical/react/LexicalCharacterLimitPlugin");
-const LexicalCheckListPlugin = require("@lexical/react/LexicalCheckListPlugin");
-const LexicalClearEditorPlugin = require("@lexical/react/LexicalClearEditorPlugin");
-const LexicalClickableLinkPlugin = require("@lexical/react/LexicalClickableLinkPlugin");
-const LexicalComposerContext = require("@lexical/react/LexicalComposerContext");
-const LexicalErrorBoundary = require("@lexical/react/LexicalErrorBoundary");
-const LexicalHashtagPlugin = require("@lexical/react/LexicalHashtagPlugin");
-const LexicalHistoryPlugin = require("@lexical/react/LexicalHistoryPlugin");
-const LexicalHorizontalRulePlugin = require("@lexical/react/LexicalHorizontalRulePlugin");
-const LexicalListPlugin = require("@lexical/react/LexicalListPlugin");
-require("@lexical/react/LexicalPlainTextPlugin");
-const LexicalRichTextPlugin = require("@lexical/react/LexicalRichTextPlugin");
-require("@lexical/react/LexicalSelectionAlwaysOnDisplay");
-const LexicalTabIndentationPlugin = require("@lexical/react/LexicalTabIndentationPlugin");
-const LexicalTablePlugin = require("@lexical/react/LexicalTablePlugin");
-const useLexicalEditable = require("@lexical/react/useLexicalEditable");
-const selection = require("@lexical/selection");
-const utils = require("@lexical/utils");
-const lexical = require("lexical");
-const LexicalAutoEmbedPlugin = require("@lexical/react/LexicalAutoEmbedPlugin");
-const ReactDOM = require("react-dom");
-const LexicalBlockWithAlignableContents = require("@lexical/react/LexicalBlockWithAlignableContents");
-const LexicalDecoratorBlockNode = require("@lexical/react/LexicalDecoratorBlockNode");
-const LexicalAutoLinkPlugin$1 = require("@lexical/react/LexicalAutoLinkPlugin");
-const code = require("@lexical/code");
-const lodashEs = require("lodash-es");
-const list = require("@lexical/list");
-const LexicalHorizontalRuleNode = require("@lexical/react/LexicalHorizontalRuleNode");
-const LexicalTypeaheadMenuPlugin = require("@lexical/react/LexicalTypeaheadMenuPlugin");
-const richText = require("@lexical/rich-text");
-const table = require("@lexical/table");
-const link = require("@lexical/link");
-require("@lexical/react/LexicalContextMenuPlugin");
-const LexicalDraggableBlockPlugin = require("@lexical/react/LexicalDraggableBlockPlugin");
-const useLexicalTextEntity = require("@lexical/react/useLexicalTextEntity");
-const LexicalLinkPlugin = require("@lexical/react/LexicalLinkPlugin");
-const LexicalMarkdownShortcutPlugin = require("@lexical/react/LexicalMarkdownShortcutPlugin");
-const markdown = require("@lexical/markdown");
-const katex = require("katex");
-const equal = require("fast-deep-equal");
-require("@lexical/react/LexicalTableOfContentsPlugin");
-require("@lexical/react/LexicalTreeView");
-const LexicalContentEditable$1 = require("@lexical/react/LexicalContentEditable");
-const hashtag = require("@lexical/hashtag");
-const mark = require("@lexical/mark");
-const overflow = require("@lexical/overflow");
-const useLexicalNodeSelection = require("@lexical/react/useLexicalNodeSelection");
-const _interopDefault = (e) => e && e.__esModule ? e : { default: e };
-function _interopNamespace(e) {
-  if (e && e.__esModule) return e;
-  const n = Object.create(null, { [Symbol.toStringTag]: { value: "Module" } });
-  if (e) {
-    for (const k in e) {
-      if (k !== "default") {
-        const d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: () => e[k]
-        });
-      }
-    }
-  }
-  n.default = e;
-  return Object.freeze(n);
-}
-const React__namespace = /* @__PURE__ */ _interopNamespace(React);
-const ReactDOM__namespace = /* @__PURE__ */ _interopNamespace(ReactDOM);
-const katex__default = /* @__PURE__ */ _interopDefault(katex);
-const equal__default = /* @__PURE__ */ _interopDefault(equal);
+import { jsx, jsxs, Fragment } from "react/jsx-runtime";
+import * as React from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef, Suspense } from "react";
+import { Modal as Modal$1, Tabs, Box, Field, Radio, Table, Tbody, Tr, Td, Typography, Button as Button$1, Flex } from "@strapi/design-system";
+import { useFetchClient, unstable_useContentManagerContext, useStrapiApp } from "@strapi/strapi/admin";
+import { debounce as debounce$2 } from "lodash";
+import { useIntl } from "react-intl";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import "@lexical/react/LexicalCharacterLimitPlugin";
+import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
+import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
+import { ClickableLinkPlugin } from "@lexical/react/LexicalClickableLinkPlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { HorizontalRulePlugin } from "@lexical/react/LexicalHorizontalRulePlugin";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import "@lexical/react/LexicalPlainTextPlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import "@lexical/react/LexicalSelectionAlwaysOnDisplay";
+import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
+import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
+import { useLexicalEditable } from "@lexical/react/useLexicalEditable";
+import { $setBlocksType, $isAtNodeEnd, $patchStyleText, $isParentElementRTL, $getSelectionStyleValueForProperty } from "@lexical/selection";
+import { $insertNodeToNearestRoot, mergeRegister, $findMatchingParent, addClassNamesToElement, $getNearestBlockElementAncestorOrThrow, calculateZoomLevel, $isEditorIsNestedEditor, $getNearestNodeOfType } from "@lexical/utils";
+import { TextNode, isDOMNode, createCommand, COMMAND_PRIORITY_EDITOR, $getNearestNodeFromDOMNode, $getSelection, $setSelection, isHTMLElement, ElementNode, $isElementNode, $createParagraphNode, DELETE_CHARACTER_COMMAND, $isRangeSelection, COMMAND_PRIORITY_LOW as COMMAND_PRIORITY_LOW$1, KEY_ARROW_DOWN_COMMAND, KEY_ARROW_RIGHT_COMMAND, KEY_ARROW_UP_COMMAND, KEY_ARROW_LEFT_COMMAND, INSERT_PARAGRAPH_COMMAND, $getNodeByKey, FORMAT_ELEMENT_COMMAND, DecoratorNode, $applyNodeReplacement, $insertNodes, DRAGSTART_COMMAND, COMMAND_PRIORITY_HIGH, DRAGOVER_COMMAND, DROP_COMMAND, $createRangeSelection, $isNodeSelection, getDOMSelectionFromTarget, PASTE_COMMAND, $createTextNode, SELECTION_CHANGE_COMMAND, COMMAND_PRIORITY_CRITICAL, CLICK_COMMAND, getDOMSelection, KEY_ESCAPE_COMMAND, $isLineBreakNode, $isTextNode, $isParagraphNode, FORMAT_TEXT_COMMAND, createEditor, KEY_MODIFIER_COMMAND, COMMAND_PRIORITY_NORMAL, INDENT_CONTENT_COMMAND, OUTDENT_CONTENT_COMMAND, FOCUS_COMMAND, $getRoot, $isRootOrShadowRoot, CAN_UNDO_COMMAND, CAN_REDO_COMMAND, UNDO_COMMAND, REDO_COMMAND, KEY_DELETE_COMMAND, KEY_BACKSPACE_COMMAND } from "lexical";
+import { LexicalAutoEmbedPlugin, AutoEmbedOption, URL_MATCHER, INSERT_EMBED_COMMAND } from "@lexical/react/LexicalAutoEmbedPlugin";
+import * as ReactDOM from "react-dom";
+import { createPortal } from "react-dom";
+import { BlockWithAlignableContents } from "@lexical/react/LexicalBlockWithAlignableContents";
+import { DecoratorBlockNode, $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
+import { createLinkMatcherWithRegExp, AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
+import { $isCodeNode, CodeNode, normalizeCodeLang, getLanguageFriendlyName, registerCodeHighlighting, $createCodeNode, $isCodeHighlightNode, CODE_LANGUAGE_MAP, CODE_LANGUAGE_FRIENDLY_NAME_MAP, CodeHighlightNode } from "@lexical/code";
+import { debounce as debounce$1 } from "lodash-es";
+import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, INSERT_CHECK_LIST_COMMAND, $isListNode, ListNode, ListItemNode } from "@lexical/list";
+import { INSERT_HORIZONTAL_RULE_COMMAND, HorizontalRuleNode, $isHorizontalRuleNode, $createHorizontalRuleNode } from "@lexical/react/LexicalHorizontalRuleNode";
+import { useBasicTypeaheadTriggerMatch, LexicalTypeaheadMenuPlugin, MenuOption } from "@lexical/react/LexicalTypeaheadMenuPlugin";
+import { $createHeadingNode, $createQuoteNode, DRAG_DROP_PASTE, $isHeadingNode, $isQuoteNode, HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { INSERT_TABLE_COMMAND, TableNode, TableRowNode, TableCellNode, $isTableNode, $isTableRowNode, $isTableCellNode, TableCellHeaderStates, $createTableNode, $createTableRowNode, $createTableCellNode, $isTableSelection, $getTableCellNodeFromLexicalNode, $getTableNodeFromLexicalNodeOrThrow, getTableElement, getTableObserverFromTableElement, $insertTableRow__EXPERIMENTAL, $insertTableColumn__EXPERIMENTAL, $deleteTableRow__EXPERIMENTAL, $deleteTableColumn__EXPERIMENTAL, $getTableRowIndexFromTableCellNode, $getTableColumnIndexFromTableCellNode, $getNodeTriplet, $unmergeCell, $computeTableMapSkipCellCheck, getDOMCellFromTarget, $getTableAndElementByKey } from "@lexical/table";
+import { $isLinkNode, TOGGLE_LINK_COMMAND, $isAutoLinkNode, $createLinkNode, AutoLinkNode, LinkNode } from "@lexical/link";
+import "@lexical/react/LexicalContextMenuPlugin";
+import { DraggableBlockPlugin_EXPERIMENTAL } from "@lexical/react/LexicalDraggableBlockPlugin";
+import { useLexicalTextEntity } from "@lexical/react/useLexicalTextEntity";
+import { LinkPlugin as LinkPlugin$1 } from "@lexical/react/LexicalLinkPlugin";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { CHECK_LIST, ELEMENT_TRANSFORMERS, MULTILINE_ELEMENT_TRANSFORMERS, TEXT_FORMAT_TRANSFORMERS, TEXT_MATCH_TRANSFORMERS, $convertToMarkdownString, $convertFromMarkdownString } from "@lexical/markdown";
+import katex from "katex";
+import equal from "fast-deep-equal";
+import "@lexical/react/LexicalTableOfContentsPlugin";
+import "@lexical/react/LexicalTreeView";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HashtagNode } from "@lexical/hashtag";
+import { MarkNode } from "@lexical/mark";
+import { OverflowNode } from "@lexical/overflow";
+import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 const CAN_USE_DOM = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
 const IS_APPLE = CAN_USE_DOM && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
 const IS_CHROME = CAN_USE_DOM && /^(?=.*Chrome).*/i.test(navigator.userAgent);
-const Context$2 = React.createContext({});
+const Context$2 = createContext({});
 const useSharedHistoryContext = () => {
-  return React.useContext(Context$2);
+  return useContext(Context$2);
 };
 const MIN_ALLOWED_FONT_SIZE = 8;
 const MAX_ALLOWED_FONT_SIZE = 72;
@@ -128,11 +107,11 @@ const INITIAL_TOOLBAR_STATE = {
   isCapitalize: false,
   rootType: "root"
 };
-const Context$1 = React.createContext(void 0);
+const Context$1 = createContext(void 0);
 const ToolbarContext = ({ children }) => {
-  const [toolbarState, setToolbarState] = React.useState(INITIAL_TOOLBAR_STATE);
+  const [toolbarState, setToolbarState] = useState(INITIAL_TOOLBAR_STATE);
   const selectionFontSize = toolbarState.fontSize;
-  const updateToolbarState = React.useCallback(
+  const updateToolbarState = useCallback(
     (key, value) => {
       setToolbarState((prev) => ({
         ...prev,
@@ -141,25 +120,25 @@ const ToolbarContext = ({ children }) => {
     },
     []
   );
-  React.useEffect(() => {
+  useEffect(() => {
     updateToolbarState("fontSizeInputValue", selectionFontSize.slice(0, -2));
   }, [selectionFontSize, updateToolbarState]);
-  const contextValue = React.useMemo(() => {
+  const contextValue = useMemo(() => {
     return {
       toolbarState,
       updateToolbarState
     };
   }, [toolbarState, updateToolbarState]);
-  return /* @__PURE__ */ jsxRuntime.jsx(Context$1.Provider, { value: contextValue, children });
+  return /* @__PURE__ */ jsx(Context$1.Provider, { value: contextValue, children });
 };
 const useToolbarState = () => {
-  const context = React.useContext(Context$1);
+  const context = useContext(Context$1);
   if (context === void 0) {
     throw new Error("useToolbarState must be used within a ToolbarProvider");
   }
   return context;
 };
-class AutocompleteNode extends lexical.TextNode {
+class AutocompleteNode extends TextNode {
   /**
    * A unique uuid is generated for each session and assigned to the instance.
    * This helps to:
@@ -218,14 +197,14 @@ function PortalImpl({
   title,
   closeOnClickOutside
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  const modalRef = React.useRef(null);
-  React.useEffect(() => {
+  const { formatMessage } = useIntl();
+  const modalRef = useRef(null);
+  useEffect(() => {
     if (modalRef.current !== null) {
       modalRef.current.focus();
     }
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     let modalOverlayElement = null;
     const handler = (event) => {
       if (event.key === "Escape") {
@@ -234,7 +213,7 @@ function PortalImpl({
     };
     const clickOutsideHandler = (event) => {
       const target = event.target;
-      if (modalRef.current !== null && lexical.isDOMNode(target) && !modalRef.current.contains(target) && closeOnClickOutside) {
+      if (modalRef.current !== null && isDOMNode(target) && !modalRef.current.contains(target) && closeOnClickOutside) {
         onClose();
       }
     };
@@ -253,7 +232,7 @@ function PortalImpl({
       }
     };
   }, [closeOnClickOutside, onClose]);
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(
     "div",
     {
       className: "Modal__overlay",
@@ -262,9 +241,9 @@ function PortalImpl({
         id: "lexical.ui.modal.dialog.aria",
         defaultMessage: "Modal dialog"
       }),
-      children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "Modal__modal", tabIndex: -1, ref: modalRef, children: [
-        /* @__PURE__ */ jsxRuntime.jsx("h2", { className: "Modal__title", children: title }),
-        /* @__PURE__ */ jsxRuntime.jsx(
+      children: /* @__PURE__ */ jsxs("div", { className: "Modal__modal", tabIndex: -1, ref: modalRef, children: [
+        /* @__PURE__ */ jsx("h2", { className: "Modal__title", children: title }),
+        /* @__PURE__ */ jsx(
           "button",
           {
             className: "Modal__closeButton",
@@ -277,7 +256,7 @@ function PortalImpl({
             children: "X"
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsx("div", { className: "Modal__content", children })
+        /* @__PURE__ */ jsx("div", { className: "Modal__content", children })
       ] })
     }
   );
@@ -288,24 +267,24 @@ function Modal({
   title,
   closeOnClickOutside = false
 }) {
-  return ReactDOM.createPortal(
-    /* @__PURE__ */ jsxRuntime.jsx(PortalImpl, { onClose, title, closeOnClickOutside, children }),
+  return createPortal(
+    /* @__PURE__ */ jsx(PortalImpl, { onClose, title, closeOnClickOutside, children }),
     document.body
   );
 }
 function useModal() {
-  const [modalContent, setModalContent] = React.useState(null);
-  const onClose = React.useCallback(() => {
+  const [modalContent, setModalContent] = useState(null);
+  const onClose = useCallback(() => {
     setModalContent(null);
   }, []);
-  const modal = React.useMemo(() => {
+  const modal = useMemo(() => {
     if (modalContent === null) {
       return null;
     }
     const { title, content, closeOnClickOutside } = modalContent;
-    return /* @__PURE__ */ jsxRuntime.jsx(Modal, { onClose, title, closeOnClickOutside, children: content });
+    return /* @__PURE__ */ jsx(Modal, { onClose, title, closeOnClickOutside, children: content });
   }, [modalContent, onClose]);
-  const showModal = React.useCallback(
+  const showModal = useCallback(
     (title, getContent, closeOnClickOutside = false) => {
       setModalContent({
         closeOnClickOutside,
@@ -329,7 +308,7 @@ function Button({
   small,
   title
 }) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(
     "button",
     {
       disabled,
@@ -348,11 +327,11 @@ function Button({
   );
 }
 function DialogActions({ "data-test-id": dataTestId, children }) {
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "DialogActions", "data-test-id": dataTestId, children });
+  return /* @__PURE__ */ jsx("div", { className: "DialogActions", "data-test-id": dataTestId, children });
 }
 function YouTubeComponent({ className, format, nodeKey, videoID }) {
-  const { formatMessage } = reactIntl.useIntl();
-  return /* @__PURE__ */ jsxRuntime.jsx(LexicalBlockWithAlignableContents.BlockWithAlignableContents, { className, format, nodeKey, children: /* @__PURE__ */ jsxRuntime.jsx(
+  const { formatMessage } = useIntl();
+  return /* @__PURE__ */ jsx(BlockWithAlignableContents, { className, format, nodeKey, children: /* @__PURE__ */ jsx(
     "iframe",
     {
       width: "560",
@@ -376,7 +355,7 @@ function $convertYoutubeElement(domNode) {
   }
   return null;
 }
-class YouTubeNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
+class YouTubeNode extends DecoratorBlockNode {
   __id;
   static getType() {
     return "youtube";
@@ -440,7 +419,7 @@ class YouTubeNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
       base: embedBlockTheme.base || "",
       focus: embedBlockTheme.focus || ""
     };
-    return /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(
       YouTubeComponent,
       {
         className,
@@ -454,10 +433,10 @@ class YouTubeNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
 function $createYouTubeNode(videoID) {
   return new YouTubeNode(videoID);
 }
-const INSERT_YOUTUBE_COMMAND = lexical.createCommand("INSERT_YOUTUBE_COMMAND");
+const INSERT_YOUTUBE_COMMAND = createCommand("INSERT_YOUTUBE_COMMAND");
 function YouTubePlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
     if (!editor.hasNodes([YouTubeNode])) {
       throw new Error("YouTubePlugin: YouTubeNode not registered on editor");
     }
@@ -465,10 +444,10 @@ function YouTubePlugin() {
       INSERT_YOUTUBE_COMMAND,
       (payload) => {
         const youTubeNode = $createYouTubeNode(payload);
-        utils.$insertNodeToNearestRoot(youTubeNode);
+        $insertNodeToNearestRoot(youTubeNode);
         return true;
       },
-      lexical.COMMAND_PRIORITY_EDITOR
+      COMMAND_PRIORITY_EDITOR
     );
   }, [editor]);
   return null;
@@ -477,7 +456,7 @@ const YoutubeEmbedConfig = {
   contentName: "Youtube Video",
   exampleUrl: "https://www.youtube.com/watch?v=jNQXAC9IVRw",
   // Icon for display.
-  icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon youtube" }),
+  icon: /* @__PURE__ */ jsx("i", { className: "icon youtube" }),
   insertNode: (editor, result) => {
     editor.dispatchCommand(INSERT_YOUTUBE_COMMAND, result.id);
   },
@@ -508,7 +487,7 @@ function AutoEmbedMenuItem({
   if (isSelected) {
     className += " selected";
   }
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(
     "li",
     {
       tabIndex: -1,
@@ -519,7 +498,7 @@ function AutoEmbedMenuItem({
       id: "typeahead-item-" + index,
       onMouseEnter,
       onClick,
-      children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: option.title })
+      children: /* @__PURE__ */ jsx("span", { className: "text", children: option.title })
     },
     option.key
   );
@@ -530,7 +509,7 @@ function AutoEmbedMenu({
   onOptionClick,
   onOptionMouseEnter
 }) {
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "typeahead-popover", children: /* @__PURE__ */ jsxRuntime.jsx("ul", { children: options.map((option, i) => /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx("div", { className: "typeahead-popover", children: /* @__PURE__ */ jsx("ul", { children: options.map((option, i) => /* @__PURE__ */ jsx(
     AutoEmbedMenuItem,
     {
       index: i,
@@ -555,13 +534,13 @@ function AutoEmbedDialog({
   embedConfig,
   onClose
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  const [text, setText] = React.useState("");
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const [embedResult, setEmbedResult] = React.useState(null);
-  const validateText = React.useMemo(
+  const { formatMessage } = useIntl();
+  const [text, setText] = useState("");
+  const [editor] = useLexicalComposerContext();
+  const [embedResult, setEmbedResult] = useState(null);
+  const validateText = useMemo(
     () => debounce((inputText) => {
-      const urlMatch = LexicalAutoEmbedPlugin.URL_MATCHER.exec(inputText);
+      const urlMatch = URL_MATCHER.exec(inputText);
       if (embedConfig != null && inputText != null && urlMatch != null) {
         Promise.resolve(embedConfig.parseUrl(inputText)).then((parseResult) => {
           setEmbedResult(parseResult);
@@ -578,8 +557,8 @@ function AutoEmbedDialog({
       onClose();
     }
   };
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { width: "600px" }, children: [
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "Input__wrapper", children: /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs("div", { style: { width: "600px" }, children: [
+    /* @__PURE__ */ jsx("div", { className: "Input__wrapper", children: /* @__PURE__ */ jsx(
       "input",
       {
         type: "text",
@@ -594,7 +573,7 @@ function AutoEmbedDialog({
         }
       }
     ) }),
-    /* @__PURE__ */ jsxRuntime.jsx(DialogActions, { children: /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(DialogActions, { children: /* @__PURE__ */ jsx(
       Button,
       {
         disabled: !embedResult,
@@ -607,23 +586,23 @@ function AutoEmbedDialog({
 }
 function AutoEmbedPlugin() {
   const [modal, showModal] = useModal();
-  const { formatMessage } = reactIntl.useIntl();
+  const { formatMessage } = useIntl();
   const openEmbedModal = (embedConfig) => {
     showModal(
       formatMessage(
         { id: "lexical.plugin.embed.modal.title", defaultMessage: "Embed {contentType}" },
         { contentType: embedConfig.contentName }
       ),
-      (onClose) => /* @__PURE__ */ jsxRuntime.jsx(AutoEmbedDialog, { embedConfig, onClose })
+      (onClose) => /* @__PURE__ */ jsx(AutoEmbedDialog, { embedConfig, onClose })
     );
   };
   const getMenuOptions = (activeEmbedConfig, embedFn, dismissFn) => {
     return [
-      new LexicalAutoEmbedPlugin.AutoEmbedOption(
+      new AutoEmbedOption(
         formatMessage({ id: "lexical.plugin.embed.menu.dismiss", defaultMessage: "Dismiss" }),
         { onSelect: dismissFn }
       ),
-      new LexicalAutoEmbedPlugin.AutoEmbedOption(
+      new AutoEmbedOption(
         formatMessage(
           { id: "lexical.plugin.embed.menu.embed", defaultMessage: "Embed {contentType}" },
           { contentType: activeEmbedConfig.contentName }
@@ -632,16 +611,16 @@ function AutoEmbedPlugin() {
       )
     ];
   };
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
     modal,
-    /* @__PURE__ */ jsxRuntime.jsx(
-      LexicalAutoEmbedPlugin.LexicalAutoEmbedPlugin,
+    /* @__PURE__ */ jsx(
+      LexicalAutoEmbedPlugin,
       {
         embedConfigs: EmbedConfigs,
         onOpenEmbedModalForConfig: openEmbedModal,
         getMenuOptions,
-        menuRenderFn: (anchorElementRef, { selectedIndex, options, selectOptionAndCleanUp, setHighlightedIndex }) => anchorElementRef.current ? ReactDOM__namespace.createPortal(
-          /* @__PURE__ */ jsxRuntime.jsx(
+        menuRenderFn: (anchorElementRef, { selectedIndex, options, selectOptionAndCleanUp, setHighlightedIndex }) => anchorElementRef.current ? ReactDOM.createPortal(
+          /* @__PURE__ */ jsx(
             "div",
             {
               className: "typeahead-popover auto-embed-menu",
@@ -652,7 +631,7 @@ function AutoEmbedPlugin() {
                 )}px`,
                 width: 200
               },
-              children: /* @__PURE__ */ jsxRuntime.jsx(
+              children: /* @__PURE__ */ jsx(
                 AutoEmbedMenu,
                 {
                   options,
@@ -677,21 +656,21 @@ function AutoEmbedPlugin() {
 const URL_REGEX = /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)(?<![-.+():%])/;
 const EMAIL_REGEX = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
 const MATCHERS = [
-  LexicalAutoLinkPlugin$1.createLinkMatcherWithRegExp(URL_REGEX, (text) => {
+  createLinkMatcherWithRegExp(URL_REGEX, (text) => {
     return text.startsWith("http") ? text : `https://${text}`;
   }),
-  LexicalAutoLinkPlugin$1.createLinkMatcherWithRegExp(EMAIL_REGEX, (text) => {
+  createLinkMatcherWithRegExp(EMAIL_REGEX, (text) => {
     return `mailto:${text}`;
   })
 ];
 function LexicalAutoLinkPlugin() {
-  return /* @__PURE__ */ jsxRuntime.jsx(LexicalAutoLinkPlugin$1.AutoLinkPlugin, { matchers: MATCHERS });
+  return /* @__PURE__ */ jsx(AutoLinkPlugin, { matchers: MATCHERS });
 }
 function useDebounce(fn, ms, maxWait) {
-  const funcRef = React.useRef(null);
+  const funcRef = useRef(null);
   funcRef.current = fn;
-  const debounceFn = React.useMemo(
-    () => lodashEs.debounce(
+  const debounceFn = useMemo(
+    () => debounce$1(
       (...args) => {
         if (funcRef.current) {
           funcRef.current(...args);
@@ -702,7 +681,7 @@ function useDebounce(fn, ms, maxWait) {
     ),
     [ms, maxWait]
   );
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       debounceFn.cancel();
     };
@@ -710,7 +689,7 @@ function useDebounce(fn, ms, maxWait) {
   return debounceFn;
 }
 function CopyButton({ editor, getCodeDOMNode }) {
-  const [isCopyCompleted, setCopyCompleted] = React.useState(false);
+  const [isCopyCompleted, setCopyCompleted] = useState(false);
   const removeSuccessIcon = useDebounce(() => {
     setCopyCompleted(false);
   }, 1e3);
@@ -721,12 +700,12 @@ function CopyButton({ editor, getCodeDOMNode }) {
     }
     let content = "";
     editor.update(() => {
-      const codeNode = lexical.$getNearestNodeFromDOMNode(codeDOMNode);
-      if (code.$isCodeNode(codeNode)) {
+      const codeNode = $getNearestNodeFromDOMNode(codeDOMNode);
+      if ($isCodeNode(codeNode)) {
         content = codeNode.getTextContent();
       }
-      const selection2 = lexical.$getSelection();
-      lexical.$setSelection(selection2);
+      const selection = $getSelection();
+      $setSelection(selection);
     });
     try {
       await navigator.clipboard.writeText(content);
@@ -736,14 +715,14 @@ function CopyButton({ editor, getCodeDOMNode }) {
       console.error("Failed to copy: ", err);
     }
   }
-  return /* @__PURE__ */ jsxRuntime.jsx("button", { className: "menu-item", onClick: handleClick, "aria-label": "copy", children: isCopyCompleted ? /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format success" }) : /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format copy" }) });
+  return /* @__PURE__ */ jsx("button", { className: "menu-item", onClick: handleClick, "aria-label": "copy", children: isCopyCompleted ? /* @__PURE__ */ jsx("i", { className: "format success" }) : /* @__PURE__ */ jsx("i", { className: "format copy" }) });
 }
 const PRETTIER_PARSER_MODULES = {
-  css: [() => Promise.resolve().then(() => require("./postcss-BuUsxkkO.js")).then((n) => n.postcss)],
-  html: [() => Promise.resolve().then(() => require("./html-CGlKon-k.js")).then((n) => n.html)],
-  js: [() => Promise.resolve().then(() => require("./babel-DPZlFoCm.js")).then((n) => n.babel), () => Promise.resolve().then(() => require("./estree-BN5paFI9.js"))],
-  markdown: [() => Promise.resolve().then(() => require("./markdown-DVqKfkek.js")).then((n) => n.markdown)],
-  typescript: [() => Promise.resolve().then(() => require("./typescript-DhvJmnKO.js")).then((n) => n.typescript), () => Promise.resolve().then(() => require("./estree-BN5paFI9.js"))]
+  css: [() => import("./postcss-DUqfG6Pc.mjs").then((n) => n.p)],
+  html: [() => import("./html-BMSb5nB6.mjs").then((n) => n.h)],
+  js: [() => import("./babel-DV0Pfq_z.mjs").then((n) => n.b), () => import("./estree-Dk9kN1_v.mjs")],
+  markdown: [() => import("./markdown-C7rGhpmz.mjs").then((n) => n.m)],
+  typescript: [() => import("./typescript-BvcGaO7_.mjs").then((n) => n.t), () => import("./estree-Dk9kN1_v.mjs")]
 };
 async function loadPrettierParserByLang(lang) {
   const dynamicImports = PRETTIER_PARSER_MODULES[lang];
@@ -751,7 +730,7 @@ async function loadPrettierParserByLang(lang) {
   return modules;
 }
 async function loadPrettierFormat() {
-  const { format } = await Promise.resolve().then(() => require("./standalone-CP_4WDCP.js"));
+  const { format } = await import("./standalone-E6x887iW.mjs");
   return format;
 }
 const PRETTIER_OPTIONS_BY_LANG = {
@@ -773,8 +752,8 @@ function getPrettierOptions(lang) {
   return options;
 }
 function PrettierButton({ lang, editor, getCodeDOMNode }) {
-  const [syntaxError, setSyntaxError] = React.useState("");
-  const [tipsVisible, setTipsVisible] = React.useState(false);
+  const [syntaxError, setSyntaxError] = useState("");
+  const [tipsVisible, setTipsVisible] = useState(false);
   async function handleClick() {
     const codeDOMNode = getCodeDOMNode();
     if (!codeDOMNode) {
@@ -782,8 +761,8 @@ function PrettierButton({ lang, editor, getCodeDOMNode }) {
     }
     let content = "";
     editor.update(() => {
-      const codeNode = lexical.$getNearestNodeFromDOMNode(codeDOMNode);
-      if (code.$isCodeNode(codeNode)) {
+      const codeNode = $getNearestNodeFromDOMNode(codeDOMNode);
+      if ($isCodeNode(codeNode)) {
         content = codeNode.getTextContent();
       }
     });
@@ -797,10 +776,10 @@ function PrettierButton({ lang, editor, getCodeDOMNode }) {
       options.plugins = prettierParsers.map((parser) => parser.default || parser);
       const formattedCode = await format(content, options);
       editor.update(() => {
-        const codeNode = lexical.$getNearestNodeFromDOMNode(codeDOMNode);
-        if (code.$isCodeNode(codeNode)) {
-          const selection2 = codeNode.select(0);
-          selection2.insertText(formattedCode);
+        const codeNode = $getNearestNodeFromDOMNode(codeDOMNode);
+        if ($isCodeNode(codeNode)) {
+          const selection = codeNode.select(0);
+          selection.insertText(formattedCode);
           setSyntaxError("");
           setTipsVisible(false);
         }
@@ -827,8 +806,8 @@ function PrettierButton({ lang, editor, getCodeDOMNode }) {
       setTipsVisible(false);
     }
   }
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "prettier-wrapper", children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs("div", { className: "prettier-wrapper", children: [
+    /* @__PURE__ */ jsx(
       "button",
       {
         className: "menu-item",
@@ -836,24 +815,24 @@ function PrettierButton({ lang, editor, getCodeDOMNode }) {
         onMouseEnter: handleMouseEnter,
         onMouseLeave: handleMouseLeave,
         "aria-label": "prettier",
-        children: syntaxError ? /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format prettier-error" }) : /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format prettier" })
+        children: syntaxError ? /* @__PURE__ */ jsx("i", { className: "format prettier-error" }) : /* @__PURE__ */ jsx("i", { className: "format prettier" })
       }
     ),
-    tipsVisible ? /* @__PURE__ */ jsxRuntime.jsx("pre", { className: "code-error-tips", children: syntaxError }) : null
+    tipsVisible ? /* @__PURE__ */ jsx("pre", { className: "code-error-tips", children: syntaxError }) : null
   ] });
 }
 const CODE_PADDING = 8;
 function CodeActionMenuContainer({ anchorElem }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const [lang, setLang] = React.useState("");
-  const [isShown, setShown] = React.useState(false);
-  const [shouldListenMouseMove, setShouldListenMouseMove] = React.useState(false);
-  const [position, setPosition] = React.useState({
+  const [editor] = useLexicalComposerContext();
+  const [lang, setLang] = useState("");
+  const [isShown, setShown] = useState(false);
+  const [shouldListenMouseMove, setShouldListenMouseMove] = useState(false);
+  const [position, setPosition] = useState({
     right: "0",
     top: "0"
   });
-  const codeSetRef = React.useRef(/* @__PURE__ */ new Set());
-  const codeDOMNodeRef = React.useRef(null);
+  const codeSetRef = useRef(/* @__PURE__ */ new Set());
+  const codeDOMNodeRef = useRef(null);
   function getCodeDOMNode() {
     return codeDOMNodeRef.current;
   }
@@ -871,8 +850,8 @@ function CodeActionMenuContainer({ anchorElem }) {
       let codeNode = null;
       let _lang = "";
       editor.update(() => {
-        const maybeCodeNode = lexical.$getNearestNodeFromDOMNode(codeDOMNode);
-        if (code.$isCodeNode(maybeCodeNode)) {
+        const maybeCodeNode = $getNearestNodeFromDOMNode(codeDOMNode);
+        if ($isCodeNode(maybeCodeNode)) {
           codeNode = maybeCodeNode;
           _lang = codeNode.getLanguage() || "";
         }
@@ -891,7 +870,7 @@ function CodeActionMenuContainer({ anchorElem }) {
     50,
     1e3
   );
-  React.useEffect(() => {
+  useEffect(() => {
     if (!shouldListenMouseMove) {
       return;
     }
@@ -902,9 +881,9 @@ function CodeActionMenuContainer({ anchorElem }) {
       document.removeEventListener("mousemove", debouncedOnMouseMove);
     };
   }, [shouldListenMouseMove, debouncedOnMouseMove]);
-  React.useEffect(() => {
+  useEffect(() => {
     return editor.registerMutationListener(
-      code.CodeNode,
+      CodeNode,
       (mutations) => {
         editor.getEditorState().read(() => {
           for (const [key, type] of mutations) {
@@ -923,17 +902,17 @@ function CodeActionMenuContainer({ anchorElem }) {
       { skipInitialization: false }
     );
   }, [editor]);
-  const normalizedLang = code.normalizeCodeLang(lang);
-  const codeFriendlyName = code.getLanguageFriendlyName(lang);
-  return /* @__PURE__ */ jsxRuntime.jsx(jsxRuntime.Fragment, { children: isShown ? /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "code-action-menu-container", style: { ...position }, children: [
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "code-highlight-language", children: codeFriendlyName }),
-    /* @__PURE__ */ jsxRuntime.jsx(CopyButton, { editor, getCodeDOMNode }),
-    canBePrettier(normalizedLang) ? /* @__PURE__ */ jsxRuntime.jsx(PrettierButton, { editor, getCodeDOMNode, lang: normalizedLang }) : null
+  const normalizedLang = normalizeCodeLang(lang);
+  const codeFriendlyName = getLanguageFriendlyName(lang);
+  return /* @__PURE__ */ jsx(Fragment, { children: isShown ? /* @__PURE__ */ jsxs("div", { className: "code-action-menu-container", style: { ...position }, children: [
+    /* @__PURE__ */ jsx("div", { className: "code-highlight-language", children: codeFriendlyName }),
+    /* @__PURE__ */ jsx(CopyButton, { editor, getCodeDOMNode }),
+    canBePrettier(normalizedLang) ? /* @__PURE__ */ jsx(PrettierButton, { editor, getCodeDOMNode, lang: normalizedLang }) : null
   ] }) : null });
 }
 function getMouseInfo$1(event) {
   const target = event.target;
-  if (lexical.isHTMLElement(target)) {
+  if (isHTMLElement(target)) {
     const codeDOMNode = target.closest("code.PlaygroundEditorTheme__code");
     const isOutside = !(codeDOMNode || target.closest("div.code-action-menu-container"));
     return { codeDOMNode, isOutside };
@@ -944,12 +923,12 @@ function getMouseInfo$1(event) {
 function CodeActionMenuPlugin({
   anchorElem = document.body
 }) {
-  return ReactDOM.createPortal(/* @__PURE__ */ jsxRuntime.jsx(CodeActionMenuContainer, { anchorElem }), anchorElem);
+  return createPortal(/* @__PURE__ */ jsx(CodeActionMenuContainer, { anchorElem }), anchorElem);
 }
 function CodeHighlightPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
-    return code.registerCodeHighlighting(editor);
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
+    return registerCodeHighlighting(editor);
   }, [editor]);
   return null;
 }
@@ -974,7 +953,7 @@ function $convertDetailsElement(domNode) {
     node
   };
 }
-class CollapsibleContainerNode extends lexical.ElementNode {
+class CollapsibleContainerNode extends ElementNode {
   __open;
   constructor(open, key) {
     super(key);
@@ -1010,7 +989,7 @@ class CollapsibleContainerNode extends lexical.ElementNode {
     if (prevNode.__open !== currentOpen) {
       if (IS_CHROME) {
         const contentDom = dom.children[1];
-        invariant(lexical.isHTMLElement(contentDom), "Expected contentDom to be an HTMLElement");
+        invariant(isHTMLElement(contentDom), "Expected contentDom to be an HTMLElement");
         if (currentOpen) {
           dom.setAttribute("open", "");
           contentDom.hidden = false;
@@ -1072,7 +1051,7 @@ function $convertCollapsibleContentElement(domNode) {
     node
   };
 }
-class CollapsibleContentNode extends lexical.ElementNode {
+class CollapsibleContentNode extends ElementNode {
   static getType() {
     return "collapsible-content";
   }
@@ -1149,7 +1128,7 @@ function $convertSummaryElement(domNode) {
     node
   };
 }
-class CollapsibleTitleNode extends lexical.ElementNode {
+class CollapsibleTitleNode extends ElementNode {
   static getType() {
     return "collapsible-title";
   }
@@ -1212,15 +1191,15 @@ class CollapsibleTitleNode extends lexical.ElementNode {
         throw new Error("CollapsibleTitleNode expects to have CollapsibleContentNode sibling");
       }
       const firstChild = contentNode.getFirstChild();
-      if (lexical.$isElementNode(firstChild)) {
+      if ($isElementNode(firstChild)) {
         return firstChild;
       } else {
-        const paragraph = lexical.$createParagraphNode();
+        const paragraph = $createParagraphNode();
         contentNode.append(paragraph);
         return paragraph;
       }
     } else {
-      const paragraph = lexical.$createParagraphNode();
+      const paragraph = $createParagraphNode();
       containerNode.insertAfter(paragraph, restoreSelection);
       return paragraph;
     }
@@ -1232,36 +1211,36 @@ function $createCollapsibleTitleNode() {
 function $isCollapsibleTitleNode(node) {
   return node instanceof CollapsibleTitleNode;
 }
-const INSERT_COLLAPSIBLE_COMMAND = lexical.createCommand();
+const INSERT_COLLAPSIBLE_COMMAND = createCommand();
 function CollapsiblePlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
     if (!editor.hasNodes([CollapsibleContainerNode, CollapsibleTitleNode, CollapsibleContentNode])) {
       throw new Error(
         "CollapsiblePlugin: CollapsibleContainerNode, CollapsibleTitleNode, or CollapsibleContentNode not registered on editor"
       );
     }
     const $onEscapeUp = () => {
-      const selection2 = lexical.$getSelection();
-      if (lexical.$isRangeSelection(selection2) && selection2.isCollapsed() && selection2.anchor.offset === 0) {
-        const container = utils.$findMatchingParent(
-          selection2.anchor.getNode(),
+      const selection = $getSelection();
+      if ($isRangeSelection(selection) && selection.isCollapsed() && selection.anchor.offset === 0) {
+        const container = $findMatchingParent(
+          selection.anchor.getNode(),
           $isCollapsibleContainerNode
         );
         if ($isCollapsibleContainerNode(container)) {
           const parent = container.getParent();
-          if (parent !== null && parent.getFirstChild() === container && selection2.anchor.key === container.getFirstDescendant()?.getKey()) {
-            container.insertBefore(lexical.$createParagraphNode());
+          if (parent !== null && parent.getFirstChild() === container && selection.anchor.key === container.getFirstDescendant()?.getKey()) {
+            container.insertBefore($createParagraphNode());
           }
         }
       }
       return false;
     };
     const $onEscapeDown = () => {
-      const selection2 = lexical.$getSelection();
-      if (lexical.$isRangeSelection(selection2) && selection2.isCollapsed()) {
-        const container = utils.$findMatchingParent(
-          selection2.anchor.getNode(),
+      const selection = $getSelection();
+      if ($isRangeSelection(selection) && selection.isCollapsed()) {
+        const container = $findMatchingParent(
+          selection.anchor.getNode(),
           $isCollapsibleContainerNode
         );
         if ($isCollapsibleContainerNode(container)) {
@@ -1269,15 +1248,15 @@ function CollapsiblePlugin() {
           if (parent !== null && parent.getLastChild() === container) {
             const titleParagraph = container.getFirstDescendant();
             const contentParagraph = container.getLastDescendant();
-            if (contentParagraph !== null && selection2.anchor.key === contentParagraph.getKey() && selection2.anchor.offset === contentParagraph.getTextContentSize() || titleParagraph !== null && selection2.anchor.key === titleParagraph.getKey() && selection2.anchor.offset === titleParagraph.getTextContentSize()) {
-              container.insertAfter(lexical.$createParagraphNode());
+            if (contentParagraph !== null && selection.anchor.key === contentParagraph.getKey() && selection.anchor.offset === contentParagraph.getTextContentSize() || titleParagraph !== null && selection.anchor.key === titleParagraph.getKey() && selection.anchor.offset === titleParagraph.getTextContentSize()) {
+              container.insertAfter($createParagraphNode());
             }
           }
         }
       }
       return false;
     };
-    return utils.mergeRegister(
+    return mergeRegister(
       // Structure enforcing transformers for each node type. In case nesting structure is not
       // "Container > Title + Content" it'll unwrap nodes and convert it back
       // to regular content.
@@ -1294,7 +1273,7 @@ function CollapsiblePlugin() {
       editor.registerNodeTransform(CollapsibleTitleNode, (node) => {
         const parent = node.getParent();
         if (!$isCollapsibleContainerNode(parent)) {
-          node.replace(lexical.$createParagraphNode().append(...node.getChildren()));
+          node.replace($createParagraphNode().append(...node.getChildren()));
           return;
         }
       }),
@@ -1312,13 +1291,13 @@ function CollapsiblePlugin() {
       // swallows it when deletes single char). Instead we expand container, which is although
       // not perfect, but avoids bigger problem
       editor.registerCommand(
-        lexical.DELETE_CHARACTER_COMMAND,
+        DELETE_CHARACTER_COMMAND,
         () => {
-          const selection2 = lexical.$getSelection();
-          if (!lexical.$isRangeSelection(selection2) || !selection2.isCollapsed() || selection2.anchor.offset !== 0) {
+          const selection = $getSelection();
+          if (!$isRangeSelection(selection) || !selection.isCollapsed() || selection.anchor.offset !== 0) {
             return false;
           }
-          const anchorNode = selection2.anchor.getNode();
+          const anchorNode = selection.anchor.getNode();
           const topLevelElement = anchorNode.getTopLevelElement();
           if (topLevelElement === null) {
             return false;
@@ -1330,28 +1309,28 @@ function CollapsiblePlugin() {
           container.setOpen(true);
           return true;
         },
-        lexical.COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW$1
       ),
       // When collapsible is the last child pressing down/right arrow will insert paragraph
       // below it to allow adding more content. It's similar what $insertBlockNode
       // (mainly for decorators), except it'll always be possible to continue adding
       // new content even if trailing paragraph is accidentally deleted
-      editor.registerCommand(lexical.KEY_ARROW_DOWN_COMMAND, $onEscapeDown, lexical.COMMAND_PRIORITY_LOW),
-      editor.registerCommand(lexical.KEY_ARROW_RIGHT_COMMAND, $onEscapeDown, lexical.COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_ARROW_DOWN_COMMAND, $onEscapeDown, COMMAND_PRIORITY_LOW$1),
+      editor.registerCommand(KEY_ARROW_RIGHT_COMMAND, $onEscapeDown, COMMAND_PRIORITY_LOW$1),
       // When collapsible is the first child pressing up/left arrow will insert paragraph
       // above it to allow adding more content. It's similar what $insertBlockNode
       // (mainly for decorators), except it'll always be possible to continue adding
       // new content even if leading paragraph is accidentally deleted
-      editor.registerCommand(lexical.KEY_ARROW_UP_COMMAND, $onEscapeUp, lexical.COMMAND_PRIORITY_LOW),
-      editor.registerCommand(lexical.KEY_ARROW_LEFT_COMMAND, $onEscapeUp, lexical.COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_ARROW_UP_COMMAND, $onEscapeUp, COMMAND_PRIORITY_LOW$1),
+      editor.registerCommand(KEY_ARROW_LEFT_COMMAND, $onEscapeUp, COMMAND_PRIORITY_LOW$1),
       // Enter goes from Title to Content rather than a new line inside Title
       editor.registerCommand(
-        lexical.INSERT_PARAGRAPH_COMMAND,
+        INSERT_PARAGRAPH_COMMAND,
         () => {
-          const selection2 = lexical.$getSelection();
-          if (lexical.$isRangeSelection(selection2)) {
-            const titleNode = utils.$findMatchingParent(
-              selection2.anchor.getNode(),
+          const selection = $getSelection();
+          if ($isRangeSelection(selection)) {
+            const titleNode = $findMatchingParent(
+              selection.anchor.getNode(),
               (node) => $isCollapsibleTitleNode(node)
             );
             if ($isCollapsibleTitleNode(titleNode)) {
@@ -1367,25 +1346,25 @@ function CollapsiblePlugin() {
           }
           return false;
         },
-        lexical.COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW$1
       ),
       editor.registerCommand(
         INSERT_COLLAPSIBLE_COMMAND,
         () => {
           editor.update(() => {
             const title = $createCollapsibleTitleNode();
-            const paragraph = lexical.$createParagraphNode();
-            utils.$insertNodeToNearestRoot(
+            const paragraph = $createParagraphNode();
+            $insertNodeToNearestRoot(
               $createCollapsibleContainerNode(true).append(
                 title.append(paragraph),
-                $createCollapsibleContentNode().append(lexical.$createParagraphNode())
+                $createCollapsibleContentNode().append($createParagraphNode())
               )
             );
             paragraph.select();
           });
           return true;
         },
-        lexical.COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW$1
       )
     );
   }, [editor]);
@@ -1399,9 +1378,9 @@ function TextInput({
   "data-test-id": dataTestId,
   type = "text"
 }) {
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "Input__wrapper", children: [
-    /* @__PURE__ */ jsxRuntime.jsx("label", { className: "Input__label", children: label }),
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs("div", { className: "Input__wrapper", children: [
+    /* @__PURE__ */ jsx("label", { className: "Input__label", children: label }),
+    /* @__PURE__ */ jsx(
       "input",
       {
         type,
@@ -1443,8 +1422,8 @@ const PRESET_COLORS$1 = [
   // Black
 ];
 function SimpleColorPicker({ color, onChange, label }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [customColor, setCustomColor] = React.useState(color);
+  const [isOpen, setIsOpen] = useState(false);
+  const [customColor, setCustomColor] = useState(color);
   const handleColorSelect = (selectedColor) => {
     onChange(selectedColor);
     setCustomColor(selectedColor);
@@ -1455,10 +1434,10 @@ function SimpleColorPicker({ color, onChange, label }) {
     setCustomColor(newColor);
     onChange(newColor);
   };
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "simple-color-picker", children: [
-    label && /* @__PURE__ */ jsxRuntime.jsx("label", { className: "simple-color-picker__label", children: label }),
-    /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "simple-color-picker__container", children: [
-      /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs("div", { className: "simple-color-picker", children: [
+    label && /* @__PURE__ */ jsx("label", { className: "simple-color-picker__label", children: label }),
+    /* @__PURE__ */ jsxs("div", { className: "simple-color-picker__container", children: [
+      /* @__PURE__ */ jsx(
         "button",
         {
           type: "button",
@@ -1466,11 +1445,11 @@ function SimpleColorPicker({ color, onChange, label }) {
           onClick: () => setIsOpen(!isOpen),
           style: { backgroundColor: color },
           "aria-label": "Select color",
-          children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "simple-color-picker__preview", style: { backgroundColor: color } })
+          children: /* @__PURE__ */ jsx("span", { className: "simple-color-picker__preview", style: { backgroundColor: color } })
         }
       ),
-      isOpen && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "simple-color-picker__dropdown", children: [
-        /* @__PURE__ */ jsxRuntime.jsx("div", { className: "simple-color-picker__presets", children: PRESET_COLORS$1.map((presetColor) => /* @__PURE__ */ jsxRuntime.jsx(
+      isOpen && /* @__PURE__ */ jsxs("div", { className: "simple-color-picker__dropdown", children: [
+        /* @__PURE__ */ jsx("div", { className: "simple-color-picker__presets", children: PRESET_COLORS$1.map((presetColor) => /* @__PURE__ */ jsx(
           "button",
           {
             type: "button",
@@ -1481,8 +1460,8 @@ function SimpleColorPicker({ color, onChange, label }) {
           },
           presetColor
         )) }),
-        /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "simple-color-picker__custom", children: [
-          /* @__PURE__ */ jsxRuntime.jsx(
+        /* @__PURE__ */ jsxs("div", { className: "simple-color-picker__custom", children: [
+          /* @__PURE__ */ jsx(
             "input",
             {
               type: "color",
@@ -1491,11 +1470,11 @@ function SimpleColorPicker({ color, onChange, label }) {
               className: "simple-color-picker__input"
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("span", { className: "simple-color-picker__custom-label", children: "Custom" })
+          /* @__PURE__ */ jsx("span", { className: "simple-color-picker__custom-label", children: "Custom" })
         ] })
       ] })
     ] }),
-    isOpen && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "simple-color-picker__overlay", onClick: () => setIsOpen(false) })
+    isOpen && /* @__PURE__ */ jsx("div", { className: "simple-color-picker__overlay", onClick: () => setIsOpen(false) })
   ] });
 }
 function CTAButtonComponent({
@@ -1507,10 +1486,10 @@ function CTAButtonComponent({
   url,
   color
 }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const [showContextMenu, setShowContextMenu] = React.useState(false);
-  const [contextMenuPosition, setContextMenuPosition] = React.useState({ x: 0, y: 0 });
-  const buttonRef = React.useRef(null);
+  const [editor] = useLexicalComposerContext();
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const buttonRef = useRef(null);
   const buttonStyle = {
     backgroundColor: color,
     borderColor: color,
@@ -1524,7 +1503,7 @@ function CTAButtonComponent({
   };
   const handleEdit = () => {
     editor.update(() => {
-      const node = lexical.$getNodeByKey(nodeKey);
+      const node = $getNodeByKey(nodeKey);
       if (node && $isCTAButtonNode(node)) {
         const event = new CustomEvent("editCTAButton", {
           detail: {
@@ -1542,14 +1521,14 @@ function CTAButtonComponent({
   };
   const handleDelete = () => {
     editor.update(() => {
-      const node = lexical.$getNodeByKey(nodeKey);
+      const node = $getNodeByKey(nodeKey);
       if (node) {
         node.remove();
       }
     });
     setShowContextMenu(false);
   };
-  React.useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = () => {
       setShowContextMenu(false);
     };
@@ -1558,8 +1537,8 @@ function CTAButtonComponent({
       return () => document.removeEventListener("click", handleClickOutside);
     }
   }, [showContextMenu]);
-  return /* @__PURE__ */ jsxRuntime.jsx(LexicalBlockWithAlignableContents.BlockWithAlignableContents, { className, format, nodeKey, children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "cta-button-container", children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(BlockWithAlignableContents, { className, format, nodeKey, children: /* @__PURE__ */ jsxs("div", { className: "cta-button-container", children: [
+    /* @__PURE__ */ jsx(
       "a",
       {
         ref: buttonRef,
@@ -1569,13 +1548,13 @@ function CTAButtonComponent({
         className: "cta-button",
         style: buttonStyle,
         onContextMenu: handleContextMenu,
-        children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "cta-button-content", children: [
-          /* @__PURE__ */ jsxRuntime.jsx("span", { className: "cta-button-text", children: text }),
-          subText && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "cta-button-subtext", children: subText })
+        children: /* @__PURE__ */ jsxs("div", { className: "cta-button-content", children: [
+          /* @__PURE__ */ jsx("span", { className: "cta-button-text", children: text }),
+          subText && /* @__PURE__ */ jsx("span", { className: "cta-button-subtext", children: subText })
         ] })
       }
     ),
-    showContextMenu && /* @__PURE__ */ jsxRuntime.jsxs(
+    showContextMenu && /* @__PURE__ */ jsxs(
       "div",
       {
         className: "cta-button-context-menu",
@@ -1585,8 +1564,8 @@ function CTAButtonComponent({
           top: contextMenuPosition.y
         },
         children: [
-          /* @__PURE__ */ jsxRuntime.jsx("button", { className: "cta-button-context-menu-item", onClick: handleEdit, children: "Edit" }),
-          /* @__PURE__ */ jsxRuntime.jsx("button", { className: "cta-button-context-menu-item", onClick: handleDelete, children: "Delete" })
+          /* @__PURE__ */ jsx("button", { className: "cta-button-context-menu-item", onClick: handleEdit, children: "Edit" }),
+          /* @__PURE__ */ jsx("button", { className: "cta-button-context-menu-item", onClick: handleDelete, children: "Delete" })
         ]
       }
     )
@@ -1603,7 +1582,7 @@ function $convertCTAButtonElement(domNode) {
   }
   return null;
 }
-class CTAButtonNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
+class CTAButtonNode extends DecoratorBlockNode {
   __text;
   __subText;
   __url;
@@ -1711,7 +1690,7 @@ class CTAButtonNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
       base: embedBlockTheme.base || "",
       focus: embedBlockTheme.focus || ""
     };
-    return /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(
       CTAButtonComponent,
       {
         className,
@@ -1736,19 +1715,19 @@ function $createCTAButtonNode({
 function $isCTAButtonNode(node) {
   return node instanceof CTAButtonNode;
 }
-const INSERT_CTA_BUTTON_COMMAND = lexical.createCommand(
+const INSERT_CTA_BUTTON_COMMAND = createCommand(
   "INSERT_CTA_BUTTON_COMMAND"
 );
 function CTAButtonPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
+  const [editor] = useLexicalComposerContext();
   const [modal, showModal] = useModal();
-  React.useEffect(() => {
+  useEffect(() => {
     if (!editor.hasNodes([CTAButtonNode])) {
       throw new Error("CTAButtonPlugin: CTAButtonNode not registered on editor");
     }
     const handleEditCTAButton = (event) => {
       const { nodeKey, text, subText, url, color } = event.detail;
-      showModal("Edit CTA Button", (onClose) => /* @__PURE__ */ jsxRuntime.jsx(
+      showModal("Edit CTA Button", (onClose) => /* @__PURE__ */ jsx(
         InsertCTAButtonDialog,
         {
           activeEditor: editor,
@@ -1762,33 +1741,33 @@ function CTAButtonPlugin() {
       INSERT_CTA_BUTTON_COMMAND,
       (payload) => {
         const ctaButtonNode = $createCTAButtonNode(payload);
-        utils.$insertNodeToNearestRoot(ctaButtonNode);
+        $insertNodeToNearestRoot(ctaButtonNode);
         return true;
       },
-      lexical.COMMAND_PRIORITY_EDITOR
+      COMMAND_PRIORITY_EDITOR
     );
     return () => {
       window.removeEventListener("editCTAButton", handleEditCTAButton);
       unregisterCommand();
     };
   }, [editor, showModal]);
-  return /* @__PURE__ */ jsxRuntime.jsx(jsxRuntime.Fragment, { children: modal });
+  return /* @__PURE__ */ jsx(Fragment, { children: modal });
 }
 function InsertCTAButtonDialog({
   activeEditor,
   onClose,
   initialData
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  const [text, setText] = React.useState(initialData?.text || "");
-  const [subText, setSubText] = React.useState(initialData?.subText || "");
-  const [url, setUrl] = React.useState(initialData?.url || "");
-  const [color, setColor] = React.useState(initialData?.color || "#3b82f6");
+  const { formatMessage } = useIntl();
+  const [text, setText] = useState(initialData?.text || "");
+  const [subText, setSubText] = useState(initialData?.subText || "");
+  const [url, setUrl] = useState(initialData?.url || "");
+  const [color, setColor] = useState(initialData?.color || "#3b82f6");
   const onClick = () => {
     if (text.trim() && url.trim()) {
       if (initialData?.nodeKey) {
         activeEditor.update(() => {
-          const node = lexical.$getNodeByKey(initialData.nodeKey);
+          const node = $getNodeByKey(initialData.nodeKey);
           if (node && $isCTAButtonNode(node)) {
             node.setTextContent(text.trim());
             node.setSubText(subText.trim() || void 0);
@@ -1808,8 +1787,8 @@ function InsertCTAButtonDialog({
     }
   };
   const isDisabled = !text.trim() || !url.trim();
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
       TextInput,
       {
         label: formatMessage({
@@ -1825,7 +1804,7 @@ function InsertCTAButtonDialog({
         "data-test-id": "cta-button-text"
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       TextInput,
       {
         label: formatMessage({
@@ -1841,7 +1820,7 @@ function InsertCTAButtonDialog({
         "data-test-id": "cta-button-subtext"
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       TextInput,
       {
         label: formatMessage({
@@ -1857,7 +1836,7 @@ function InsertCTAButtonDialog({
         "data-test-id": "cta-button-url"
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx("div", { style: { marginBottom: "16px" }, children: /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx("div", { style: { marginBottom: "16px" }, children: /* @__PURE__ */ jsx(
       SimpleColorPicker,
       {
         color,
@@ -1868,13 +1847,13 @@ function InsertCTAButtonDialog({
         })
       }
     ) }),
-    /* @__PURE__ */ jsxRuntime.jsx(DialogActions, { "data-test-id": "cta-button-modal-confirm-insert", children: /* @__PURE__ */ jsxRuntime.jsx(Button, { disabled: isDisabled, onClick, children: formatMessage({
+    /* @__PURE__ */ jsx(DialogActions, { "data-test-id": "cta-button-modal-confirm-insert", children: /* @__PURE__ */ jsx(Button, { disabled: isDisabled, onClick, children: formatMessage({
       id: initialData?.nodeKey ? "lexical.plugin.cta-button.update.confirm" : "lexical.plugin.cta-button.insert.confirm",
       defaultMessage: initialData?.nodeKey ? "Update CTA Button" : "Insert CTA Button"
     }) }) })
   ] });
 }
-const DropDownContext = React__namespace.createContext(null);
+const DropDownContext = React.createContext(null);
 const dropDownPadding = 4;
 function DropDownItem({
   children,
@@ -1882,27 +1861,27 @@ function DropDownItem({
   onClick,
   title
 }) {
-  const ref = React.useRef(null);
-  const dropDownContext = React__namespace.useContext(DropDownContext);
+  const ref = useRef(null);
+  const dropDownContext = React.useContext(DropDownContext);
   if (dropDownContext === null) {
     throw new Error("DropDownItem must be used within a DropDown");
   }
   const { registerItem } = dropDownContext;
-  React.useEffect(() => {
+  useEffect(() => {
     if (ref && ref.current) {
       registerItem(ref);
     }
   }, [ref, registerItem]);
-  return /* @__PURE__ */ jsxRuntime.jsx("button", { className, onClick, ref, title, type: "button", children });
+  return /* @__PURE__ */ jsx("button", { className, onClick, ref, title, type: "button", children });
 }
 function DropDownItems({
   children,
   dropDownRef,
   onClose
 }) {
-  const [items, setItems] = React.useState();
-  const [highlightedItem, setHighlightedItem] = React.useState();
-  const registerItem = React.useCallback(
+  const [items, setItems] = useState();
+  const [highlightedItem, setHighlightedItem] = useState();
+  const registerItem = useCallback(
     (itemRef) => {
       setItems((prev) => prev ? [...prev, itemRef] : [itemRef]);
     },
@@ -1935,13 +1914,13 @@ function DropDownItems({
       });
     }
   };
-  const contextValue = React.useMemo(
+  const contextValue = useMemo(
     () => ({
       registerItem
     }),
     [registerItem]
   );
-  React.useEffect(() => {
+  useEffect(() => {
     if (items && !highlightedItem) {
       setHighlightedItem(items[0]);
     }
@@ -1949,7 +1928,7 @@ function DropDownItems({
       highlightedItem.current.focus();
     }
   }, [items, highlightedItem]);
-  return /* @__PURE__ */ jsxRuntime.jsx(DropDownContext.Provider, { value: contextValue, children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: "dropdown", ref: dropDownRef, onKeyDown: handleKeyDown, children }) });
+  return /* @__PURE__ */ jsx(DropDownContext.Provider, { value: contextValue, children: /* @__PURE__ */ jsx("div", { className: "dropdown", ref: dropDownRef, onKeyDown: handleKeyDown, children }) });
 }
 function DropDown({
   disabled = false,
@@ -1960,16 +1939,16 @@ function DropDown({
   children,
   stopCloseOnClickSelf
 }) {
-  const dropDownRef = React.useRef(null);
-  const buttonRef = React.useRef(null);
-  const [showDropDown, setShowDropDown] = React.useState(false);
+  const dropDownRef = useRef(null);
+  const buttonRef = useRef(null);
+  const [showDropDown, setShowDropDown] = useState(false);
   const handleClose = () => {
     setShowDropDown(false);
     if (buttonRef && buttonRef.current) {
       buttonRef.current.focus();
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     const button = buttonRef.current;
     const dropDown = dropDownRef.current;
     if (showDropDown && button !== null && dropDown !== null) {
@@ -1978,12 +1957,12 @@ function DropDown({
       dropDown.style.left = `${Math.min(left, window.innerWidth - dropDown.offsetWidth - 20)}px`;
     }
   }, [dropDownRef, buttonRef, showDropDown]);
-  React.useEffect(() => {
+  useEffect(() => {
     const button = buttonRef.current;
     if (button !== null && showDropDown) {
       const handle = (event) => {
         const target = event.target;
-        if (!lexical.isDOMNode(target)) {
+        if (!isDOMNode(target)) {
           return;
         }
         if (stopCloseOnClickSelf) {
@@ -2001,7 +1980,7 @@ function DropDown({
       };
     }
   }, [dropDownRef, buttonRef, showDropDown, stopCloseOnClickSelf]);
-  React.useEffect(() => {
+  useEffect(() => {
     const handleButtonPositionUpdate = () => {
       if (showDropDown) {
         const button = buttonRef.current;
@@ -2020,8 +1999,8 @@ function DropDown({
       document.removeEventListener("scroll", handleButtonPositionUpdate);
     };
   }, [buttonRef, dropDownRef, showDropDown]);
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsxs(
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsxs(
       "button",
       {
         type: "button",
@@ -2031,14 +2010,14 @@ function DropDown({
         onClick: () => setShowDropDown(!showDropDown),
         ref: buttonRef,
         children: [
-          buttonIconClassName && /* @__PURE__ */ jsxRuntime.jsx("span", { className: buttonIconClassName }),
-          buttonLabel && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text dropdown-button-text", children: buttonLabel }),
-          /* @__PURE__ */ jsxRuntime.jsx("i", { className: "chevron-down" })
+          buttonIconClassName && /* @__PURE__ */ jsx("span", { className: buttonIconClassName }),
+          buttonLabel && /* @__PURE__ */ jsx("span", { className: "text dropdown-button-text", children: buttonLabel }),
+          /* @__PURE__ */ jsx("i", { className: "chevron-down" })
         ]
       }
     ),
-    showDropDown && ReactDOM.createPortal(
-      /* @__PURE__ */ jsxRuntime.jsx(DropDownItems, { dropDownRef, onClose: handleClose, children }),
+    showDropDown && createPortal(
+      /* @__PURE__ */ jsx(DropDownItems, { dropDownRef, onClose: handleClose, children }),
       document.body
     )
   ] });
@@ -2052,7 +2031,7 @@ function $convertLayoutContainerElement(domNode) {
   }
   return null;
 }
-class LayoutContainerNode extends lexical.ElementNode {
+class LayoutContainerNode extends ElementNode {
   __templateColumns;
   constructor(templateColumns, key) {
     super(key);
@@ -2068,7 +2047,7 @@ class LayoutContainerNode extends lexical.ElementNode {
     const dom = document.createElement("div");
     dom.style.gridTemplateColumns = this.__templateColumns;
     if (typeof config.theme.layoutContainer === "string") {
-      utils.addClassNamesToElement(dom, config.theme.layoutContainer);
+      addClassNamesToElement(dom, config.theme.layoutContainer);
     }
     return dom;
   }
@@ -2133,7 +2112,7 @@ function $isLayoutContainerNode(node) {
 function $convertLayoutItemElement() {
   return { node: $createLayoutItemNode() };
 }
-class LayoutItemNode extends lexical.ElementNode {
+class LayoutItemNode extends ElementNode {
   static getType() {
     return "layout-item";
   }
@@ -2144,7 +2123,7 @@ class LayoutItemNode extends lexical.ElementNode {
     const dom = document.createElement("div");
     dom.setAttribute("data-lexical-layout-item", "true");
     if (typeof config.theme.layoutItem === "string") {
-      utils.addClassNamesToElement(dom, config.theme.layoutItem);
+      addClassNamesToElement(dom, config.theme.layoutItem);
     }
     return dom;
   }
@@ -2177,29 +2156,29 @@ function $createLayoutItemNode() {
 function $isLayoutItemNode(node) {
   return node instanceof LayoutItemNode;
 }
-const INSERT_LAYOUT_COMMAND = lexical.createCommand();
-const UPDATE_LAYOUT_COMMAND = lexical.createCommand();
+const INSERT_LAYOUT_COMMAND = createCommand();
+const UPDATE_LAYOUT_COMMAND = createCommand();
 function LayoutPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
     if (!editor.hasNodes([LayoutContainerNode, LayoutItemNode])) {
       throw new Error(
         "LayoutPlugin: LayoutContainerNode, or LayoutItemNode not registered on editor"
       );
     }
     const $onEscape = (before) => {
-      const selection2 = lexical.$getSelection();
-      if (lexical.$isRangeSelection(selection2) && selection2.isCollapsed() && selection2.anchor.offset === 0) {
-        const container = utils.$findMatchingParent(selection2.anchor.getNode(), $isLayoutContainerNode);
+      const selection = $getSelection();
+      if ($isRangeSelection(selection) && selection.isCollapsed() && selection.anchor.offset === 0) {
+        const container = $findMatchingParent(selection.anchor.getNode(), $isLayoutContainerNode);
         if ($isLayoutContainerNode(container)) {
           const parent = container.getParent();
           const child = parent && (before ? parent.getFirstChild() : parent?.getLastChild());
           const descendant = before ? container.getFirstDescendant()?.getKey() : container.getLastDescendant()?.getKey();
-          if (parent !== null && child === container && selection2.anchor.key === descendant) {
+          if (parent !== null && child === container && selection.anchor.key === descendant) {
             if (before) {
-              container.insertBefore(lexical.$createParagraphNode());
+              container.insertBefore($createParagraphNode());
             } else {
-              container.insertAfter(lexical.$createParagraphNode());
+              container.insertAfter($createParagraphNode());
             }
           }
         }
@@ -2208,7 +2187,7 @@ function LayoutPlugin() {
     };
     const $fillLayoutItemIfEmpty = (node) => {
       if (node.isEmpty()) {
-        node.append(lexical.$createParagraphNode());
+        node.append($createParagraphNode());
       }
     };
     const $removeIsolatedLayoutItem = (node) => {
@@ -2223,19 +2202,19 @@ function LayoutPlugin() {
       }
       return false;
     };
-    return utils.mergeRegister(
+    return mergeRegister(
       // When layout is the last child pressing down/right arrow will insert paragraph
       // below it to allow adding more content. It's similar what $insertBlockNode
       // (mainly for decorators), except it'll always be possible to continue adding
       // new content even if trailing paragraph is accidentally deleted
-      editor.registerCommand(lexical.KEY_ARROW_DOWN_COMMAND, () => $onEscape(false), lexical.COMMAND_PRIORITY_LOW),
-      editor.registerCommand(lexical.KEY_ARROW_RIGHT_COMMAND, () => $onEscape(false), lexical.COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_ARROW_DOWN_COMMAND, () => $onEscape(false), COMMAND_PRIORITY_LOW$1),
+      editor.registerCommand(KEY_ARROW_RIGHT_COMMAND, () => $onEscape(false), COMMAND_PRIORITY_LOW$1),
       // When layout is the first child pressing up/left arrow will insert paragraph
       // above it to allow adding more content. It's similar what $insertBlockNode
       // (mainly for decorators), except it'll always be possible to continue adding
       // new content even if leading paragraph is accidentally deleted
-      editor.registerCommand(lexical.KEY_ARROW_UP_COMMAND, () => $onEscape(true), lexical.COMMAND_PRIORITY_LOW),
-      editor.registerCommand(lexical.KEY_ARROW_LEFT_COMMAND, () => $onEscape(true), lexical.COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_ARROW_UP_COMMAND, () => $onEscape(true), COMMAND_PRIORITY_LOW$1),
+      editor.registerCommand(KEY_ARROW_LEFT_COMMAND, () => $onEscape(true), COMMAND_PRIORITY_LOW$1),
       editor.registerCommand(
         INSERT_LAYOUT_COMMAND,
         (template) => {
@@ -2243,20 +2222,20 @@ function LayoutPlugin() {
             const container = $createLayoutContainerNode(template);
             const itemsCount = getItemsCountFromTemplate(template);
             for (let i = 0; i < itemsCount; i++) {
-              container.append($createLayoutItemNode().append(lexical.$createParagraphNode()));
+              container.append($createLayoutItemNode().append($createParagraphNode()));
             }
-            utils.$insertNodeToNearestRoot(container);
+            $insertNodeToNearestRoot(container);
             container.selectStart();
           });
           return true;
         },
-        lexical.COMMAND_PRIORITY_EDITOR
+        COMMAND_PRIORITY_EDITOR
       ),
       editor.registerCommand(
         UPDATE_LAYOUT_COMMAND,
         ({ template, nodeKey }) => {
           editor.update(() => {
-            const container = lexical.$getNodeByKey(nodeKey);
+            const container = $getNodeByKey(nodeKey);
             if (!$isLayoutContainerNode(container)) {
               return;
             }
@@ -2264,7 +2243,7 @@ function LayoutPlugin() {
             const prevItemsCount = getItemsCountFromTemplate(container.getTemplateColumns());
             if (itemsCount > prevItemsCount) {
               for (let i = prevItemsCount; i < itemsCount; i++) {
-                container.append($createLayoutItemNode().append(lexical.$createParagraphNode()));
+                container.append($createLayoutItemNode().append($createParagraphNode()));
               }
             } else if (itemsCount < prevItemsCount) {
               for (let i = prevItemsCount - 1; i >= itemsCount; i--) {
@@ -2278,7 +2257,7 @@ function LayoutPlugin() {
           });
           return true;
         },
-        lexical.COMMAND_PRIORITY_EDITOR
+        COMMAND_PRIORITY_EDITOR
       ),
       editor.registerNodeTransform(LayoutItemNode, (node) => {
         const isRemoved = $removeIsolatedLayoutItem(node);
@@ -2333,8 +2312,8 @@ function InsertLayoutDialog({
   activeEditor,
   onClose
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  const [layout, setLayout] = React.useState(LAYOUTS[0].value);
+  const { formatMessage } = useIntl();
+  const [layout, setLayout] = useState(LAYOUTS[0].value);
   const selectedLayout = LAYOUTS.find((item) => item.value === layout);
   const buttonLabel = selectedLayout ? formatMessage({
     id: selectedLayout.label,
@@ -2344,29 +2323,29 @@ function InsertLayoutDialog({
     activeEditor.dispatchCommand(INSERT_LAYOUT_COMMAND, layout);
     onClose();
   };
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(DropDown, { buttonClassName: "toolbar-item dialog-dropdown", buttonLabel, children: LAYOUTS.map(({ label, defaultMessage, value }) => /* @__PURE__ */ jsxRuntime.jsx(DropDownItem, { className: "item", onClick: () => setLayout(value), children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({ id: label, defaultMessage }) }) }, value)) }),
-    /* @__PURE__ */ jsxRuntime.jsx(Button, { onClick, children: formatMessage({
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(DropDown, { buttonClassName: "toolbar-item dialog-dropdown", buttonLabel, children: LAYOUTS.map(({ label, defaultMessage, value }) => /* @__PURE__ */ jsx(DropDownItem, { className: "item", onClick: () => setLayout(value), children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({ id: label, defaultMessage }) }) }, value)) }),
+    /* @__PURE__ */ jsx(Button, { onClick, children: formatMessage({
       id: "lexical.plugin.layout.button.insert",
       defaultMessage: "Insert"
     }) })
   ] });
 }
-const CellContext = React.createContext({
+const CellContext = createContext({
   cellEditorConfig: null,
   cellEditorPlugins: null,
   set: () => {
   }
 });
 function TableContext({ children }) {
-  const [contextValue, setContextValue] = React.useState({
+  const [contextValue, setContextValue] = useState({
     cellEditorConfig: null,
     cellEditorPlugins: null
   });
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(
     CellContext.Provider,
     {
-      value: React.useMemo(
+      value: useMemo(
         () => ({
           cellEditorConfig: contextValue.cellEditorConfig,
           cellEditorPlugins: contextValue.cellEditorPlugins,
@@ -2384,11 +2363,11 @@ function InsertTableDialog({
   activeEditor,
   onClose
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  const [rows, setRows] = React.useState("5");
-  const [columns, setColumns] = React.useState("5");
-  const [isDisabled, setIsDisabled] = React.useState(true);
-  React.useEffect(() => {
+  const { formatMessage } = useIntl();
+  const [rows, setRows] = useState("5");
+  const [columns, setColumns] = useState("5");
+  const [isDisabled, setIsDisabled] = useState(true);
+  useEffect(() => {
     const row = Number(rows);
     const column = Number(columns);
     if (row && row > 0 && row <= 500 && column && column > 0 && column <= 50) {
@@ -2398,14 +2377,14 @@ function InsertTableDialog({
     }
   }, [rows, columns]);
   const onClick = () => {
-    activeEditor.dispatchCommand(table.INSERT_TABLE_COMMAND, {
+    activeEditor.dispatchCommand(INSERT_TABLE_COMMAND, {
       columns,
       rows
     });
     onClose();
   };
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
       TextInput,
       {
         placeholder: formatMessage({
@@ -2422,7 +2401,7 @@ function InsertTableDialog({
         type: "number"
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       TextInput,
       {
         placeholder: formatMessage({
@@ -2439,13 +2418,13 @@ function InsertTableDialog({
         type: "number"
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(DialogActions, { "data-test-id": "table-model-confirm-insert", children: /* @__PURE__ */ jsxRuntime.jsx(Button, { disabled: isDisabled, onClick, children: formatMessage({
+    /* @__PURE__ */ jsx(DialogActions, { "data-test-id": "table-model-confirm-insert", children: /* @__PURE__ */ jsx(Button, { disabled: isDisabled, onClick, children: formatMessage({
       id: "lexical.plugin.table.confirm.button",
       defaultMessage: "Confirm"
     }) }) })
   ] });
 }
-class ComponentPickerOption extends LexicalTypeaheadMenuPlugin.MenuOption {
+class ComponentPickerOption extends MenuOption {
   // What shows up in the editor
   title;
   // Icon for display
@@ -2476,7 +2455,7 @@ function ComponentPickerMenuItem({
   if (isSelected) {
     className += " selected";
   }
-  return /* @__PURE__ */ jsxRuntime.jsxs(
+  return /* @__PURE__ */ jsxs(
     "li",
     {
       tabIndex: -1,
@@ -2489,7 +2468,7 @@ function ComponentPickerMenuItem({
       onClick,
       children: [
         option.icon,
-        /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: option.title })
+        /* @__PURE__ */ jsx("span", { className: "text", children: option.title })
       ]
     },
     option.key
@@ -2507,9 +2486,9 @@ function getDynamicOptions(editor, queryString) {
     options.push(
       ...colOptions.map(
         (columns) => new ComponentPickerOption(`${rows}x${columns} Table`, {
-          icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon table" }),
+          icon: /* @__PURE__ */ jsx("i", { className: "icon table" }),
           keywords: ["table"],
-          onSelect: () => editor.dispatchCommand(table.INSERT_TABLE_COMMAND, { columns, rows })
+          onSelect: () => editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows })
         })
       )
     );
@@ -2519,78 +2498,78 @@ function getDynamicOptions(editor, queryString) {
 function getBaseOptions(editor, showModal) {
   return [
     new ComponentPickerOption("Paragraph", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon paragraph" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon paragraph" }),
       keywords: ["normal", "paragraph", "p", "text"],
       onSelect: () => editor.update(() => {
-        const selection$1 = lexical.$getSelection();
-        if (lexical.$isRangeSelection(selection$1)) {
-          selection.$setBlocksType(selection$1, () => lexical.$createParagraphNode());
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          $setBlocksType(selection, () => $createParagraphNode());
         }
       })
     }),
     ...[1, 2, 3].map(
       (n) => new ComponentPickerOption(`Heading ${n}`, {
-        icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: `icon h${n}` }),
+        icon: /* @__PURE__ */ jsx("i", { className: `icon h${n}` }),
         keywords: ["heading", "header", `h${n}`],
         onSelect: () => editor.update(() => {
-          const selection$1 = lexical.$getSelection();
-          if (lexical.$isRangeSelection(selection$1)) {
-            selection.$setBlocksType(selection$1, () => richText.$createHeadingNode(`h${n}`));
+          const selection = $getSelection();
+          if ($isRangeSelection(selection)) {
+            $setBlocksType(selection, () => $createHeadingNode(`h${n}`));
           }
         })
       })
     ),
     new ComponentPickerOption("Table", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon table" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon table" }),
       keywords: ["table", "grid", "spreadsheet", "rows", "columns"],
-      onSelect: () => showModal("Insert Table", (onClose) => /* @__PURE__ */ jsxRuntime.jsx(InsertTableDialog, { activeEditor: editor, onClose }))
+      onSelect: () => showModal("Insert Table", (onClose) => /* @__PURE__ */ jsx(InsertTableDialog, { activeEditor: editor, onClose }))
     }),
     new ComponentPickerOption("Numbered List", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon number" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon number" }),
       keywords: ["numbered list", "ordered list", "ol"],
-      onSelect: () => editor.dispatchCommand(list.INSERT_ORDERED_LIST_COMMAND, void 0)
+      onSelect: () => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, void 0)
     }),
     new ComponentPickerOption("Bulleted List", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon bullet" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon bullet" }),
       keywords: ["bulleted list", "unordered list", "ul"],
-      onSelect: () => editor.dispatchCommand(list.INSERT_UNORDERED_LIST_COMMAND, void 0)
+      onSelect: () => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, void 0)
     }),
     new ComponentPickerOption("Check List", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon check" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon check" }),
       keywords: ["check list", "todo list"],
-      onSelect: () => editor.dispatchCommand(list.INSERT_CHECK_LIST_COMMAND, void 0)
+      onSelect: () => editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, void 0)
     }),
     new ComponentPickerOption("Quote", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon quote" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon quote" }),
       keywords: ["block quote"],
       onSelect: () => editor.update(() => {
-        const selection$1 = lexical.$getSelection();
-        if (lexical.$isRangeSelection(selection$1)) {
-          selection.$setBlocksType(selection$1, () => richText.$createQuoteNode());
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          $setBlocksType(selection, () => $createQuoteNode());
         }
       })
     }),
     new ComponentPickerOption("Code", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon code" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon code" }),
       keywords: ["javascript", "python", "js", "codeblock"],
       onSelect: () => editor.update(() => {
-        const selection$1 = lexical.$getSelection();
-        if (lexical.$isRangeSelection(selection$1)) {
-          if (selection$1.isCollapsed()) {
-            selection.$setBlocksType(selection$1, () => code.$createCodeNode());
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          if (selection.isCollapsed()) {
+            $setBlocksType(selection, () => $createCodeNode());
           } else {
-            const textContent = selection$1.getTextContent();
-            const codeNode = code.$createCodeNode();
-            selection$1.insertNodes([codeNode]);
-            selection$1.insertRawText(textContent);
+            const textContent = selection.getTextContent();
+            const codeNode = $createCodeNode();
+            selection.insertNodes([codeNode]);
+            selection.insertRawText(textContent);
           }
         }
       })
     }),
     new ComponentPickerOption("Divider", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon horizontal-rule" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon horizontal-rule" }),
       keywords: ["horizontal rule", "divider", "hr"],
-      onSelect: () => editor.dispatchCommand(LexicalHorizontalRuleNode.INSERT_HORIZONTAL_RULE_COMMAND, void 0)
+      onSelect: () => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, void 0)
     }),
     // new ComponentPickerOption('Page Break', {
     //   icon: <i className="icon page-break" />,
@@ -2609,7 +2588,7 @@ function getBaseOptions(editor, showModal) {
       (embedConfig) => new ComponentPickerOption(`Embed ${embedConfig.contentName}`, {
         icon: embedConfig.icon,
         keywords: [...embedConfig.keywords, "embed"],
-        onSelect: () => editor.dispatchCommand(LexicalAutoEmbedPlugin.INSERT_EMBED_COMMAND, embedConfig.type)
+        onSelect: () => editor.dispatchCommand(INSERT_EMBED_COMMAND, embedConfig.type)
       })
     ),
     // new ComponentPickerOption('Equation', {
@@ -2638,37 +2617,37 @@ function getBaseOptions(editor, showModal) {
     //     )),
     // }),
     new ComponentPickerOption("Collapsible", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon caret-right" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon caret-right" }),
       keywords: ["collapse", "collapsible", "toggle"],
       onSelect: () => editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, void 0)
     }),
     new ComponentPickerOption("CTA Button", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon link" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon link" }),
       keywords: ["cta", "button", "call to action", "link"],
-      onSelect: () => showModal("Insert CTA Button", (onClose) => /* @__PURE__ */ jsxRuntime.jsx(InsertCTAButtonDialog, { activeEditor: editor, onClose }))
+      onSelect: () => showModal("Insert CTA Button", (onClose) => /* @__PURE__ */ jsx(InsertCTAButtonDialog, { activeEditor: editor, onClose }))
     }),
     new ComponentPickerOption("Columns Layout", {
-      icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon columns" }),
+      icon: /* @__PURE__ */ jsx("i", { className: "icon columns" }),
       keywords: ["columns", "layout", "grid"],
-      onSelect: () => showModal("Insert Columns Layout", (onClose) => /* @__PURE__ */ jsxRuntime.jsx(InsertLayoutDialog, { activeEditor: editor, onClose }))
+      onSelect: () => showModal("Insert Columns Layout", (onClose) => /* @__PURE__ */ jsx(InsertLayoutDialog, { activeEditor: editor, onClose }))
     }),
     ...["left", "center", "right", "justify"].map(
       (alignment) => new ComponentPickerOption(`Align ${alignment}`, {
-        icon: /* @__PURE__ */ jsxRuntime.jsx("i", { className: `icon ${alignment}-align` }),
+        icon: /* @__PURE__ */ jsx("i", { className: `icon ${alignment}-align` }),
         keywords: ["align", "justify", alignment],
-        onSelect: () => editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, alignment)
+        onSelect: () => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment)
       })
     )
   ];
 }
 function ComponentPickerMenuPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
+  const [editor] = useLexicalComposerContext();
   const [modal, showModal] = useModal();
-  const [queryString, setQueryString] = React.useState(null);
-  const checkForTriggerMatch = LexicalTypeaheadMenuPlugin.useBasicTypeaheadTriggerMatch("/", {
+  const [queryString, setQueryString] = useState(null);
+  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch("/", {
     minLength: 0
   });
-  const options = React.useMemo(() => {
+  const options = useMemo(() => {
     const baseOptions = getBaseOptions(editor, showModal);
     if (!queryString) {
       return baseOptions;
@@ -2681,7 +2660,7 @@ function ComponentPickerMenuPlugin() {
       )
     ];
   }, [editor, queryString, showModal]);
-  const onSelectOption = React.useCallback(
+  const onSelectOption = useCallback(
     (selectedOption, nodeToRemove, closeMenu, matchingString) => {
       editor.update(() => {
         nodeToRemove?.remove();
@@ -2691,17 +2670,17 @@ function ComponentPickerMenuPlugin() {
     },
     [editor]
   );
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
     modal,
-    /* @__PURE__ */ jsxRuntime.jsx(
-      LexicalTypeaheadMenuPlugin.LexicalTypeaheadMenuPlugin,
+    /* @__PURE__ */ jsx(
+      LexicalTypeaheadMenuPlugin,
       {
         onQueryChange: setQueryString,
         onSelectOption,
         triggerFn: checkForTriggerMatch,
         options,
-        menuRenderFn: (anchorElementRef, { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }) => anchorElementRef.current && options.length ? ReactDOM__namespace.createPortal(
-          /* @__PURE__ */ jsxRuntime.jsx("div", { className: "typeahead-popover component-picker-menu", children: /* @__PURE__ */ jsxRuntime.jsx("ul", { children: options.map((option, i) => /* @__PURE__ */ jsxRuntime.jsx(
+        menuRenderFn: (anchorElementRef, { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }) => anchorElementRef.current && options.length ? ReactDOM.createPortal(
+          /* @__PURE__ */ jsx("div", { className: "typeahead-popover component-picker-menu", children: /* @__PURE__ */ jsx("ul", { children: options.map((option, i) => /* @__PURE__ */ jsx(
             ComponentPickerMenuItem,
             {
               index: i,
@@ -2723,8 +2702,8 @@ function ComponentPickerMenuPlugin() {
     )
   ] });
 }
-const StrapiImageComponent = React__namespace.lazy(() => Promise.resolve().then(() => require("./StrapiImageComponent-XX_h-Mdn.js")));
-class StrapiImageNode extends lexical.DecoratorNode {
+const StrapiImageComponent = React.lazy(() => import("./StrapiImageComponent-lijqeuwa.mjs"));
+class StrapiImageNode extends DecoratorNode {
   __documentId;
   __src;
   __caption;
@@ -2791,7 +2770,7 @@ class StrapiImageNode extends lexical.DecoratorNode {
     return false;
   }
   decorate() {
-    return /* @__PURE__ */ jsxRuntime.jsx(React.Suspense, { fallback: null, children: /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(Suspense, { fallback: null, children: /* @__PURE__ */ jsx(
       StrapiImageComponent,
       {
         documentId: this.__documentId,
@@ -2807,12 +2786,12 @@ function $createStrapiImageNode({
   src,
   caption
 }) {
-  return lexical.$applyNodeReplacement(new StrapiImageNode(documentId, src, caption));
+  return $applyNodeReplacement(new StrapiImageNode(documentId, src, caption));
 }
 function $isStrapiImageNode(node) {
   return node instanceof StrapiImageNode;
 }
-const INSERT_STRAPI_IMAGE_COMMAND = lexical.createCommand(
+const INSERT_STRAPI_IMAGE_COMMAND = createCommand(
   "INSERT_STRAPI_IMAGE_COMMAND"
 );
 function InsertStrapiImageDialog({
@@ -2838,7 +2817,7 @@ function InsertStrapiImageDialog({
       console.log(err);
     }
   };
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(
     MediaLibraryDialog,
     {
       allowedTypes: ["images"],
@@ -2848,46 +2827,46 @@ function InsertStrapiImageDialog({
   );
 }
 function StrapiImagePlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
     if (!editor.hasNodes([StrapiImageNode])) {
       throw new Error("StrapiImagePlugin:  StrapiImageNode not registered on editor");
     }
-    return utils.mergeRegister(
+    return mergeRegister(
       editor.registerCommand(
         INSERT_STRAPI_IMAGE_COMMAND,
         (payload) => {
-          const selection2 = lexical.$getSelection();
+          const selection = $getSelection();
           const strapiImageNode = $createStrapiImageNode(payload);
-          if (lexical.$isRangeSelection(selection2)) {
-            lexical.$insertNodes([strapiImageNode]);
+          if ($isRangeSelection(selection)) {
+            $insertNodes([strapiImageNode]);
           } else {
-            lexical.$insertNodes([strapiImageNode]);
+            $insertNodes([strapiImageNode]);
           }
           return true;
         },
-        lexical.COMMAND_PRIORITY_EDITOR
+        COMMAND_PRIORITY_EDITOR
       ),
       editor.registerCommand(
-        lexical.DRAGSTART_COMMAND,
+        DRAGSTART_COMMAND,
         (event) => {
           return $onDragStart(event);
         },
-        lexical.COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH
       ),
       editor.registerCommand(
-        lexical.DRAGOVER_COMMAND,
+        DRAGOVER_COMMAND,
         (event) => {
           return $onDragover(event);
         },
-        lexical.COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW$1
       ),
       editor.registerCommand(
-        lexical.DROP_COMMAND,
+        DROP_COMMAND,
         (event) => {
           return $onDrop(event, editor);
         },
-        lexical.COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH
       )
     );
   }, [editor]);
@@ -2943,21 +2922,21 @@ function $onDrop(event, editor) {
   if (canDropImage(event)) {
     const range = getDragSelection(event);
     node.remove();
-    const rangeSelection = lexical.$createRangeSelection();
+    const rangeSelection = $createRangeSelection();
     if (range !== null && range !== void 0) {
       rangeSelection.applyDOMRange(range);
     }
-    lexical.$setSelection(rangeSelection);
+    $setSelection(rangeSelection);
     editor.dispatchCommand(INSERT_STRAPI_IMAGE_COMMAND, data);
   }
   return true;
 }
 function $getImageNodeInSelection() {
-  const selection2 = lexical.$getSelection();
-  if (!lexical.$isNodeSelection(selection2)) {
+  const selection = $getSelection();
+  if (!$isNodeSelection(selection)) {
     return null;
   }
-  const nodes = selection2.getNodes();
+  const nodes = selection.getNodes();
   const node = nodes[0];
   return $isStrapiImageNode(node) ? node : null;
 }
@@ -2974,11 +2953,11 @@ function getDragImageData(event) {
 }
 function canDropImage(event) {
   const target = event.target;
-  return !!(lexical.isHTMLElement(target) && !target.closest("code, span.editor-image") && lexical.isHTMLElement(target.parentElement) && target.parentElement.closest("div.ContentEditable__root"));
+  return !!(isHTMLElement(target) && !target.closest("code, span.editor-image") && isHTMLElement(target.parentElement) && target.parentElement.closest("div.ContentEditable__root"));
 }
 function getDragSelection(event) {
   let range;
-  const domSelection = lexical.getDOMSelectionFromTarget(event.target);
+  const domSelection = getDOMSelectionFromTarget(event.target);
   if (document.caretRangeFromPoint) {
     range = document.caretRangeFromPoint(event.clientX, event.clientY);
   } else if (event.rangeParent && domSelection !== null) {
@@ -3205,26 +3184,26 @@ const ACCEPTABLE_IMAGE_TYPES = [
   "image/webp",
   "image/svg+xml"
 ];
-const UPLOAD_IMAGE_COMMAND = lexical.createCommand("UPLOAD_IMAGE_COMMAND");
+const UPLOAD_IMAGE_COMMAND = createCommand("UPLOAD_IMAGE_COMMAND");
 function StrapiImageUploadPlugin({
   folder = "post"
 }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const fileInputRef = React.useRef(null);
-  const [isUploading, setIsUploading] = React.useState(false);
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+  useEffect(() => {
     return editor.registerCommand(
-      richText.DRAG_DROP_PASTE,
+      DRAG_DROP_PASTE,
       (files) => {
         handleFileUpload(files);
         return true;
       },
-      lexical.COMMAND_PRIORITY_HIGH
+      COMMAND_PRIORITY_HIGH
     );
   }, [editor, folder]);
-  React.useEffect(() => {
+  useEffect(() => {
     return editor.registerCommand(
-      lexical.PASTE_COMMAND,
+      PASTE_COMMAND,
       (event) => {
         const clipboardData = event.clipboardData;
         if (clipboardData && clipboardData.files.length > 0) {
@@ -3238,17 +3217,17 @@ function StrapiImageUploadPlugin({
         }
         return false;
       },
-      lexical.COMMAND_PRIORITY_HIGH
+      COMMAND_PRIORITY_HIGH
     );
   }, [editor, folder]);
-  React.useEffect(() => {
+  useEffect(() => {
     return editor.registerCommand(
       UPLOAD_IMAGE_COMMAND,
       (files) => {
         handleFileUpload(files);
         return true;
       },
-      lexical.COMMAND_PRIORITY_LOW
+      COMMAND_PRIORITY_LOW$1
     );
   }, [editor, folder]);
   const handleFileUpload = async (files) => {
@@ -3310,13 +3289,13 @@ function StrapiImageUploadPlugin({
       fileInputRef.current.click();
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     window.__strapiImageUploadTrigger = triggerFileInput;
     return () => {
       delete window.__strapiImageUploadTrigger;
     };
   }, [isUploading]);
-  return /* @__PURE__ */ jsxRuntime.jsx(jsxRuntime.Fragment, { children: /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsx(
     "input",
     {
       ref: fileInputRef,
@@ -3335,10 +3314,10 @@ const triggerImageUpload = () => {
   }
 };
 function DragDropPaste() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
     return editor.registerCommand(
-      richText.DRAG_DROP_PASTE,
+      DRAG_DROP_PASTE,
       (files) => {
         const fileArray = Array.from(files);
         const imageFiles = fileArray.filter(isValidImageFile);
@@ -3348,7 +3327,7 @@ function DragDropPaste() {
         }
         return false;
       },
-      lexical.COMMAND_PRIORITY_LOW
+      COMMAND_PRIORITY_LOW$1
     );
   }, [editor]);
   return null;
@@ -3360,21 +3339,21 @@ function isOnMenu(element) {
 function DraggableBlockPlugin({
   anchorElem = document.body
 }) {
-  const menuRef = React.useRef(null);
-  const targetLineRef = React.useRef(null);
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    LexicalDraggableBlockPlugin.DraggableBlockPlugin_EXPERIMENTAL,
+  const menuRef = useRef(null);
+  const targetLineRef = useRef(null);
+  return /* @__PURE__ */ jsx(
+    DraggableBlockPlugin_EXPERIMENTAL,
     {
       anchorElem,
       menuRef,
       targetLineRef,
-      menuComponent: /* @__PURE__ */ jsxRuntime.jsx("div", { ref: menuRef, className: "icon draggable-block-menu", children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: "icon" }) }),
-      targetLineComponent: /* @__PURE__ */ jsxRuntime.jsx("div", { ref: targetLineRef, className: "draggable-block-target-line" }),
+      menuComponent: /* @__PURE__ */ jsx("div", { ref: menuRef, className: "icon draggable-block-menu", children: /* @__PURE__ */ jsx("div", { className: "icon" }) }),
+      targetLineComponent: /* @__PURE__ */ jsx("div", { ref: targetLineRef, className: "draggable-block-target-line" }),
       isOnMenu
     }
   );
 }
-class EmojiOption extends LexicalTypeaheadMenuPlugin.MenuOption {
+class EmojiOption extends MenuOption {
   title;
   emoji;
   keywords;
@@ -3396,7 +3375,7 @@ function EmojiMenuItem({
   if (isSelected) {
     className += " selected";
   }
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(
     "li",
     {
       tabIndex: -1,
@@ -3407,7 +3386,7 @@ function EmojiMenuItem({
       id: "typeahead-item-" + index,
       onMouseEnter,
       onClick,
-      children: /* @__PURE__ */ jsxRuntime.jsxs("span", { className: "text", children: [
+      children: /* @__PURE__ */ jsxs("span", { className: "text", children: [
         option.emoji,
         " ",
         option.title
@@ -3418,13 +3397,13 @@ function EmojiMenuItem({
 }
 const MAX_EMOJI_SUGGESTION_COUNT = 10;
 function EmojiPickerPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const [queryString, setQueryString] = React.useState(null);
-  const [emojis2, setEmojis] = React.useState([]);
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  const [queryString, setQueryString] = useState(null);
+  const [emojis2, setEmojis] = useState([]);
+  useEffect(() => {
     Promise.resolve().then(() => emojiList$1).then((file) => setEmojis(file.default));
   }, []);
-  const emojiOptions = React.useMemo(
+  const emojiOptions = useMemo(
     () => emojis2 != null ? emojis2.map(
       ({ emoji, aliases, tags }) => new EmojiOption(aliases[0], emoji, {
         keywords: [...aliases, ...tags]
@@ -3432,32 +3411,32 @@ function EmojiPickerPlugin() {
     ) : [],
     [emojis2]
   );
-  const checkForTriggerMatch = LexicalTypeaheadMenuPlugin.useBasicTypeaheadTriggerMatch(":", {
+  const checkForTriggerMatch = useBasicTypeaheadTriggerMatch(":", {
     minLength: 0
   });
-  const options = React.useMemo(() => {
+  const options = useMemo(() => {
     return emojiOptions.filter((option) => {
       return queryString != null ? new RegExp(queryString, "gi").exec(option.title) || option.keywords != null ? option.keywords.some((keyword) => new RegExp(queryString, "gi").exec(keyword)) : false : emojiOptions;
     }).slice(0, MAX_EMOJI_SUGGESTION_COUNT);
   }, [emojiOptions, queryString]);
-  const onSelectOption = React.useCallback(
+  const onSelectOption = useCallback(
     (selectedOption, nodeToRemove, closeMenu) => {
       editor.update(() => {
-        const selection2 = lexical.$getSelection();
-        if (!lexical.$isRangeSelection(selection2) || selectedOption == null) {
+        const selection = $getSelection();
+        if (!$isRangeSelection(selection) || selectedOption == null) {
           return;
         }
         if (nodeToRemove) {
           nodeToRemove.remove();
         }
-        selection2.insertNodes([lexical.$createTextNode(selectedOption.emoji)]);
+        selection.insertNodes([$createTextNode(selectedOption.emoji)]);
         closeMenu();
       });
     },
     [editor]
   );
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    LexicalTypeaheadMenuPlugin.LexicalTypeaheadMenuPlugin,
+  return /* @__PURE__ */ jsx(
+    LexicalTypeaheadMenuPlugin,
     {
       onQueryChange: setQueryString,
       onSelectOption,
@@ -3467,8 +3446,8 @@ function EmojiPickerPlugin() {
         if (anchorElementRef.current == null || options.length === 0) {
           return null;
         }
-        return anchorElementRef.current && options.length ? ReactDOM__namespace.createPortal(
-          /* @__PURE__ */ jsxRuntime.jsx("div", { className: "typeahead-popover emoji-menu", children: /* @__PURE__ */ jsxRuntime.jsx("ul", { children: options.map((option, index) => /* @__PURE__ */ jsxRuntime.jsx(
+        return anchorElementRef.current && options.length ? ReactDOM.createPortal(
+          /* @__PURE__ */ jsx("div", { className: "typeahead-popover emoji-menu", children: /* @__PURE__ */ jsx("ul", { children: options.map((option, index) => /* @__PURE__ */ jsx(
             EmojiMenuItem,
             {
               index,
@@ -3490,7 +3469,7 @@ function EmojiPickerPlugin() {
     }
   );
 }
-class EmojiNode extends lexical.TextNode {
+class EmojiNode extends TextNode {
   __className;
   static getType() {
     return "emoji";
@@ -3536,7 +3515,7 @@ class EmojiNode extends lexical.TextNode {
 }
 function $createEmojiNode(className, emojiText) {
   const node = new EmojiNode(className, emojiText).setMode("token");
-  return lexical.$applyNodeReplacement(node);
+  return $applyNodeReplacement(node);
 }
 const emojis = /* @__PURE__ */ new Map([
   [":)", ["emoji happysmile", "🙂"]],
@@ -3573,31 +3552,31 @@ function $textNodeTransform(node) {
   }
 }
 function useEmojis(editor) {
-  React.useEffect(() => {
+  useEffect(() => {
     if (!editor.hasNodes([EmojiNode])) {
       throw new Error("EmojisPlugin: EmojiNode not registered on editor");
     }
-    return editor.registerNodeTransform(lexical.TextNode, $textNodeTransform);
+    return editor.registerNodeTransform(TextNode, $textNodeTransform);
   }, [editor]);
 }
 function EmojisPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
+  const [editor] = useLexicalComposerContext();
   useEmojis(editor);
   return null;
 }
-function getSelectedNode(selection$1) {
-  const anchor = selection$1.anchor;
-  const focus = selection$1.focus;
-  const anchorNode = selection$1.anchor.getNode();
-  const focusNode = selection$1.focus.getNode();
+function getSelectedNode(selection) {
+  const anchor = selection.anchor;
+  const focus = selection.focus;
+  const anchorNode = selection.anchor.getNode();
+  const focusNode = selection.focus.getNode();
   if (anchorNode === focusNode) {
     return anchorNode;
   }
-  const isBackward = selection$1.isBackward();
+  const isBackward = selection.isBackward();
   if (isBackward) {
-    return selection.$isAtNodeEnd(focus) ? anchorNode : focusNode;
+    return $isAtNodeEnd(focus) ? anchorNode : focusNode;
   } else {
-    return selection.$isAtNodeEnd(anchor) ? anchorNode : focusNode;
+    return $isAtNodeEnd(anchor) ? anchorNode : focusNode;
   }
 }
 const VERTICAL_GAP$1 = 10;
@@ -3661,11 +3640,11 @@ function validateUrl(url) {
   return url === "https://" || urlRegExp.test(url);
 }
 const highlightText = (text, q) => {
-  if (!q.trim().length) return /* @__PURE__ */ jsxRuntime.jsx(jsxRuntime.Fragment, { children: text });
+  if (!q.trim().length) return /* @__PURE__ */ jsx(Fragment, { children: text });
   const regex = new RegExp(`(${q})`, "gi");
   const parts = text.split(regex);
-  return /* @__PURE__ */ jsxRuntime.jsx(jsxRuntime.Fragment, { children: parts.map(
-    (part, index) => part.toLowerCase() === q.toLowerCase() ? /* @__PURE__ */ jsxRuntime.jsx("strong", { children: part }, index) : part
+  return /* @__PURE__ */ jsx(Fragment, { children: parts.map(
+    (part, index) => part.toLowerCase() === q.toLowerCase() ? /* @__PURE__ */ jsx("strong", { children: part }, index) : part
   ) });
 };
 const linkRegex = /^(https?|ftp|mailto|tel|ws|wss|sms|geo|maps|whatsapp|facetime|facetime-audio|skype|sip|sips):\/\/?/i;
@@ -3676,21 +3655,21 @@ const LinkModal = ({
   open,
   setOpen
 }) => {
-  const { locale, formatMessage } = reactIntl.useIntl();
-  const { get } = admin.useFetchClient();
-  const { model } = admin.unstable_useContentManagerContext();
-  const currentType = React__namespace.useMemo(
+  const { locale, formatMessage } = useIntl();
+  const { get } = useFetchClient();
+  const { model } = unstable_useContentManagerContext();
+  const currentType = React.useMemo(
     () => currentValue.startsWith("strapi://") ? "internal" : "external",
     [currentValue]
   );
-  const defaultTab = React__namespace.useMemo(
+  const defaultTab = React.useMemo(
     () => currentType === "external" && currentValue.length ? "external" : "internal",
     [currentValue, currentType]
   );
-  const [activeTab, setActiveTab] = React__namespace.useState(defaultTab);
-  const [searchResults, setSearchResults] = React__namespace.useState([]);
-  const [q, setQ] = React__namespace.useState("");
-  React__namespace.useEffect(() => {
+  const [activeTab, setActiveTab] = React.useState(defaultTab);
+  const [searchResults, setSearchResults] = React.useState([]);
+  const [q, setQ] = React.useState("");
+  React.useEffect(() => {
     const loadCurrentSelected = async (currentSelectedItem) => {
       try {
         const resultCurrentItem = await get(`/lexical/get/${currentSelectedItem}`);
@@ -3708,7 +3687,7 @@ const LinkModal = ({
       loadCurrentSelected(currentValue.replace("strapi://", ""));
     }
   }, [currentValue]);
-  const handleSearch = React__namespace.useCallback(async (e) => {
+  const handleSearch = React.useCallback(async (e) => {
     const userQuery = e.target.value.trim();
     if (userQuery.length) {
       setQ(userQuery);
@@ -3728,9 +3707,9 @@ ${JSON.stringify(resultSearchLinkables.data, null, 2)}`);
     }
     setSearchResults([]);
   }, []);
-  const [internalError, setInternalError] = React__namespace.useState("");
-  const [externalError, setExternalError] = React__namespace.useState("");
-  const onSubmitCb = React__namespace.useCallback(
+  const [internalError, setInternalError] = React.useState("");
+  const [externalError, setExternalError] = React.useState("");
+  const onSubmitCb = React.useCallback(
     (e) => {
       const formData = new FormData(e.currentTarget);
       const value = formData.get(activeTab)?.toString();
@@ -3760,39 +3739,39 @@ ${JSON.stringify(resultSearchLinkables.data, null, 2)}`);
     },
     [activeTab, setValue, setInternalError, externalError]
   );
-  return /* @__PURE__ */ jsxRuntime.jsx(designSystem.Modal.Root, { open, onOpenChange: setOpen, children: /* @__PURE__ */ jsxRuntime.jsx(designSystem.Modal.Content, { children: /* @__PURE__ */ jsxRuntime.jsxs("form", { onSubmit: onSubmitCb, children: [
-    /* @__PURE__ */ jsxRuntime.jsx(designSystem.Modal.Header, { children: /* @__PURE__ */ jsxRuntime.jsx(designSystem.Modal.Title, { children: formatMessage({
+  return /* @__PURE__ */ jsx(Modal$1.Root, { open, onOpenChange: setOpen, children: /* @__PURE__ */ jsx(Modal$1.Content, { children: /* @__PURE__ */ jsxs("form", { onSubmit: onSubmitCb, children: [
+    /* @__PURE__ */ jsx(Modal$1.Header, { children: /* @__PURE__ */ jsx(Modal$1.Title, { children: formatMessage({
       id: "lexical.components.link-modal.title",
       defaultMessage: "Link Content"
     }) }) }),
-    /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Tabs.Root, { defaultValue: defaultTab, onValueChange: setActiveTab, children: [
-      /* @__PURE__ */ jsxRuntime.jsxs(
-        designSystem.Tabs.List,
+    /* @__PURE__ */ jsxs(Tabs.Root, { defaultValue: defaultTab, onValueChange: setActiveTab, children: [
+      /* @__PURE__ */ jsxs(
+        Tabs.List,
         {
           "aria-label": formatMessage({
             id: "lexical.components.link-modal.tab-list.aria-label",
             defaultMessage: "Do you want to link internal or external content?"
           }),
           children: [
-            /* @__PURE__ */ jsxRuntime.jsx(designSystem.Tabs.Trigger, { value: "internal", children: formatMessage({
+            /* @__PURE__ */ jsx(Tabs.Trigger, { value: "internal", children: formatMessage({
               id: "lexical.components.link-modal.tabs.title.internal-link",
               defaultMessage: "Internal Link"
             }) }),
-            /* @__PURE__ */ jsxRuntime.jsx(designSystem.Tabs.Trigger, { value: "external", children: formatMessage({
+            /* @__PURE__ */ jsx(Tabs.Trigger, { value: "external", children: formatMessage({
               id: "lexical.components.link-modal.tabs.title.external-link",
               defaultMessage: "External Link"
             }) })
           ]
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(designSystem.Tabs.Content, { value: "internal", children: /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Box, { padding: 4, style: { minHeight: "60vh", overflowY: "scroll" }, children: [
-        /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Field.Root, { error: internalError, onChange: handleSearch, required: true, children: [
-          /* @__PURE__ */ jsxRuntime.jsx(designSystem.Field.Label, { children: formatMessage({
+      /* @__PURE__ */ jsx(Tabs.Content, { value: "internal", children: /* @__PURE__ */ jsxs(Box, { padding: 4, style: { minHeight: "60vh", overflowY: "scroll" }, children: [
+        /* @__PURE__ */ jsxs(Field.Root, { error: internalError, onChange: handleSearch, required: true, children: [
+          /* @__PURE__ */ jsx(Field.Label, { children: formatMessage({
             id: "lexical.components.link-modal.tabs.content.internal.label",
             defaultMessage: "Search for content within Strapi to link to"
           }) }),
-          /* @__PURE__ */ jsxRuntime.jsx(
-            designSystem.Field.Input,
+          /* @__PURE__ */ jsx(
+            Field.Input,
             {
               type: "search",
               placeholder: formatMessage({
@@ -3802,22 +3781,22 @@ ${JSON.stringify(resultSearchLinkables.data, null, 2)}`);
               size: "M"
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx(designSystem.Field.Error, {})
+          /* @__PURE__ */ jsx(Field.Error, {})
         ] }),
-        searchResults.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(
-          designSystem.Radio.Group,
+        searchResults.length > 0 && /* @__PURE__ */ jsx(
+          Radio.Group,
           {
             name: "internal",
             defaultValue: currentType === "internal" ? currentValue : void 0,
-            children: /* @__PURE__ */ jsxRuntime.jsx(designSystem.Table, { colCount: 2, rowCount: 1, style: { marginTop: "0.5rem" }, children: /* @__PURE__ */ jsxRuntime.jsx(designSystem.Tbody, { children: searchResults.map((result) => /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Tr, { children: [
-              /* @__PURE__ */ jsxRuntime.jsx(designSystem.Td, { children: /* @__PURE__ */ jsxRuntime.jsx(
-                designSystem.Radio.Item,
+            children: /* @__PURE__ */ jsx(Table, { colCount: 2, rowCount: 1, style: { marginTop: "0.5rem" }, children: /* @__PURE__ */ jsx(Tbody, { children: searchResults.map((result) => /* @__PURE__ */ jsxs(Tr, { children: [
+              /* @__PURE__ */ jsx(Td, { children: /* @__PURE__ */ jsx(
+                Radio.Item,
                 {
                   value: `strapi://${result.collectionName}/${result.documentId}`,
                   id: result.documentId
                 }
               ) }),
-              /* @__PURE__ */ jsxRuntime.jsx(designSystem.Td, { children: /* @__PURE__ */ jsxRuntime.jsx("label", { htmlFor: result.documentId, children: /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Typography, { children: [
+              /* @__PURE__ */ jsx(Td, { children: /* @__PURE__ */ jsx("label", { htmlFor: result.documentId, children: /* @__PURE__ */ jsxs(Typography, { children: [
                 highlightText(result.label, q),
                 " (",
                 result.collectionName,
@@ -3829,13 +3808,13 @@ ${JSON.stringify(resultSearchLinkables.data, null, 2)}`);
           }
         )
       ] }) }),
-      /* @__PURE__ */ jsxRuntime.jsx(designSystem.Tabs.Content, { value: "external", children: /* @__PURE__ */ jsxRuntime.jsx(designSystem.Box, { padding: 4, style: { minHeight: "60vh", overflowY: "scroll" }, children: /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Field.Root, { error: externalError, name: "external", required: true, children: [
-        /* @__PURE__ */ jsxRuntime.jsx(designSystem.Field.Label, { children: formatMessage({
+      /* @__PURE__ */ jsx(Tabs.Content, { value: "external", children: /* @__PURE__ */ jsx(Box, { padding: 4, style: { minHeight: "60vh", overflowY: "scroll" }, children: /* @__PURE__ */ jsxs(Field.Root, { error: externalError, name: "external", required: true, children: [
+        /* @__PURE__ */ jsx(Field.Label, { children: formatMessage({
           id: "lexical.components.link-modal.tabs.content.external.label",
           defaultMessage: "Enter URI to external content"
         }) }),
-        /* @__PURE__ */ jsxRuntime.jsx(
-          designSystem.Field.Input,
+        /* @__PURE__ */ jsx(
+          Field.Input,
           {
             placeholder: formatMessage({
               id: "lexical.components.link-modal.tabs.content.external.placeholder",
@@ -3846,15 +3825,15 @@ ${JSON.stringify(resultSearchLinkables.data, null, 2)}`);
             defaultValue: currentType === "external" ? currentValue : ""
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsx(designSystem.Field.Error, {})
+        /* @__PURE__ */ jsx(Field.Error, {})
       ] }) }) })
     ] }),
-    /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Modal.Footer, { children: [
-      /* @__PURE__ */ jsxRuntime.jsx(designSystem.Modal.Close, { children: /* @__PURE__ */ jsxRuntime.jsx(designSystem.Button, { variant: "tertiary", onClick: () => setOpen(false), children: formatMessage({
+    /* @__PURE__ */ jsxs(Modal$1.Footer, { children: [
+      /* @__PURE__ */ jsx(Modal$1.Close, { children: /* @__PURE__ */ jsx(Button$1, { variant: "tertiary", onClick: () => setOpen(false), children: formatMessage({
         id: "lexical.components.link-modal.button.cancel",
         defaultMessage: "Cancel"
       }) }) }),
-      /* @__PURE__ */ jsxRuntime.jsx(designSystem.Button, { type: "submit", children: formatMessage({
+      /* @__PURE__ */ jsx(Button$1, { type: "submit", children: formatMessage({
         id: "lexical.components.link-modal.button.set-link",
         defaultMessage: "Set Link"
       }) })
@@ -3873,20 +3852,20 @@ function FloatingLinkEditor({
   setIsLinkEditMode,
   fieldName
 }) {
-  const { get } = admin.useFetchClient();
-  const editorRef = React.useRef(null);
-  const inputRef = React.useRef(null);
-  const [linkUrl, setLinkUrl] = React.useState("");
-  const [editedLinkUrl, setEditedLinkUrl] = React.useState("https://");
-  const [lastSelection, setLastSelection] = React.useState(null);
-  const $updateLinkEditor = React.useCallback(() => {
-    const selection2 = lexical.$getSelection();
-    if (lexical.$isRangeSelection(selection2)) {
-      const node = getSelectedNode(selection2);
-      const linkParent = utils.$findMatchingParent(node, link.$isLinkNode);
+  const { get } = useFetchClient();
+  const editorRef = useRef(null);
+  const inputRef = useRef(null);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [editedLinkUrl, setEditedLinkUrl] = useState("https://");
+  const [lastSelection, setLastSelection] = useState(null);
+  const $updateLinkEditor = useCallback(() => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      const node = getSelectedNode(selection);
+      const linkParent = $findMatchingParent(node, $isLinkNode);
       if (linkParent) {
         setLinkUrl(linkParent.getURL());
-      } else if (link.$isLinkNode(node)) {
+      } else if ($isLinkNode(node)) {
         setLinkUrl(node.getURL());
       } else {
         setLinkUrl("");
@@ -3896,19 +3875,19 @@ function FloatingLinkEditor({
       }
     }
     const editorElem = editorRef.current;
-    const nativeSelection = lexical.getDOMSelection(editor._window);
+    const nativeSelection = getDOMSelection(editor._window);
     const activeElement = document.activeElement;
     if (editorElem === null) {
       return;
     }
     const rootElement = editor.getRootElement();
-    if (selection2 !== null && nativeSelection !== null && rootElement !== null && rootElement.contains(nativeSelection.anchorNode) && editor.isEditable()) {
+    if (selection !== null && nativeSelection !== null && rootElement !== null && rootElement.contains(nativeSelection.anchorNode) && editor.isEditable()) {
       const domRect = nativeSelection.focusNode?.parentElement?.getBoundingClientRect();
       if (domRect) {
         domRect.y += 40;
         setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem);
       }
-      setLastSelection(selection2);
+      setLastSelection(selection);
     } else if (!activeElement || activeElement.className !== "link-input") {
       if (rootElement !== null) {
         setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem);
@@ -3919,7 +3898,7 @@ function FloatingLinkEditor({
     }
     return true;
   }, [anchorElem, editor, setIsLinkEditMode, isLinkEditMode, linkUrl]);
-  React.useEffect(() => {
+  useEffect(() => {
     const scrollerElem = anchorElem.parentElement;
     const update = () => {
       editor.getEditorState().read(() => {
@@ -3937,23 +3916,23 @@ function FloatingLinkEditor({
       }
     };
   }, [anchorElem.parentElement, editor, $updateLinkEditor]);
-  React.useEffect(() => {
-    return utils.mergeRegister(
+  useEffect(() => {
+    return mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
           $updateLinkEditor();
         });
       }),
       editor.registerCommand(
-        lexical.SELECTION_CHANGE_COMMAND,
+        SELECTION_CHANGE_COMMAND,
         () => {
           $updateLinkEditor();
           return true;
         },
-        lexical.COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW$1
       ),
       editor.registerCommand(
-        lexical.KEY_ESCAPE_COMMAND,
+        KEY_ESCAPE_COMMAND,
         () => {
           if (isLink) {
             setIsLink(false);
@@ -3961,16 +3940,16 @@ function FloatingLinkEditor({
           }
           return false;
         },
-        lexical.COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH
       )
     );
   }, [editor, $updateLinkEditor, setIsLink, isLink]);
-  React.useEffect(() => {
+  useEffect(() => {
     editor.getEditorState().read(() => {
       $updateLinkEditor();
     });
   }, [editor, $updateLinkEditor]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLinkEditMode && inputRef.current) {
       inputRef.current.focus();
     }
@@ -3980,12 +3959,12 @@ function FloatingLinkEditor({
       if (newValue !== "") {
         setEditedLinkUrl(newValue);
         editor.update(() => {
-          editor.dispatchCommand(link.TOGGLE_LINK_COMMAND, sanitizeUrl(newValue));
-          const selection2 = lexical.$getSelection();
-          if (lexical.$isRangeSelection(selection2)) {
-            const parent = getSelectedNode(selection2).getParent();
-            if (link.$isAutoLinkNode(parent)) {
-              const linkNode = link.$createLinkNode(parent.getURL(), {
+          editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl(newValue));
+          const selection = $getSelection();
+          if ($isRangeSelection(selection)) {
+            const parent = getSelectedNode(selection).getParent();
+            if ($isAutoLinkNode(parent)) {
+              const linkNode = $createLinkNode(parent.getURL(), {
                 rel: parent.__rel,
                 target: parent.__target,
                 title: parent.__title
@@ -3999,8 +3978,8 @@ function FloatingLinkEditor({
       setIsLinkEditMode(false);
     }
   };
-  const [linkHref, setLinkHref] = React__namespace.useState("about:blank");
-  React__namespace.useEffect(() => {
+  const [linkHref, setLinkHref] = React.useState("about:blank");
+  React.useEffect(() => {
     const findStrapiLink = async (strapiURI) => {
       const [collectionName, documentId] = strapiURI.replace("strapi://", "").split("/");
       try {
@@ -4020,7 +3999,7 @@ function FloatingLinkEditor({
     }
     setLinkHref(sanitized);
   }, [linkUrl]);
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { ref: editorRef, className: "link-editor", children: !isLink ? null : isLinkEditMode ? /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx("div", { ref: editorRef, className: "link-editor", children: !isLink ? null : isLinkEditMode ? /* @__PURE__ */ jsx(
     LinkModal,
     {
       open: isLinkEditMode,
@@ -4029,9 +4008,9 @@ function FloatingLinkEditor({
       currentValue: editedLinkUrl,
       setValue: handleLinkSubmission
     }
-  ) : /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "link-view", children: [
-    /* @__PURE__ */ jsxRuntime.jsx("a", { href: linkHref, target: "_blank", rel: "noopener noreferrer", children: linkUrl }),
-    /* @__PURE__ */ jsxRuntime.jsx(
+  ) : /* @__PURE__ */ jsxs("div", { className: "link-view", children: [
+    /* @__PURE__ */ jsx("a", { href: linkHref, target: "_blank", rel: "noopener noreferrer", children: linkUrl }),
+    /* @__PURE__ */ jsx(
       "div",
       {
         className: "link-edit",
@@ -4045,7 +4024,7 @@ function FloatingLinkEditor({
         }
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "div",
       {
         className: "link-trash",
@@ -4053,29 +4032,29 @@ function FloatingLinkEditor({
         tabIndex: 0,
         onMouseDown: preventDefault,
         onClick: () => {
-          editor.dispatchCommand(link.TOGGLE_LINK_COMMAND, null);
+          editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
         }
       }
     )
   ] }) });
 }
 function useFloatingLinkEditorToolbar(editor, anchorElem, isLinkEditMode, setIsLinkEditMode, fieldName) {
-  const [activeEditor, setActiveEditor] = React.useState(editor);
-  const [isLink, setIsLink] = React.useState(false);
-  React.useEffect(() => {
+  const [activeEditor, setActiveEditor] = useState(editor);
+  const [isLink, setIsLink] = useState(false);
+  useEffect(() => {
     function $updateToolbar() {
-      const selection2 = lexical.$getSelection();
-      if (lexical.$isRangeSelection(selection2)) {
-        const focusNode = getSelectedNode(selection2);
-        const focusLinkNode = utils.$findMatchingParent(focusNode, link.$isLinkNode);
-        const focusAutoLinkNode = utils.$findMatchingParent(focusNode, link.$isAutoLinkNode);
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        const focusNode = getSelectedNode(selection);
+        const focusLinkNode = $findMatchingParent(focusNode, $isLinkNode);
+        const focusAutoLinkNode = $findMatchingParent(focusNode, $isAutoLinkNode);
         if (!(focusLinkNode || focusAutoLinkNode)) {
           setIsLink(false);
           return;
         }
-        const badNode = selection2.getNodes().filter((node) => !lexical.$isLineBreakNode(node)).find((node) => {
-          const linkNode = utils.$findMatchingParent(node, link.$isLinkNode);
-          const autoLinkNode = utils.$findMatchingParent(node, link.$isAutoLinkNode);
+        const badNode = selection.getNodes().filter((node) => !$isLineBreakNode(node)).find((node) => {
+          const linkNode = $findMatchingParent(node, $isLinkNode);
+          const autoLinkNode = $findMatchingParent(node, $isAutoLinkNode);
           return focusLinkNode && !focusLinkNode.is(linkNode) || linkNode && !linkNode.is(focusLinkNode) || focusAutoLinkNode && !focusAutoLinkNode.is(autoLinkNode) || autoLinkNode && (!autoLinkNode.is(focusAutoLinkNode) || autoLinkNode.getIsUnlinked());
         });
         if (!badNode) {
@@ -4085,41 +4064,41 @@ function useFloatingLinkEditorToolbar(editor, anchorElem, isLinkEditMode, setIsL
         }
       }
     }
-    return utils.mergeRegister(
+    return mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
           $updateToolbar();
         });
       }),
       editor.registerCommand(
-        lexical.SELECTION_CHANGE_COMMAND,
+        SELECTION_CHANGE_COMMAND,
         (_payload, newEditor) => {
           $updateToolbar();
           setActiveEditor(newEditor);
           return false;
         },
-        lexical.COMMAND_PRIORITY_CRITICAL
+        COMMAND_PRIORITY_CRITICAL
       ),
       editor.registerCommand(
-        lexical.CLICK_COMMAND,
+        CLICK_COMMAND,
         (payload) => {
-          const selection2 = lexical.$getSelection();
-          if (lexical.$isRangeSelection(selection2)) {
-            const node = getSelectedNode(selection2);
-            const linkNode = utils.$findMatchingParent(node, link.$isLinkNode);
-            if (link.$isLinkNode(linkNode) && (payload.metaKey || payload.ctrlKey)) {
+          const selection = $getSelection();
+          if ($isRangeSelection(selection)) {
+            const node = getSelectedNode(selection);
+            const linkNode = $findMatchingParent(node, $isLinkNode);
+            if ($isLinkNode(linkNode) && (payload.metaKey || payload.ctrlKey)) {
               window.open(linkNode.getURL(), "_blank");
               return true;
             }
           }
           return false;
         },
-        lexical.COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW$1
       )
     );
   }, [editor]);
-  return ReactDOM.createPortal(
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return createPortal(
+    /* @__PURE__ */ jsx(
       FloatingLinkEditor,
       {
         editor: activeEditor,
@@ -4140,7 +4119,7 @@ function FloatingLinkEditorPlugin({
   setIsLinkEditMode,
   fieldName
 }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
+  const [editor] = useLexicalComposerContext();
   return useFloatingLinkEditorToolbar(
     editor,
     anchorElem,
@@ -4204,15 +4183,15 @@ function TextFormatFloatingToolbar({
   isSuperscript: isSuperscript2,
   setIsLinkEditMode
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  const popupCharStylesEditorRef = React.useRef(null);
-  const insertLink = React.useCallback(() => {
+  const { formatMessage } = useIntl();
+  const popupCharStylesEditorRef = useRef(null);
+  const insertLink = useCallback(() => {
     if (!isLink) {
       setIsLinkEditMode(true);
-      editor.dispatchCommand(link.TOGGLE_LINK_COMMAND, "https://");
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, "https://");
     } else {
       setIsLinkEditMode(false);
-      editor.dispatchCommand(link.TOGGLE_LINK_COMMAND, null);
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     }
   }, [editor, isLink, setIsLinkEditMode]);
   function mouseMoveListener(e) {
@@ -4234,7 +4213,7 @@ function TextFormatFloatingToolbar({
       }
     }
   }
-  React.useEffect(() => {
+  useEffect(() => {
     if (popupCharStylesEditorRef?.current) {
       document.addEventListener("mousemove", mouseMoveListener);
       document.addEventListener("mouseup", mouseUpListener);
@@ -4244,20 +4223,20 @@ function TextFormatFloatingToolbar({
       };
     }
   }, [popupCharStylesEditorRef]);
-  const $updateTextFormatFloatingToolbar = React.useCallback(() => {
-    const selection2 = lexical.$getSelection();
+  const $updateTextFormatFloatingToolbar = useCallback(() => {
+    const selection = $getSelection();
     const popupCharStylesEditorElem = popupCharStylesEditorRef.current;
-    const nativeSelection = lexical.getDOMSelection(editor._window);
+    const nativeSelection = getDOMSelection(editor._window);
     if (popupCharStylesEditorElem === null) {
       return;
     }
     const rootElement = editor.getRootElement();
-    if (selection2 !== null && nativeSelection !== null && !nativeSelection.isCollapsed && rootElement !== null && rootElement.contains(nativeSelection.anchorNode)) {
+    if (selection !== null && nativeSelection !== null && !nativeSelection.isCollapsed && rootElement !== null && rootElement.contains(nativeSelection.anchorNode)) {
       const rangeRect = getDOMRangeRect(nativeSelection, rootElement);
       setFloatingElemPosition(rangeRect, popupCharStylesEditorElem, anchorElem, isLink);
     }
   }, [editor, anchorElem, isLink]);
-  React.useEffect(() => {
+  useEffect(() => {
     const scrollerElem = anchorElem.parentElement;
     const update = () => {
       editor.getEditorState().read(() => {
@@ -4275,33 +4254,33 @@ function TextFormatFloatingToolbar({
       }
     };
   }, [editor, $updateTextFormatFloatingToolbar, anchorElem]);
-  React.useEffect(() => {
+  useEffect(() => {
     editor.getEditorState().read(() => {
       $updateTextFormatFloatingToolbar();
     });
-    return utils.mergeRegister(
+    return mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
           $updateTextFormatFloatingToolbar();
         });
       }),
       editor.registerCommand(
-        lexical.SELECTION_CHANGE_COMMAND,
+        SELECTION_CHANGE_COMMAND,
         () => {
           $updateTextFormatFloatingToolbar();
           return false;
         },
-        lexical.COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW$1
       )
     );
   }, [editor, $updateTextFormatFloatingToolbar]);
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { ref: popupCharStylesEditorRef, className: "floating-text-format-popup", children: editor.isEditable() && /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx("div", { ref: popupCharStylesEditorRef, className: "floating-text-format-popup", children: editor.isEditable() && /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "bold");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
         },
         className: "popup-item spaced " + (isBold ? "active" : ""),
         title: formatMessage({
@@ -4312,15 +4291,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.bold.aria",
           defaultMessage: "Format text as bold"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format bold" })
+        children: /* @__PURE__ */ jsx("i", { className: "format bold" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "italic");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
         },
         className: "popup-item spaced " + (isItalic ? "active" : ""),
         title: formatMessage({
@@ -4331,15 +4310,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.italic.aria",
           defaultMessage: "Format text as italics"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format italic" })
+        children: /* @__PURE__ */ jsx("i", { className: "format italic" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "underline");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
         },
         className: "popup-item spaced " + (isUnderline ? "active" : ""),
         title: formatMessage({
@@ -4350,15 +4329,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.underline.aria",
           defaultMessage: "Format text to underlined"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format underline" })
+        children: /* @__PURE__ */ jsx("i", { className: "format underline" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "strikethrough");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
         },
         className: "popup-item spaced " + (isStrikethrough ? "active" : ""),
         title: formatMessage({
@@ -4369,15 +4348,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.strikethrough.aria",
           defaultMessage: "Format text with a strikethrough"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format strikethrough" })
+        children: /* @__PURE__ */ jsx("i", { className: "format strikethrough" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "subscript");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "subscript");
         },
         className: "popup-item spaced " + (isSubscript2 ? "active" : ""),
         title: formatMessage({
@@ -4388,15 +4367,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.subscript.aria",
           defaultMessage: "Format Subscript"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format subscript" })
+        children: /* @__PURE__ */ jsx("i", { className: "format subscript" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "superscript");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "superscript");
         },
         className: "popup-item spaced " + (isSuperscript2 ? "active" : ""),
         title: formatMessage({
@@ -4407,15 +4386,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.superscript.aria",
           defaultMessage: "Format Superscript"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format superscript" })
+        children: /* @__PURE__ */ jsx("i", { className: "format superscript" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "uppercase");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "uppercase");
         },
         className: "popup-item spaced " + (isUppercase2 ? "active" : ""),
         title: formatMessage({
@@ -4426,15 +4405,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.uppercase.aria",
           defaultMessage: "Format text to uppercase"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format uppercase" })
+        children: /* @__PURE__ */ jsx("i", { className: "format uppercase" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "lowercase");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "lowercase");
         },
         className: "popup-item spaced " + (isLowercase2 ? "active" : ""),
         title: formatMessage({
@@ -4445,15 +4424,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.lowercase.aria",
           defaultMessage: "Format text to lowercase"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format lowercase" })
+        children: /* @__PURE__ */ jsx("i", { className: "format lowercase" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "capitalize");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "capitalize");
         },
         className: "popup-item spaced " + (isCapitalize2 ? "active" : ""),
         title: formatMessage({
@@ -4464,15 +4443,15 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.capitalize.aria",
           defaultMessage: "Format text to capitalize"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format capitalize" })
+        children: /* @__PURE__ */ jsx("i", { className: "format capitalize" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
         onClick: () => {
-          editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "code");
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
         },
         className: "popup-item spaced " + (isCode ? "active" : ""),
         title: formatMessage({
@@ -4483,10 +4462,10 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.code.aria",
           defaultMessage: "Insert code block"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format code" })
+        children: /* @__PURE__ */ jsx("i", { className: "format code" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
@@ -4500,76 +4479,76 @@ function TextFormatFloatingToolbar({
           id: "lexical.plugin.format.link.aria",
           defaultMessage: "Insert link"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format link" })
+        children: /* @__PURE__ */ jsx("i", { className: "format link" })
       }
     )
   ] }) });
 }
 function useFloatingTextFormatToolbar(editor, anchorElem, setIsLinkEditMode) {
-  const [isText, setIsText] = React.useState(false);
-  const [isLink, setIsLink] = React.useState(false);
-  const [isBold, setIsBold] = React.useState(false);
-  const [isItalic, setIsItalic] = React.useState(false);
-  const [isUnderline, setIsUnderline] = React.useState(false);
-  const [isUppercase2, setIsUppercase] = React.useState(false);
-  const [isLowercase2, setIsLowercase] = React.useState(false);
-  const [isCapitalize2, setIsCapitalize] = React.useState(false);
-  const [isStrikethrough, setIsStrikethrough] = React.useState(false);
-  const [isSubscript2, setIsSubscript] = React.useState(false);
-  const [isSuperscript2, setIsSuperscript] = React.useState(false);
-  const [isCode, setIsCode] = React.useState(false);
-  const updatePopup = React.useCallback(() => {
+  const [isText, setIsText] = useState(false);
+  const [isLink, setIsLink] = useState(false);
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
+  const [isUppercase2, setIsUppercase] = useState(false);
+  const [isLowercase2, setIsLowercase] = useState(false);
+  const [isCapitalize2, setIsCapitalize] = useState(false);
+  const [isStrikethrough, setIsStrikethrough] = useState(false);
+  const [isSubscript2, setIsSubscript] = useState(false);
+  const [isSuperscript2, setIsSuperscript] = useState(false);
+  const [isCode, setIsCode] = useState(false);
+  const updatePopup = useCallback(() => {
     editor.getEditorState().read(() => {
       if (editor.isComposing()) {
         return;
       }
-      const selection2 = lexical.$getSelection();
-      const nativeSelection = lexical.getDOMSelection(editor._window);
+      const selection = $getSelection();
+      const nativeSelection = getDOMSelection(editor._window);
       const rootElement = editor.getRootElement();
-      if (nativeSelection !== null && (!lexical.$isRangeSelection(selection2) || rootElement === null || !rootElement.contains(nativeSelection.anchorNode))) {
+      if (nativeSelection !== null && (!$isRangeSelection(selection) || rootElement === null || !rootElement.contains(nativeSelection.anchorNode))) {
         setIsText(false);
         return;
       }
-      if (!lexical.$isRangeSelection(selection2)) {
+      if (!$isRangeSelection(selection)) {
         return;
       }
-      const node = getSelectedNode(selection2);
-      setIsBold(selection2.hasFormat("bold"));
-      setIsItalic(selection2.hasFormat("italic"));
-      setIsUnderline(selection2.hasFormat("underline"));
-      setIsUppercase(selection2.hasFormat("uppercase"));
-      setIsLowercase(selection2.hasFormat("lowercase"));
-      setIsCapitalize(selection2.hasFormat("capitalize"));
-      setIsStrikethrough(selection2.hasFormat("strikethrough"));
-      setIsSubscript(selection2.hasFormat("subscript"));
-      setIsSuperscript(selection2.hasFormat("superscript"));
-      setIsCode(selection2.hasFormat("code"));
+      const node = getSelectedNode(selection);
+      setIsBold(selection.hasFormat("bold"));
+      setIsItalic(selection.hasFormat("italic"));
+      setIsUnderline(selection.hasFormat("underline"));
+      setIsUppercase(selection.hasFormat("uppercase"));
+      setIsLowercase(selection.hasFormat("lowercase"));
+      setIsCapitalize(selection.hasFormat("capitalize"));
+      setIsStrikethrough(selection.hasFormat("strikethrough"));
+      setIsSubscript(selection.hasFormat("subscript"));
+      setIsSuperscript(selection.hasFormat("superscript"));
+      setIsCode(selection.hasFormat("code"));
       const parent = node.getParent();
-      if (link.$isLinkNode(parent) || link.$isLinkNode(node)) {
+      if ($isLinkNode(parent) || $isLinkNode(node)) {
         setIsLink(true);
       } else {
         setIsLink(false);
       }
-      if (!code.$isCodeHighlightNode(selection2.anchor.getNode()) && selection2.getTextContent() !== "") {
-        setIsText(lexical.$isTextNode(node) || lexical.$isParagraphNode(node));
+      if (!$isCodeHighlightNode(selection.anchor.getNode()) && selection.getTextContent() !== "") {
+        setIsText($isTextNode(node) || $isParagraphNode(node));
       } else {
         setIsText(false);
       }
-      const rawTextContent = selection2.getTextContent().replace(/\n/g, "");
-      if (!selection2.isCollapsed() && rawTextContent === "") {
+      const rawTextContent = selection.getTextContent().replace(/\n/g, "");
+      if (!selection.isCollapsed() && rawTextContent === "") {
         setIsText(false);
         return;
       }
     });
   }, [editor]);
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener("selectionchange", updatePopup);
     return () => {
       document.removeEventListener("selectionchange", updatePopup);
     };
   }, [updatePopup]);
-  React.useEffect(() => {
-    return utils.mergeRegister(
+  useEffect(() => {
+    return mergeRegister(
       editor.registerUpdateListener(() => {
         updatePopup();
       }),
@@ -4583,8 +4562,8 @@ function useFloatingTextFormatToolbar(editor, anchorElem, setIsLinkEditMode) {
   if (!isText) {
     return null;
   }
-  return ReactDOM.createPortal(
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return createPortal(
+    /* @__PURE__ */ jsx(
       TextFormatFloatingToolbar,
       {
         editor,
@@ -4610,10 +4589,10 @@ function FloatingTextFormatToolbarPlugin({
   anchorElem = document.body,
   setIsLinkEditMode
 }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
+  const [editor] = useLexicalComposerContext();
   return useFloatingTextFormatToolbar(editor, anchorElem, setIsLinkEditMode);
 }
-class KeywordNode extends lexical.TextNode {
+class KeywordNode extends TextNode {
   static getType() {
     return "keyword";
   }
@@ -4640,20 +4619,20 @@ class KeywordNode extends lexical.TextNode {
   }
 }
 function $createKeywordNode(keyword = "") {
-  return lexical.$applyNodeReplacement(new KeywordNode(keyword));
+  return $applyNodeReplacement(new KeywordNode(keyword));
 }
 const KEYWORDS_REGEX = /(^|$|[^A-Za-zªµºÀ-ÖØ-öø-ˁˆ-ˑˠ-ˤˬˮͰ-ʹͶͷͺ-ͽΆΈ-ΊΌΎ-ΡΣ-ϵϷ-ҁҊ-ԧԱ-Ֆՙա-ևא-תװ-ײؠ-يٮٯٱ-ۓەۥۦۮۯۺ-ۼۿܐܒ-ܯݍ-ޥޱߊ-ߪߴߵߺࠀ-ࠕࠚࠤࠨࡀ-ࡘࢠࢢ-ࢬऄ-हऽॐक़-ॡॱ-ॷॹ-ॿঅ-ঌএঐও-নপ-রলশ-হঽৎড়ঢ়য়-ৡৰৱਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹਖ਼-ੜਫ਼ੲ-ੴઅ-ઍએ-ઑઓ-નપ-રલળવ-હઽૐૠૡଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହଽଡ଼ଢ଼ୟ-ୡୱஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹௐఅ-ఌఎ-ఐఒ-నప-ళవ-హఽౘౙౠౡಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹಽೞೠೡೱೲഅ-ഌഎ-ഐഒ-ഺഽൎൠൡൺ-ൿඅ-ඖක-නඳ-රලව-ෆก-ะาำเ-ๆກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ະາຳຽເ-ໄໆໜ-ໟༀཀ-ཇཉ-ཬྈ-ྌက-ဪဿၐ-ၕၚ-ၝၡၥၦၮ-ၰၵ-ႁႎႠ-ჅჇჍა-ჺჼ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚᎀ-ᎏᎠ-Ᏼᐁ-ᙬᙯ-ᙿᚁ-ᚚᚠ-ᛪᜀ-ᜌᜎ-ᜑᜠ-ᜱᝀ-ᝑᝠ-ᝬᝮ-ᝰក-ឳៗៜᠠ-ᡷᢀ-ᢨᢪᢰ-ᣵᤀ-ᤜᥐ-ᥭᥰ-ᥴᦀ-ᦫᧁ-ᧇᨀ-ᨖᨠ-ᩔᪧᬅ-ᬳᭅ-ᭋᮃ-ᮠᮮᮯᮺ-ᯥᰀ-ᰣᱍ-ᱏᱚ-ᱽᳩ-ᳬᳮ-ᳱᳵᳶᴀ-ᶿḀ-ἕἘ-Ἕἠ-ὅὈ-Ὅὐ-ὗὙὛὝὟ-ώᾀ-ᾴᾶ-ᾼιῂ-ῄῆ-ῌῐ-ΐῖ-Ίῠ-Ῥῲ-ῴῶ-ῼⁱⁿₐ-ₜℂℇℊ-ℓℕℙ-ℝℤΩℨK-ℭℯ-ℹℼ-ℿⅅ-ⅉⅎↃↄⰀ-Ⱞⰰ-ⱞⱠ-ⳤⳫ-ⳮⳲⳳⴀ-ⴥⴧⴭⴰ-ⵧⵯⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞⸯ々〆〱-〵〻〼ぁ-ゖゝ-ゟァ-ヺー-ヿㄅ-ㄭㄱ-ㆎㆠ-ㆺㇰ-ㇿ㐀-䶵一-鿌ꀀ-ꒌꓐ-ꓽꔀ-ꘌꘐ-ꘟꘪꘫꙀ-ꙮꙿ-ꚗꚠ-ꛥꜗ-ꜟꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꠁꠃ-ꠅꠇ-ꠊꠌ-ꠢꡀ-ꡳꢂ-ꢳꣲ-ꣷꣻꤊ-ꤥꤰ-ꥆꥠ-ꥼꦄ-ꦲꧏꨀ-ꨨꩀ-ꩂꩄ-ꩋꩠ-ꩶꩺꪀ-ꪯꪱꪵꪶꪹ-ꪽꫀꫂꫛ-ꫝꫠ-ꫪꫲ-ꫴꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮꯀ-ꯢ가-힣ힰ-ퟆퟋ-ퟻ豈-舘並-龎ﬀ-ﬆﬓ-ﬗיִײַ-ﬨשׁ-זּטּ-לּמּנּסּףּפּצּ-ﮱﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-ﷻﹰ-ﹴﹶ-ﻼＡ-Ｚａ-ｚｦ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ])(congrats|congratulations|gratuluju|gratuluji|gratulujeme|blahopřeju|blahopřeji|blahopřejeme|Til lykke|Tillykke|Glückwunsch|Gratuliere|felicitaciones|enhorabuena|paljon onnea|onnittelut|Félicitations|gratula|gratulálok|gratulálunk|congratulazioni|complimenti|おめでとう|おめでとうございます|축하해|축하해요|gratulerer|Gefeliciteerd|gratulacje|Parabéns|parabéns|felicitações|felicitări|мои поздравления|поздравляем|поздравляю|gratulujem|blahoželám|ยินดีด้วย|ขอแสดงความยินดี|tebrikler|tebrik ederim|恭喜|祝贺你|恭喜你|恭喜|恭喜|baie geluk|veels geluk|অভিনন্দন|Čestitam|Čestitke|Čestitamo|Συγχαρητήρια|Μπράβο|અભિનંદન|badhai|बधाई|अभिनंदन|Честитам|Свака част|hongera|வாழ்த்துகள்|வாழ்த்துக்கள்|అభినందనలు|അഭിനന്ദനങ്ങൾ|Chúc mừng|מזל טוב|mazel tov|mazal tov)(^|$|[^A-Za-zªµºÀ-ÖØ-öø-ˁˆ-ˑˠ-ˤˬˮͰ-ʹͶͷͺ-ͽΆΈ-ΊΌΎ-ΡΣ-ϵϷ-ҁҊ-ԧԱ-Ֆՙա-ևא-תװ-ײؠ-يٮٯٱ-ۓەۥۦۮۯۺ-ۼۿܐܒ-ܯݍ-ޥޱߊ-ߪߴߵߺࠀ-ࠕࠚࠤࠨࡀ-ࡘࢠࢢ-ࢬऄ-हऽॐक़-ॡॱ-ॷॹ-ॿঅ-ঌএঐও-নপ-রলশ-হঽৎড়ঢ়য়-ৡৰৱਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹਖ਼-ੜਫ਼ੲ-ੴઅ-ઍએ-ઑઓ-નપ-રલળવ-હઽૐૠૡଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହଽଡ଼ଢ଼ୟ-ୡୱஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹௐఅ-ఌఎ-ఐఒ-నప-ళవ-హఽౘౙౠౡಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹಽೞೠೡೱೲഅ-ഌഎ-ഐഒ-ഺഽൎൠൡൺ-ൿඅ-ඖක-නඳ-රලව-ෆก-ะาำเ-ๆກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ະາຳຽເ-ໄໆໜ-ໟༀཀ-ཇཉ-ཬྈ-ྌက-ဪဿၐ-ၕၚ-ၝၡၥၦၮ-ၰၵ-ႁႎႠ-ჅჇჍა-ჺჼ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚᎀ-ᎏᎠ-Ᏼᐁ-ᙬᙯ-ᙿᚁ-ᚚᚠ-ᛪᜀ-ᜌᜎ-ᜑᜠ-ᜱᝀ-ᝑᝠ-ᝬᝮ-ᝰក-ឳៗៜᠠ-ᡷᢀ-ᢨᢪᢰ-ᣵᤀ-ᤜᥐ-ᥭᥰ-ᥴᦀ-ᦫᧁ-ᧇᨀ-ᨖᨠ-ᩔᪧᬅ-ᬳᭅ-ᭋᮃ-ᮠᮮᮯᮺ-ᯥᰀ-ᰣᱍ-ᱏᱚ-ᱽᳩ-ᳬᳮ-ᳱᳵᳶᴀ-ᶿḀ-ἕἘ-Ἕἠ-ὅὈ-Ὅὐ-ὗὙὛὝὟ-ώᾀ-ᾴᾶ-ᾼιῂ-ῄῆ-ῌῐ-ΐῖ-Ίῠ-Ῥῲ-ῴῶ-ῼⁱⁿₐ-ₜℂℇℊ-ℓℕℙ-ℝℤΩℨK-ℭℯ-ℹℼ-ℿⅅ-ⅉⅎↃↄⰀ-Ⱞⰰ-ⱞⱠ-ⳤⳫ-ⳮⳲⳳⴀ-ⴥⴧⴭⴰ-ⵧⵯⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞⸯ々〆〱-〵〻〼ぁ-ゖゝ-ゟァ-ヺー-ヿㄅ-ㄭㄱ-ㆎㆠ-ㆺㇰ-ㇿ㐀-䶵一-鿌ꀀ-ꒌꓐ-ꓽꔀ-ꘌꘐ-ꘟꘪꘫꙀ-ꙮꙿ-ꚗꚠ-ꛥꜗ-ꜟꜢ-ꞈꞋ-ꞎꞐ-ꞓꞠ-Ɦꟸ-ꠁꠃ-ꠅꠇ-ꠊꠌ-ꠢꡀ-ꡳꢂ-ꢳꣲ-ꣷꣻꤊ-ꤥꤰ-ꥆꥠ-ꥼꦄ-ꦲꧏꨀ-ꨨꩀ-ꩂꩄ-ꩋꩠ-ꩶꩺꪀ-ꪯꪱꪵꪶꪹ-ꪽꫀꫂꫛ-ꫝꫠ-ꫪꫲ-ꫴꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮꯀ-ꯢ가-힣ힰ-ퟆퟋ-ퟻ豈-舘並-龎ﬀ-ﬆﬓ-ﬗיִײַ-ﬨשׁ-זּטּ-לּמּנּסּףּפּצּ-ﮱﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-ﷻﹰ-ﹴﹶ-ﻼＡ-Ｚａ-ｚｦ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ])/i;
 function KeywordsPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
     if (!editor.hasNodes([KeywordNode])) {
       throw new Error("KeywordsPlugin: KeywordNode not registered on editor");
     }
   }, [editor]);
-  const $createKeywordNode_ = React.useCallback((textNode) => {
+  const $createKeywordNode_ = useCallback((textNode) => {
     return $createKeywordNode(textNode.getTextContent());
   }, []);
-  const getKeywordMatch = React.useCallback((text) => {
+  const getKeywordMatch = useCallback((text) => {
     const matchArr = KEYWORDS_REGEX.exec(text);
     if (matchArr === null) {
       return null;
@@ -4666,12 +4645,12 @@ function KeywordsPlugin() {
       start: startOffset
     };
   }, []);
-  useLexicalTextEntity.useLexicalTextEntity(getKeywordMatch, KeywordNode, $createKeywordNode_);
+  useLexicalTextEntity(getKeywordMatch, KeywordNode, $createKeywordNode_);
   return null;
 }
 function LinkPlugin({ hasLinkAttributes = false }) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    LexicalLinkPlugin.LinkPlugin,
+  return /* @__PURE__ */ jsx(
+    LinkPlugin$1,
     {
       validateUrl,
       attributes: hasLinkAttributes ? {
@@ -4681,7 +4660,7 @@ function LinkPlugin({ hasLinkAttributes = false }) {
     }
   );
 }
-const EquationComponent = React__namespace.lazy(() => Promise.resolve().then(() => require("./EquationComponent-R3vMfIH7.js")));
+const EquationComponent = React.lazy(() => import("./EquationComponent-BZPqyKMC.mjs"));
 function $convertEquationElement(domNode) {
   let equation = domNode.getAttribute("data-lexical-equation");
   const inline = domNode.getAttribute("data-lexical-inline") === "true";
@@ -4692,7 +4671,7 @@ function $convertEquationElement(domNode) {
   }
   return null;
 }
-class EquationNode extends lexical.DecoratorNode {
+class EquationNode extends DecoratorNode {
   __equation;
   __inline;
   static getType() {
@@ -4728,7 +4707,7 @@ class EquationNode extends lexical.DecoratorNode {
     const equation = btoa(this.__equation);
     element.setAttribute("data-lexical-equation", equation);
     element.setAttribute("data-lexical-inline", `${this.__inline}`);
-    katex__default.default.render(this.__equation, element, {
+    katex.render(this.__equation, element, {
       displayMode: !this.__inline,
       // true === block display //
       errorColor: "#cc0000",
@@ -4775,17 +4754,17 @@ class EquationNode extends lexical.DecoratorNode {
     writable.__equation = equation;
   }
   decorate() {
-    return /* @__PURE__ */ jsxRuntime.jsx(React.Suspense, { fallback: null, children: /* @__PURE__ */ jsxRuntime.jsx(EquationComponent, { equation: this.__equation, inline: this.__inline, nodeKey: this.__key }) });
+    return /* @__PURE__ */ jsx(Suspense, { fallback: null, children: /* @__PURE__ */ jsx(EquationComponent, { equation: this.__equation, inline: this.__inline, nodeKey: this.__key }) });
   }
 }
 function $createEquationNode(equation = "", inline = false) {
   const equationNode = new EquationNode(equation, inline);
-  return lexical.$applyNodeReplacement(equationNode);
+  return $applyNodeReplacement(equationNode);
 }
 function $isEquationNode(node) {
   return node instanceof EquationNode;
 }
-const ImageComponent = React__namespace.lazy(() => Promise.resolve().then(() => require("./ImageComponent-COQzx1qJ.js")));
+const ImageComponent = React.lazy(() => import("./ImageComponent-BWx0Xp18.mjs"));
 function isGoogleDocCheckboxImg(img2) {
   return img2.parentElement != null && img2.parentElement.tagName === "LI" && img2.previousSibling === null && img2.getAttribute("aria-roledescription") === "checkbox";
 }
@@ -4798,7 +4777,7 @@ function $convertImageElement(domNode) {
   const node = $createImageNode({ altText, height, src, width });
   return { node };
 }
-class ImageNode extends lexical.DecoratorNode {
+class ImageNode extends DecoratorNode {
   __src;
   __altText;
   __width;
@@ -4869,7 +4848,7 @@ class ImageNode extends lexical.DecoratorNode {
     this.__width = width || "inherit";
     this.__height = height || "inherit";
     this.__showCaption = showCaption || false;
-    this.__caption = caption || lexical.createEditor({
+    this.__caption = caption || createEditor({
       nodes: []
     });
     this.__captionsEnabled = captionsEnabled || captionsEnabled === void 0;
@@ -4915,7 +4894,7 @@ class ImageNode extends lexical.DecoratorNode {
     return this.__altText;
   }
   decorate() {
-    return /* @__PURE__ */ jsxRuntime.jsx(React.Suspense, { fallback: null, children: /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(Suspense, { fallback: null, children: /* @__PURE__ */ jsx(
       ImageComponent,
       {
         src: this.__src,
@@ -4943,7 +4922,7 @@ function $createImageNode({
   caption,
   key
 }) {
-  return lexical.$applyNodeReplacement(
+  return $applyNodeReplacement(
     new ImageNode(src, altText, maxWidth, width, height, showCaption, caption, captionsEnabled, key)
   );
 }
@@ -4969,10 +4948,10 @@ function TweetComponent({
   onLoad,
   tweetID
 }) {
-  const containerRef = React.useRef(null);
-  const previousTweetIDRef = React.useRef("");
-  const [isTweetLoading, setIsTweetLoading] = React.useState(false);
-  const createTweet = React.useCallback(async () => {
+  const containerRef = useRef(null);
+  const previousTweetIDRef = useRef("");
+  const [isTweetLoading, setIsTweetLoading] = useState(false);
+  const createTweet = useCallback(async () => {
     try {
       await window.twttr.widgets.createTweet(tweetID, containerRef.current);
       setIsTweetLoading(false);
@@ -4986,7 +4965,7 @@ function TweetComponent({
       }
     }
   }, [onError, onLoad, tweetID]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (tweetID !== previousTweetIDRef.current) {
       setIsTweetLoading(true);
       if (isTwitterScriptLoading) {
@@ -5006,12 +4985,12 @@ function TweetComponent({
       }
     }
   }, [createTweet, onError, tweetID]);
-  return /* @__PURE__ */ jsxRuntime.jsxs(LexicalBlockWithAlignableContents.BlockWithAlignableContents, { className, format, nodeKey, children: [
+  return /* @__PURE__ */ jsxs(BlockWithAlignableContents, { className, format, nodeKey, children: [
     isTweetLoading ? loadingComponent : null,
-    /* @__PURE__ */ jsxRuntime.jsx("div", { style: { display: "inline-block", width: "550px" }, ref: containerRef })
+    /* @__PURE__ */ jsx("div", { style: { display: "inline-block", width: "550px" }, ref: containerRef })
   ] });
 }
-class TweetNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
+class TweetNode extends DecoratorBlockNode {
   __id;
   static getType() {
     return "tweet";
@@ -5064,7 +5043,7 @@ class TweetNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
       base: embedBlockTheme.base || "",
       focus: embedBlockTheme.focus || ""
     };
-    return /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(
       TweetComponent,
       {
         className,
@@ -21689,13 +21668,13 @@ const emojiList$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineP
   default: emojiList
 }, Symbol.toStringTag, { value: "Module" }));
 const HR = {
-  dependencies: [LexicalHorizontalRuleNode.HorizontalRuleNode],
+  dependencies: [HorizontalRuleNode],
   export: (node) => {
-    return LexicalHorizontalRuleNode.$isHorizontalRuleNode(node) ? "***" : null;
+    return $isHorizontalRuleNode(node) ? "***" : null;
   },
   regExp: /^(---|\*\*\*|___)\s?$/,
   replace: (parentNode, _1, _2, isImport) => {
-    const line = LexicalHorizontalRuleNode.$createHorizontalRuleNode();
+    const line = $createHorizontalRuleNode();
     if (isImport || parentNode.getNextSibling() != null) {
       parentNode.replace(line);
     } else {
@@ -21735,7 +21714,7 @@ const EMOJI = {
   replace: (textNode, [, name]) => {
     const emoji = emojiList.find((e) => e.aliases.includes(name))?.emoji;
     if (emoji) {
-      textNode.replace(lexical.$createTextNode(emoji));
+      textNode.replace($createTextNode(emoji));
     }
   },
   trigger: ":",
@@ -21778,24 +21757,24 @@ const TWEET = {
 const TABLE_ROW_REG_EXP = /^(?:\|)(.+)(?:\|)\s?$/;
 const TABLE_ROW_DIVIDER_REG_EXP = /^(\| ?:?-*:? ?)+\|\s?$/;
 const TABLE = {
-  dependencies: [table.TableNode, table.TableRowNode, table.TableCellNode],
+  dependencies: [TableNode, TableRowNode, TableCellNode],
   export: (node) => {
-    if (!table.$isTableNode(node)) {
+    if (!$isTableNode(node)) {
       return null;
     }
     const output = [];
     for (const row of node.getChildren()) {
       const rowOutput = [];
-      if (!table.$isTableRowNode(row)) {
+      if (!$isTableRowNode(row)) {
         continue;
       }
       let isHeaderRow = false;
       for (const cell of row.getChildren()) {
-        if (table.$isTableCellNode(cell)) {
+        if ($isTableCellNode(cell)) {
           rowOutput.push(
-            markdown.$convertToMarkdownString(PLAYGROUND_TRANSFORMERS, cell).replace(/\n/g, "\\n").trim()
+            $convertToMarkdownString(PLAYGROUND_TRANSFORMERS, cell).replace(/\n/g, "\\n").trim()
           );
-          if (cell.__headerState === table.TableCellHeaderStates.ROW) {
+          if (cell.__headerState === TableCellHeaderStates.ROW) {
             isHeaderRow = true;
           }
         }
@@ -21811,19 +21790,19 @@ const TABLE = {
   replace: (parentNode, _1, match) => {
     if (TABLE_ROW_DIVIDER_REG_EXP.test(match[0])) {
       const table2 = parentNode.getPreviousSibling();
-      if (!table2 || !table.$isTableNode(table2)) {
+      if (!table2 || !$isTableNode(table2)) {
         return;
       }
       const rows2 = table2.getChildren();
       const lastRow = rows2[rows2.length - 1];
-      if (!lastRow || !table.$isTableRowNode(lastRow)) {
+      if (!lastRow || !$isTableRowNode(lastRow)) {
         return;
       }
       lastRow.getChildren().forEach((cell) => {
-        if (!table.$isTableCellNode(cell)) {
+        if (!$isTableCellNode(cell)) {
           return;
         }
-        cell.setHeaderStyles(table.TableCellHeaderStates.ROW, table.TableCellHeaderStates.ROW);
+        cell.setHeaderStyles(TableCellHeaderStates.ROW, TableCellHeaderStates.ROW);
       });
       parentNode.remove();
       return;
@@ -21836,14 +21815,14 @@ const TABLE = {
     let sibling = parentNode.getPreviousSibling();
     let maxCells = matchCells.length;
     while (sibling) {
-      if (!lexical.$isParagraphNode(sibling)) {
+      if (!$isParagraphNode(sibling)) {
         break;
       }
       if (sibling.getChildrenSize() !== 1) {
         break;
       }
       const firstChild = sibling.getFirstChild();
-      if (!lexical.$isTextNode(firstChild)) {
+      if (!$isTextNode(firstChild)) {
         break;
       }
       const cells = mapToTableCells(firstChild.getTextContent());
@@ -21856,33 +21835,33 @@ const TABLE = {
       sibling.remove();
       sibling = previousSibling2;
     }
-    const table$1 = table.$createTableNode();
+    const table = $createTableNode();
     for (const cells of rows) {
-      const tableRow = table.$createTableRowNode();
-      table$1.append(tableRow);
+      const tableRow = $createTableRowNode();
+      table.append(tableRow);
       for (let i = 0; i < maxCells; i++) {
         tableRow.append(i < cells.length ? cells[i] : $createTableCell(""));
       }
     }
     const previousSibling = parentNode.getPreviousSibling();
-    if (table.$isTableNode(previousSibling) && getTableColumnsSize(previousSibling) === maxCells) {
-      previousSibling.append(...table$1.getChildren());
+    if ($isTableNode(previousSibling) && getTableColumnsSize(previousSibling) === maxCells) {
+      previousSibling.append(...table.getChildren());
       parentNode.remove();
     } else {
-      parentNode.replace(table$1);
+      parentNode.replace(table);
     }
-    table$1.selectEnd();
+    table.selectEnd();
   },
   type: "element"
 };
-function getTableColumnsSize(table$1) {
-  const row = table$1.getFirstChild();
-  return table.$isTableRowNode(row) ? row.getChildrenSize() : 0;
+function getTableColumnsSize(table) {
+  const row = table.getFirstChild();
+  return $isTableRowNode(row) ? row.getChildrenSize() : 0;
 }
 const $createTableCell = (textContent) => {
   textContent = textContent.replace(/\\n/g, "\n");
-  const cell = table.$createTableCellNode(table.TableCellHeaderStates.NO_STATUS);
-  markdown.$convertFromMarkdownString(textContent, PLAYGROUND_TRANSFORMERS, cell);
+  const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS);
+  $convertFromMarkdownString(textContent, PLAYGROUND_TRANSFORMERS, cell);
   return cell;
 };
 const mapToTableCells = (textContent) => {
@@ -21899,14 +21878,14 @@ const PLAYGROUND_TRANSFORMERS = [
   EMOJI,
   EQUATION,
   TWEET,
-  markdown.CHECK_LIST,
-  ...markdown.ELEMENT_TRANSFORMERS,
-  ...markdown.MULTILINE_ELEMENT_TRANSFORMERS,
-  ...markdown.TEXT_FORMAT_TRANSFORMERS,
-  ...markdown.TEXT_MATCH_TRANSFORMERS
+  CHECK_LIST,
+  ...ELEMENT_TRANSFORMERS,
+  ...MULTILINE_ELEMENT_TRANSFORMERS,
+  ...TEXT_FORMAT_TRANSFORMERS,
+  ...TEXT_MATCH_TRANSFORMERS
 ];
 function MarkdownPlugin() {
-  return /* @__PURE__ */ jsxRuntime.jsx(LexicalMarkdownShortcutPlugin.MarkdownShortcutPlugin, { transformers: PLAYGROUND_TRANSFORMERS });
+  return /* @__PURE__ */ jsx(MarkdownShortcutPlugin, { transformers: PLAYGROUND_TRANSFORMERS });
 }
 function $convertMentionElement(domNode) {
   const textContent = domNode.textContent;
@@ -21922,7 +21901,7 @@ function $convertMentionElement(domNode) {
   return null;
 }
 const mentionStyle = "background-color: rgba(24, 119, 232, 0.2)";
-class MentionNode extends lexical.TextNode {
+class MentionNode extends TextNode {
   __mention;
   static getType() {
     return "mention";
@@ -21985,7 +21964,7 @@ class MentionNode extends lexical.TextNode {
 function $createMentionNode(mentionName, textContent) {
   const mentionNode = new MentionNode(mentionName, mentionName);
   mentionNode.setMode("segmented").toggleDirectionless();
-  return lexical.$applyNodeReplacement(mentionNode);
+  return $applyNodeReplacement(mentionNode);
 }
 const PUNCTUATION = `\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%'"~=<>_:;`;
 const NAME = "\\b[A-Z][^\\s" + PUNCTUATION + "]";
@@ -22423,8 +22402,8 @@ const dummyLookupService = {
   }
 };
 function useMentionLookupService(mentionString) {
-  const [results, setResults] = React.useState([]);
-  React.useEffect(() => {
+  const [results, setResults] = useState([]);
+  useEffect(() => {
     const cachedResults = mentionsCache.get(mentionString);
     if (mentionString == null) {
       setResults([]);
@@ -22465,7 +22444,7 @@ function checkForAtSignMentions(text, minMatchLength) {
 function getPossibleQueryMatch(text) {
   return checkForAtSignMentions(text, 1);
 }
-class MentionTypeaheadOption extends LexicalTypeaheadMenuPlugin.MenuOption {
+class MentionTypeaheadOption extends MenuOption {
   name;
   picture;
   constructor(name, picture) {
@@ -22485,7 +22464,7 @@ function MentionsTypeaheadMenuItem({
   if (isSelected) {
     className += " selected";
   }
-  return /* @__PURE__ */ jsxRuntime.jsxs(
+  return /* @__PURE__ */ jsxs(
     "li",
     {
       tabIndex: -1,
@@ -22498,24 +22477,24 @@ function MentionsTypeaheadMenuItem({
       onClick,
       children: [
         option.picture,
-        /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: option.name })
+        /* @__PURE__ */ jsx("span", { className: "text", children: option.name })
       ]
     },
     option.key
   );
 }
 function NewMentionsPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const [queryString, setQueryString] = React.useState(null);
+  const [editor] = useLexicalComposerContext();
+  const [queryString, setQueryString] = useState(null);
   const results = useMentionLookupService(queryString);
-  const checkForSlashTriggerMatch = LexicalTypeaheadMenuPlugin.useBasicTypeaheadTriggerMatch("/", {
+  const checkForSlashTriggerMatch = useBasicTypeaheadTriggerMatch("/", {
     minLength: 0
   });
-  const options = React.useMemo(
-    () => results.map((result) => new MentionTypeaheadOption(result, /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon user" }))).slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
+  const options = useMemo(
+    () => results.map((result) => new MentionTypeaheadOption(result, /* @__PURE__ */ jsx("i", { className: "icon user" }))).slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
     [results]
   );
-  const onSelectOption = React.useCallback(
+  const onSelectOption = useCallback(
     (selectedOption, nodeToReplace, closeMenu) => {
       editor.update(() => {
         const mentionNode = $createMentionNode(selectedOption.name);
@@ -22528,7 +22507,7 @@ function NewMentionsPlugin() {
     },
     [editor]
   );
-  const checkForMentionMatch = React.useCallback(
+  const checkForMentionMatch = useCallback(
     (text) => {
       const slashMatch = checkForSlashTriggerMatch(text, editor);
       if (slashMatch !== null) {
@@ -22538,15 +22517,15 @@ function NewMentionsPlugin() {
     },
     [checkForSlashTriggerMatch, editor]
   );
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    LexicalTypeaheadMenuPlugin.LexicalTypeaheadMenuPlugin,
+  return /* @__PURE__ */ jsx(
+    LexicalTypeaheadMenuPlugin,
     {
       onQueryChange: setQueryString,
       onSelectOption,
       triggerFn: checkForMentionMatch,
       options,
-      menuRenderFn: (anchorElementRef, { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }) => anchorElementRef.current && results.length ? ReactDOM__namespace.createPortal(
-        /* @__PURE__ */ jsxRuntime.jsx("div", { className: "typeahead-popover mentions-menu", children: /* @__PURE__ */ jsxRuntime.jsx("ul", { children: options.map((option, i) => /* @__PURE__ */ jsxRuntime.jsx(
+      menuRenderFn: (anchorElementRef, { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }) => anchorElementRef.current && results.length ? ReactDOM.createPortal(
+        /* @__PURE__ */ jsx("div", { className: "typeahead-popover mentions-menu", children: /* @__PURE__ */ jsx("ul", { children: options.map((option, i) => /* @__PURE__ */ jsx(
           MentionsTypeaheadMenuItem,
           {
             index: i,
@@ -22636,9 +22615,9 @@ const updateFontSizeInSelection = (editor, newFontSize, updateType) => {
   };
   editor.update(() => {
     if (editor.isEditable()) {
-      const selection$1 = lexical.$getSelection();
-      if (selection$1 !== null) {
-        selection.$patchStyleText(selection$1, {
+      const selection = $getSelection();
+      if (selection !== null) {
+        $patchStyleText(selection, {
           "font-size": newFontSize || getNextFontSize
         });
       }
@@ -22655,37 +22634,37 @@ const updateFontSize = (editor, updateType, inputValue) => {
 };
 const formatParagraph = (editor) => {
   editor.update(() => {
-    const selection$1 = lexical.$getSelection();
-    if (lexical.$isRangeSelection(selection$1)) {
-      selection.$setBlocksType(selection$1, () => lexical.$createParagraphNode());
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      $setBlocksType(selection, () => $createParagraphNode());
     }
   });
 };
 const formatHeading = (editor, blockType, headingSize) => {
   if (blockType !== headingSize) {
     editor.update(() => {
-      const selection$1 = lexical.$getSelection();
-      selection.$setBlocksType(selection$1, () => richText.$createHeadingNode(headingSize));
+      const selection = $getSelection();
+      $setBlocksType(selection, () => $createHeadingNode(headingSize));
     });
   }
 };
 const formatBulletList = (editor, blockType) => {
   if (blockType !== "bullet") {
-    editor.dispatchCommand(list.INSERT_UNORDERED_LIST_COMMAND, void 0);
+    editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, void 0);
   } else {
     formatParagraph(editor);
   }
 };
 const formatCheckList = (editor, blockType) => {
   if (blockType !== "check") {
-    editor.dispatchCommand(list.INSERT_CHECK_LIST_COMMAND, void 0);
+    editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, void 0);
   } else {
     formatParagraph(editor);
   }
 };
 const formatNumberedList = (editor, blockType) => {
   if (blockType !== "number") {
-    editor.dispatchCommand(list.INSERT_ORDERED_LIST_COMMAND, void 0);
+    editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, void 0);
   } else {
     formatParagraph(editor);
   }
@@ -22693,25 +22672,25 @@ const formatNumberedList = (editor, blockType) => {
 const formatQuote = (editor, blockType) => {
   if (blockType !== "quote") {
     editor.update(() => {
-      const selection$1 = lexical.$getSelection();
-      selection.$setBlocksType(selection$1, () => richText.$createQuoteNode());
+      const selection = $getSelection();
+      $setBlocksType(selection, () => $createQuoteNode());
     });
   }
 };
 const formatCode = (editor, blockType) => {
   if (blockType !== "code") {
     editor.update(() => {
-      let selection$1 = lexical.$getSelection();
-      if (selection$1 !== null) {
-        if (selection$1.isCollapsed()) {
-          selection.$setBlocksType(selection$1, () => code.$createCodeNode());
+      let selection = $getSelection();
+      if (selection !== null) {
+        if (selection.isCollapsed()) {
+          $setBlocksType(selection, () => $createCodeNode());
         } else {
-          const textContent = selection$1.getTextContent();
-          const codeNode = code.$createCodeNode();
-          selection$1.insertNodes([codeNode]);
-          selection$1 = lexical.$getSelection();
-          if (lexical.$isRangeSelection(selection$1)) {
-            selection$1.insertRawText(textContent);
+          const textContent = selection.getTextContent();
+          const codeNode = $createCodeNode();
+          selection.insertNodes([codeNode]);
+          selection = $getSelection();
+          if ($isRangeSelection(selection)) {
+            selection.insertRawText(textContent);
           }
         }
       }
@@ -22720,17 +22699,17 @@ const formatCode = (editor, blockType) => {
 };
 const clearFormatting = (editor) => {
   editor.update(() => {
-    const selection2 = lexical.$getSelection();
-    if (lexical.$isRangeSelection(selection2) || table.$isTableSelection(selection2)) {
-      const anchor = selection2.anchor;
-      const focus = selection2.focus;
-      const nodes = selection2.getNodes();
-      const extractedNodes = selection2.extract();
+    const selection = $getSelection();
+    if ($isRangeSelection(selection) || $isTableSelection(selection)) {
+      const anchor = selection.anchor;
+      const focus = selection.focus;
+      const nodes = selection.getNodes();
+      const extractedNodes = selection.extract();
       if (anchor.key === focus.key && anchor.offset === focus.offset) {
         return;
       }
       nodes.forEach((node, idx) => {
-        if (lexical.$isTextNode(node)) {
+        if ($isTextNode(node)) {
           let textNode = node;
           if (idx === 0 && anchor.offset !== 0) {
             textNode = textNode.splitText(anchor.offset)[1] || textNode;
@@ -22739,7 +22718,7 @@ const clearFormatting = (editor) => {
             textNode = textNode.splitText(focus.offset)[0] || textNode;
           }
           const extractedTextNode = extractedNodes[0];
-          if (nodes.length === 1 && lexical.$isTextNode(extractedTextNode)) {
+          if (nodes.length === 1 && $isTextNode(extractedTextNode)) {
             textNode = extractedTextNode;
           }
           if (textNode.__style !== "") {
@@ -22747,12 +22726,12 @@ const clearFormatting = (editor) => {
           }
           if (textNode.__format !== 0) {
             textNode.setFormat(0);
-            utils.$getNearestBlockElementAncestorOrThrow(textNode).setFormat("");
+            $getNearestBlockElementAncestorOrThrow(textNode).setFormat("");
           }
           node = textNode;
-        } else if (richText.$isHeadingNode(node) || richText.$isQuoteNode(node)) {
-          node.replace(lexical.$createParagraphNode(), true);
-        } else if (LexicalDecoratorBlockNode.$isDecoratorBlockNode(node)) {
+        } else if ($isHeadingNode(node) || $isQuoteNode(node)) {
+          node.replace($createParagraphNode(), true);
+        } else if ($isDecoratorBlockNode(node)) {
           node.setFormat("");
         }
       });
@@ -22799,108 +22778,108 @@ function controlOrMeta(metaKey, ctrlKey) {
   return IS_APPLE ? metaKey : ctrlKey;
 }
 function isFormatParagraph(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return (code2 === "Numpad0" || code2 === "Digit0") && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return (code === "Numpad0" || code === "Digit0") && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isFormatHeading(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  const keyNumber = code2[code2.length - 1];
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  const keyNumber = code[code.length - 1];
   return ["1", "2", "3"].includes(keyNumber) && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isFormatBulletList(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return (code2 === "Numpad4" || code2 === "Digit4") && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return (code === "Numpad4" || code === "Digit4") && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isFormatNumberedList(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return (code2 === "Numpad5" || code2 === "Digit5") && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return (code === "Numpad5" || code === "Digit5") && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isFormatCheckList(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return (code2 === "Numpad6" || code2 === "Digit6") && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return (code === "Numpad6" || code === "Digit6") && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isFormatCode(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyC" && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyC" && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isFormatQuote(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyQ" && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyQ" && !shiftKey && altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isLowercase(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return (code2 === "Numpad1" || code2 === "Digit1") && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return (code === "Numpad1" || code === "Digit1") && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isUppercase(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return (code2 === "Numpad2" || code2 === "Digit2") && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return (code === "Numpad2" || code === "Digit2") && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isCapitalize(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return (code2 === "Numpad3" || code2 === "Digit3") && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return (code === "Numpad3" || code === "Digit3") && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isStrikeThrough(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyS" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyS" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isIndent(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "BracketRight" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "BracketRight" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isOutdent(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "BracketLeft" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "BracketLeft" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isCenterAlign(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyE" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyE" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isLeftAlign(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyL" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyL" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isRightAlign(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyR" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyR" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isJustifyAlign(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyJ" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyJ" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isSubscript(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "Comma" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "Comma" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isSuperscript(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "Period" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "Period" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isInsertCodeBlock(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyC" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyC" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isIncreaseFontSize(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "Period" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "Period" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isDecreaseFontSize(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "Comma" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "Comma" && shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isClearFormatting(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "Backslash" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "Backslash" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function isInsertLink(event) {
-  const { code: code2, shiftKey, altKey, metaKey, ctrlKey } = event;
-  return code2 === "KeyK" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
+  const { code, shiftKey, altKey, metaKey, ctrlKey } = event;
+  return code === "KeyK" && !shiftKey && !altKey && controlOrMeta(metaKey, ctrlKey);
 }
 function ShortcutsPlugin({
   editor,
   setIsLinkEditMode
 }) {
   const { toolbarState } = useToolbarState();
-  React.useEffect(() => {
+  useEffect(() => {
     const keyboardShortcutsHandler = (payload) => {
       const event = payload;
       if (isFormatParagraph(event)) {
@@ -22908,8 +22887,8 @@ function ShortcutsPlugin({
         formatParagraph(editor);
       } else if (isFormatHeading(event)) {
         event.preventDefault();
-        const { code: code2 } = event;
-        const headingSize = `h${code2[code2.length - 1]}`;
+        const { code } = event;
+        const headingSize = `h${code[code.length - 1]}`;
         formatHeading(editor, toolbarState.blockType, headingSize);
       } else if (isFormatBulletList(event)) {
         event.preventDefault();
@@ -22928,43 +22907,43 @@ function ShortcutsPlugin({
         formatQuote(editor, toolbarState.blockType);
       } else if (isStrikeThrough(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "strikethrough");
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
       } else if (isLowercase(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "lowercase");
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "lowercase");
       } else if (isUppercase(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "uppercase");
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "uppercase");
       } else if (isCapitalize(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "capitalize");
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "capitalize");
       } else if (isIndent(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.INDENT_CONTENT_COMMAND, void 0);
+        editor.dispatchCommand(INDENT_CONTENT_COMMAND, void 0);
       } else if (isOutdent(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.OUTDENT_CONTENT_COMMAND, void 0);
+        editor.dispatchCommand(OUTDENT_CONTENT_COMMAND, void 0);
       } else if (isCenterAlign(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "center");
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
       } else if (isLeftAlign(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "left");
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
       } else if (isRightAlign(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "right");
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
       } else if (isJustifyAlign(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "justify");
+        editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
       } else if (isSubscript(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "subscript");
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "subscript");
       } else if (isSuperscript(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "superscript");
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "superscript");
       } else if (isInsertCodeBlock(event)) {
         event.preventDefault();
-        editor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "code");
+        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
       } else if (isIncreaseFontSize(event)) {
         event.preventDefault();
         updateFontSize(editor, UpdateFontSizeType.increment, toolbarState.fontSizeInputValue);
@@ -22978,14 +22957,14 @@ function ShortcutsPlugin({
         event.preventDefault();
         const url = toolbarState.isLink ? null : sanitizeUrl("https://");
         setIsLinkEditMode(!toolbarState.isLink);
-        editor.dispatchCommand(link.TOGGLE_LINK_COMMAND, url);
+        editor.dispatchCommand(TOGGLE_LINK_COMMAND, url);
       }
       return false;
     };
     return editor.registerCommand(
-      lexical.KEY_MODIFIER_COMMAND,
+      KEY_MODIFIER_COMMAND,
       keyboardShortcutsHandler,
-      lexical.COMMAND_PRIORITY_NORMAL
+      COMMAND_PRIORITY_NORMAL
     );
   }, [
     editor,
@@ -22996,7 +22975,7 @@ function ShortcutsPlugin({
   ]);
   return null;
 }
-class SpecialTextNode extends lexical.TextNode {
+class SpecialTextNode extends TextNode {
   static getType() {
     return "specialText";
   }
@@ -23005,7 +22984,7 @@ class SpecialTextNode extends lexical.TextNode {
   }
   createDOM(config) {
     const dom = document.createElement("span");
-    utils.addClassNamesToElement(dom, config.theme.specialText);
+    addClassNamesToElement(dom, config.theme.specialText);
     dom.textContent = this.getTextContent();
     return dom;
   }
@@ -23014,7 +22993,7 @@ class SpecialTextNode extends lexical.TextNode {
       const strippedText = this.__text.substring(1, this.__text.length - 1);
       dom.textContent = strippedText;
     }
-    utils.addClassNamesToElement(dom, config.theme.specialText);
+    addClassNamesToElement(dom, config.theme.specialText);
     return false;
   }
   static importJSON(serializedNode) {
@@ -23028,20 +23007,20 @@ class SpecialTextNode extends lexical.TextNode {
   }
 }
 function $createSpecialTextNode(text = "") {
-  return lexical.$applyNodeReplacement(new SpecialTextNode(text));
+  return $applyNodeReplacement(new SpecialTextNode(text));
 }
 function StrapiOnChangePlugin({
   onChange,
   expectedEditorState
 }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
     return editor.registerUpdateListener(({ editorState }) => {
       onChange(editorState);
     });
   }, [editor, onChange]);
-  React.useEffect(() => {
-    if (expectedEditorState && !equal__default.default(expectedEditorState, editor.getEditorState().toJSON())) {
+  useEffect(() => {
+    if (expectedEditorState && !equal(expectedEditorState, editor.getEditorState().toJSON())) {
       const parsedEditorState = editor.parseEditorState(expectedEditorState);
       editor.setEditorState(parsedEditorState);
     }
@@ -23064,19 +23043,19 @@ function registerKeyTimeStampTracker() {
   );
 }
 function TabFocusPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  React.useEffect(() => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
     if (!hasRegisteredKeyDownListener) {
       registerKeyTimeStampTracker();
       hasRegisteredKeyDownListener = true;
     }
     return editor.registerCommand(
-      lexical.FOCUS_COMMAND,
+      FOCUS_COMMAND,
       (event) => {
-        const selection2 = lexical.$getSelection();
-        if (lexical.$isRangeSelection(selection2)) {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
           if (lastTabKeyDownTimestamp + TAB_TO_FOCUS_INTERVAL > event.timeStamp) {
-            lexical.$setSelection(selection2.clone());
+            $setSelection(selection.clone());
           }
         }
         return false;
@@ -23116,19 +23095,19 @@ const PRESET_COLORS = [
   // Black
 ];
 function ColorPicker({ color, onChange, label }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [customColor, setCustomColor] = React.useState(color);
-  const [selfColor, setSelfColor] = React.useState(transformColor("hex", color));
-  const [inputColor, setInputColor] = React.useState(color);
-  React.useRef(null);
-  React.useMemo(
+  const [isOpen, setIsOpen] = useState(false);
+  const [customColor, setCustomColor] = useState(color);
+  const [selfColor, setSelfColor] = useState(transformColor("hex", color));
+  const [inputColor, setInputColor] = useState(color);
+  useRef(null);
+  useMemo(
     () => ({
       x: selfColor.hsv.s / 100 * WIDTH,
       y: (100 - selfColor.hsv.v) / 100 * HEIGHT
     }),
     [selfColor.hsv.s, selfColor.hsv.v]
   );
-  React.useMemo(
+  useMemo(
     () => ({
       x: selfColor.hsv.h / 360 * WIDTH
     }),
@@ -23144,7 +23123,7 @@ function ColorPicker({ color, onChange, label }) {
     setCustomColor(newColor);
     onChange?.(newColor, skipAddingToHistoryStack);
   };
-  React.useEffect(() => {
+  useEffect(() => {
     if (color === void 0) {
       return;
     }
@@ -23152,10 +23131,10 @@ function ColorPicker({ color, onChange, label }) {
     setSelfColor(newColor);
     setInputColor(newColor.hex);
   }, [color]);
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "color-picker", children: [
-    label && /* @__PURE__ */ jsxRuntime.jsx("label", { className: "color-picker__label", children: label }),
-    /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "color-picker__container", children: [
-      /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs("div", { className: "color-picker", children: [
+    label && /* @__PURE__ */ jsx("label", { className: "color-picker__label", children: label }),
+    /* @__PURE__ */ jsxs("div", { className: "color-picker__container", children: [
+      /* @__PURE__ */ jsx(
         "button",
         {
           type: "button",
@@ -23163,11 +23142,11 @@ function ColorPicker({ color, onChange, label }) {
           onClick: () => setIsOpen(!isOpen),
           style: { backgroundColor: color },
           "aria-label": "Select color",
-          children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "color-picker__preview", style: { backgroundColor: color } })
+          children: /* @__PURE__ */ jsx("span", { className: "color-picker__preview", style: { backgroundColor: color } })
         }
       ),
-      isOpen && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "color-picker__dropdown", children: [
-        /* @__PURE__ */ jsxRuntime.jsx("div", { className: "color-picker__presets", children: PRESET_COLORS.map((presetColor) => /* @__PURE__ */ jsxRuntime.jsx(
+      isOpen && /* @__PURE__ */ jsxs("div", { className: "color-picker__dropdown", children: [
+        /* @__PURE__ */ jsx("div", { className: "color-picker__presets", children: PRESET_COLORS.map((presetColor) => /* @__PURE__ */ jsx(
           "button",
           {
             type: "button",
@@ -23178,8 +23157,8 @@ function ColorPicker({ color, onChange, label }) {
           },
           presetColor
         )) }),
-        /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "color-picker__custom", children: [
-          /* @__PURE__ */ jsxRuntime.jsx(
+        /* @__PURE__ */ jsxs("div", { className: "color-picker__custom", children: [
+          /* @__PURE__ */ jsx(
             "input",
             {
               type: "color",
@@ -23188,11 +23167,11 @@ function ColorPicker({ color, onChange, label }) {
               className: "color-picker__input"
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("span", { className: "color-picker__custom-label", children: "Custom" })
+          /* @__PURE__ */ jsx("span", { className: "color-picker__custom-label", children: "Custom" })
         ] })
       ] })
     ] }),
-    isOpen && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "color-picker__overlay", onClick: () => setIsOpen(false) })
+    isOpen && /* @__PURE__ */ jsx("div", { className: "color-picker__overlay", onClick: () => setIsOpen(false) })
   ] });
 }
 function toHex(value) {
@@ -23242,19 +23221,19 @@ function transformColor(format, color) {
   }
   return { hex, hsv, rgb };
 }
-function computeSelectionCount(selection2) {
-  const selectionShape = selection2.getShape();
+function computeSelectionCount(selection) {
+  const selectionShape = selection.getShape();
   return {
     columns: selectionShape.toX - selectionShape.fromX + 1,
     rows: selectionShape.toY - selectionShape.fromY + 1
   };
 }
 function $canUnmerge() {
-  const selection2 = lexical.$getSelection();
-  if (lexical.$isRangeSelection(selection2) && !selection2.isCollapsed() || table.$isTableSelection(selection2) && !selection2.anchor.is(selection2.focus) || !lexical.$isRangeSelection(selection2) && !table.$isTableSelection(selection2)) {
+  const selection = $getSelection();
+  if ($isRangeSelection(selection) && !selection.isCollapsed() || $isTableSelection(selection) && !selection.anchor.is(selection.focus) || !$isRangeSelection(selection) && !$isTableSelection(selection)) {
     return false;
   }
-  const [cell] = table.$getNodeTriplet(selection2.anchor);
+  const [cell] = $getNodeTriplet(selection.anchor);
   return cell.__colSpan > 1 || cell.__rowSpan > 1;
 }
 function $cellContainsEmptyParagraph(cell) {
@@ -23262,16 +23241,16 @@ function $cellContainsEmptyParagraph(cell) {
     return false;
   }
   const firstChild = cell.getFirstChildOrThrow();
-  if (!lexical.$isParagraphNode(firstChild) || !firstChild.isEmpty()) {
+  if (!$isParagraphNode(firstChild) || !firstChild.isEmpty()) {
     return false;
   }
   return true;
 }
 function $selectLastDescendant(node) {
   const lastDescendant = node.getLastDescendant();
-  if (lexical.$isTextNode(lastDescendant)) {
+  if ($isTextNode(lastDescendant)) {
     lastDescendant.select();
-  } else if (lexical.$isElementNode(lastDescendant)) {
+  } else if ($isElementNode(lastDescendant)) {
     lastDescendant.selectEnd();
   } else if (lastDescendant !== null) {
     lastDescendant.selectNext();
@@ -23279,10 +23258,10 @@ function $selectLastDescendant(node) {
 }
 function currentCellBackgroundColor(editor) {
   return editor.getEditorState().read(() => {
-    const selection2 = lexical.$getSelection();
-    if (lexical.$isRangeSelection(selection2) || table.$isTableSelection(selection2)) {
-      const [cell] = table.$getNodeTriplet(selection2.anchor);
-      if (table.$isTableCellNode(cell)) {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection) || $isTableSelection(selection)) {
+      const [cell] = $getNodeTriplet(selection.anchor);
+      if ($isTableCellNode(cell)) {
         return cell.getBackgroundColor();
       }
     }
@@ -23297,22 +23276,22 @@ function TableActionMenu({
   cellMerge,
   showColorPickerModal
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const dropDownRef = React.useRef(null);
-  const [tableCellNode, updateTableCellNode] = React.useState(_tableCellNode);
-  const [selectionCounts, updateSelectionCounts] = React.useState({
+  const { formatMessage } = useIntl();
+  const [editor] = useLexicalComposerContext();
+  const dropDownRef = useRef(null);
+  const [tableCellNode, updateTableCellNode] = useState(_tableCellNode);
+  const [selectionCounts, updateSelectionCounts] = useState({
     columns: 1,
     rows: 1
   });
-  const [canMergeCells, setCanMergeCells] = React.useState(false);
-  const [canUnmergeCell, setCanUnmergeCell] = React.useState(false);
-  const [backgroundColor, setBackgroundColor] = React.useState(
+  const [canMergeCells, setCanMergeCells] = useState(false);
+  const [canUnmergeCell, setCanUnmergeCell] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState(
     () => currentCellBackgroundColor(editor) || ""
   );
-  React.useEffect(() => {
+  useEffect(() => {
     return editor.registerMutationListener(
-      table.TableCellNode,
+      TableCellNode,
       (nodeMutations) => {
         const nodeUpdated = nodeMutations.get(tableCellNode.getKey()) === "updated";
         if (nodeUpdated) {
@@ -23325,18 +23304,18 @@ function TableActionMenu({
       { skipInitialization: true }
     );
   }, [editor, tableCellNode]);
-  React.useEffect(() => {
+  useEffect(() => {
     editor.getEditorState().read(() => {
-      const selection2 = lexical.$getSelection();
-      if (table.$isTableSelection(selection2)) {
-        const currentSelectionCounts = computeSelectionCount(selection2);
-        updateSelectionCounts(computeSelectionCount(selection2));
+      const selection = $getSelection();
+      if ($isTableSelection(selection)) {
+        const currentSelectionCounts = computeSelectionCount(selection);
+        updateSelectionCounts(computeSelectionCount(selection));
         setCanMergeCells(currentSelectionCounts.columns > 1 || currentSelectionCounts.rows > 1);
       }
       setCanUnmergeCell($canUnmerge());
     });
   }, [editor]);
-  React.useEffect(() => {
+  useEffect(() => {
     const menuButtonElement = contextRef.current;
     const dropDownElement = dropDownRef.current;
     const rootElement = editor.getRootElement();
@@ -23360,54 +23339,54 @@ function TableActionMenu({
       dropDownElement.style.top = `${topPosition + +window.pageYOffset}px`;
     }
   }, [contextRef, dropDownRef, editor]);
-  React.useEffect(() => {
+  useEffect(() => {
     function handleClickOutside(event) {
-      if (dropDownRef.current != null && contextRef.current != null && lexical.isDOMNode(event.target) && !dropDownRef.current.contains(event.target) && !contextRef.current.contains(event.target)) {
+      if (dropDownRef.current != null && contextRef.current != null && isDOMNode(event.target) && !dropDownRef.current.contains(event.target) && !contextRef.current.contains(event.target)) {
         setIsMenuOpen(false);
       }
     }
     window.addEventListener("click", handleClickOutside);
     return () => window.removeEventListener("click", handleClickOutside);
   }, [setIsMenuOpen, contextRef]);
-  const clearTableSelection = React.useCallback(() => {
+  const clearTableSelection = useCallback(() => {
     editor.update(() => {
       if (tableCellNode.isAttached()) {
-        const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-        const tableElement = table.getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
+        const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+        const tableElement = getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
         invariant(tableElement !== null, "TableActionMenu: Expected to find tableElement in DOM");
         if (!tableElement) {
           return;
         }
-        const tableObserver = table.getTableObserverFromTableElement(tableElement);
+        const tableObserver = getTableObserverFromTableElement(tableElement);
         if (tableObserver !== null) {
           tableObserver.$clearHighlight();
         }
         tableNode.markDirty();
         updateTableCellNode(tableCellNode.getLatest());
       }
-      const rootNode = lexical.$getRoot();
+      const rootNode = $getRoot();
       rootNode.selectStart();
     });
   }, [editor, tableCellNode]);
   const mergeTableCellsAtSelection = () => {
     editor.update(() => {
-      const selection2 = lexical.$getSelection();
-      if (table.$isTableSelection(selection2)) {
-        const { columns, rows } = computeSelectionCount(selection2);
-        const nodes = selection2.getNodes();
+      const selection = $getSelection();
+      if ($isTableSelection(selection)) {
+        const { columns, rows } = computeSelectionCount(selection);
+        const nodes = selection.getNodes();
         let firstCell = null;
         for (let i = 0; i < nodes.length; i++) {
           const node = nodes[i];
-          if (table.$isTableCellNode(node)) {
+          if ($isTableCellNode(node)) {
             if (firstCell === null) {
               node.setColSpan(columns).setRowSpan(rows);
               firstCell = node;
               const isEmpty = $cellContainsEmptyParagraph(node);
               let firstChild;
-              if (isEmpty && lexical.$isParagraphNode(firstChild = node.getFirstChild())) {
+              if (isEmpty && $isParagraphNode(firstChild = node.getFirstChild())) {
                 firstChild.remove();
               }
-            } else if (table.$isTableCellNode(firstCell)) {
+            } else if ($isTableCellNode(firstCell)) {
               const isEmpty = $cellContainsEmptyParagraph(node);
               if (!isEmpty) {
                 firstCell.append(...node.getChildren());
@@ -23418,7 +23397,7 @@ function TableActionMenu({
         }
         if (firstCell !== null) {
           if (firstCell.getChildrenSize() === 0) {
-            firstCell.append(lexical.$createParagraphNode());
+            firstCell.append($createParagraphNode());
           }
           $selectLastDescendant(firstCell);
         }
@@ -23428,87 +23407,87 @@ function TableActionMenu({
   };
   const unmergeTableCellsAtSelection = () => {
     editor.update(() => {
-      table.$unmergeCell();
+      $unmergeCell();
     });
   };
-  const insertTableRowAtSelection = React.useCallback(
+  const insertTableRowAtSelection = useCallback(
     (shouldInsertAfter) => {
       editor.update(() => {
         for (let i = 0; i < selectionCounts.rows; i++) {
-          table.$insertTableRow__EXPERIMENTAL(shouldInsertAfter);
+          $insertTableRow__EXPERIMENTAL(shouldInsertAfter);
         }
         onClose();
       });
     },
     [editor, onClose, selectionCounts.rows]
   );
-  const insertTableColumnAtSelection = React.useCallback(
+  const insertTableColumnAtSelection = useCallback(
     (shouldInsertAfter) => {
       editor.update(() => {
         for (let i = 0; i < selectionCounts.columns; i++) {
-          table.$insertTableColumn__EXPERIMENTAL(shouldInsertAfter);
+          $insertTableColumn__EXPERIMENTAL(shouldInsertAfter);
         }
         onClose();
       });
     },
     [editor, onClose, selectionCounts.columns]
   );
-  const deleteTableRowAtSelection = React.useCallback(() => {
+  const deleteTableRowAtSelection = useCallback(() => {
     editor.update(() => {
-      table.$deleteTableRow__EXPERIMENTAL();
+      $deleteTableRow__EXPERIMENTAL();
       onClose();
     });
   }, [editor, onClose]);
-  const deleteTableAtSelection = React.useCallback(() => {
+  const deleteTableAtSelection = useCallback(() => {
     editor.update(() => {
-      const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+      const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
       tableNode.remove();
       clearTableSelection();
       onClose();
     });
   }, [editor, tableCellNode, clearTableSelection, onClose]);
-  const deleteTableColumnAtSelection = React.useCallback(() => {
+  const deleteTableColumnAtSelection = useCallback(() => {
     editor.update(() => {
-      table.$deleteTableColumn__EXPERIMENTAL();
+      $deleteTableColumn__EXPERIMENTAL();
       onClose();
     });
   }, [editor, onClose]);
-  const toggleTableRowIsHeader = React.useCallback(() => {
+  const toggleTableRowIsHeader = useCallback(() => {
     editor.update(() => {
-      const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-      const tableRowIndex = table.$getTableRowIndexFromTableCellNode(tableCellNode);
+      const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+      const tableRowIndex = $getTableRowIndexFromTableCellNode(tableCellNode);
       const tableRows = tableNode.getChildren();
       if (tableRowIndex >= tableRows.length || tableRowIndex < 0) {
         throw new Error("Expected table cell to be inside of table row.");
       }
       const tableRow = tableRows[tableRowIndex];
-      if (!table.$isTableRowNode(tableRow)) {
+      if (!$isTableRowNode(tableRow)) {
         throw new Error("Expected table row");
       }
-      const newStyle = tableCellNode.getHeaderStyles() ^ table.TableCellHeaderStates.ROW;
+      const newStyle = tableCellNode.getHeaderStyles() ^ TableCellHeaderStates.ROW;
       tableRow.getChildren().forEach((tableCell) => {
-        if (!table.$isTableCellNode(tableCell)) {
+        if (!$isTableCellNode(tableCell)) {
           throw new Error("Expected table cell");
         }
-        tableCell.setHeaderStyles(newStyle, table.TableCellHeaderStates.ROW);
+        tableCell.setHeaderStyles(newStyle, TableCellHeaderStates.ROW);
       });
       clearTableSelection();
       onClose();
     });
   }, [editor, tableCellNode, clearTableSelection, onClose]);
-  const toggleTableColumnIsHeader = React.useCallback(() => {
+  const toggleTableColumnIsHeader = useCallback(() => {
     editor.update(() => {
-      const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-      const tableColumnIndex = table.$getTableColumnIndexFromTableCellNode(tableCellNode);
+      const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+      const tableColumnIndex = $getTableColumnIndexFromTableCellNode(tableCellNode);
       const tableRows = tableNode.getChildren();
       const maxRowsLength = Math.max(...tableRows.map((row) => row.getChildren().length));
       if (tableColumnIndex >= maxRowsLength || tableColumnIndex < 0) {
         throw new Error("Expected table cell to be inside of table row.");
       }
-      const newStyle = tableCellNode.getHeaderStyles() ^ table.TableCellHeaderStates.COLUMN;
+      const newStyle = tableCellNode.getHeaderStyles() ^ TableCellHeaderStates.COLUMN;
       for (let r = 0; r < tableRows.length; r++) {
         const tableRow = tableRows[r];
-        if (!table.$isTableRowNode(tableRow)) {
+        if (!$isTableRowNode(tableRow)) {
           throw new Error("Expected table row");
         }
         const tableCells = tableRow.getChildren();
@@ -23516,19 +23495,19 @@ function TableActionMenu({
           continue;
         }
         const tableCell = tableCells[tableColumnIndex];
-        if (!table.$isTableCellNode(tableCell)) {
+        if (!$isTableCellNode(tableCell)) {
           throw new Error("Expected table cell");
         }
-        tableCell.setHeaderStyles(newStyle, table.TableCellHeaderStates.COLUMN);
+        tableCell.setHeaderStyles(newStyle, TableCellHeaderStates.COLUMN);
       }
       clearTableSelection();
       onClose();
     });
   }, [editor, tableCellNode, clearTableSelection, onClose]);
-  const toggleRowStriping = React.useCallback(() => {
+  const toggleRowStriping = useCallback(() => {
     editor.update(() => {
       if (tableCellNode.isAttached()) {
-        const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+        const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
         if (tableNode) {
           tableNode.setRowStriping(!tableNode.getRowStriping());
         }
@@ -23537,20 +23516,20 @@ function TableActionMenu({
       onClose();
     });
   }, [editor, tableCellNode, clearTableSelection, onClose]);
-  const handleCellBackgroundColor = React.useCallback(
+  const handleCellBackgroundColor = useCallback(
     (value) => {
       editor.update(() => {
-        const selection2 = lexical.$getSelection();
-        if (lexical.$isRangeSelection(selection2) || table.$isTableSelection(selection2)) {
-          const [cell] = table.$getNodeTriplet(selection2.anchor);
-          if (table.$isTableCellNode(cell)) {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection) || $isTableSelection(selection)) {
+          const [cell] = $getNodeTriplet(selection.anchor);
+          if ($isTableCellNode(cell)) {
             cell.setBackgroundColor(value);
           }
-          if (table.$isTableSelection(selection2)) {
-            const nodes = selection2.getNodes();
+          if ($isTableSelection(selection)) {
+            const nodes = selection.getNodes();
             for (let i = 0; i < nodes.length; i++) {
               const node = nodes[i];
-              if (table.$isTableCellNode(node)) {
+              if ($isTableCellNode(node)) {
                 node.setBackgroundColor(value);
               }
             }
@@ -23563,28 +23542,28 @@ function TableActionMenu({
   let mergeCellButton = null;
   if (cellMerge) {
     if (canMergeCells) {
-      mergeCellButton = /* @__PURE__ */ jsxRuntime.jsx(
+      mergeCellButton = /* @__PURE__ */ jsx(
         "button",
         {
           type: "button",
           className: "item",
           onClick: () => mergeTableCellsAtSelection(),
           "data-test-id": "table-merge-cells",
-          children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+          children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
             id: "lexical.plugin.table.merge.cells",
             defaultMessage: "Merge cells"
           }) })
         }
       );
     } else if (canUnmergeCell) {
-      mergeCellButton = /* @__PURE__ */ jsxRuntime.jsx(
+      mergeCellButton = /* @__PURE__ */ jsx(
         "button",
         {
           type: "button",
           className: "item",
           onClick: () => unmergeTableCellsAtSelection(),
           "data-test-id": "table-unmerge-cells",
-          children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+          children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
             id: "lexical.plugin.table.unmerge.cells",
             defaultMessage: "Unmerge cells"
           }) })
@@ -23592,9 +23571,9 @@ function TableActionMenu({
       );
     }
   }
-  return ReactDOM.createPortal(
+  return createPortal(
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    /* @__PURE__ */ jsxRuntime.jsxs(
+    /* @__PURE__ */ jsxs(
       "div",
       {
         className: "dropdown",
@@ -23604,7 +23583,7 @@ function TableActionMenu({
         },
         children: [
           mergeCellButton,
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
@@ -23614,37 +23593,37 @@ function TableActionMenu({
                   id: "lexical.plugin.table.background.title",
                   defaultMessage: "Cell background color"
                 }),
-                () => /* @__PURE__ */ jsxRuntime.jsx(ColorPicker, { color: backgroundColor, onChange: handleCellBackgroundColor })
+                () => /* @__PURE__ */ jsx(ColorPicker, { color: backgroundColor, onChange: handleCellBackgroundColor })
               ),
               "data-test-id": "table-background-color",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                 id: "lexical.plugin.table.background.label",
                 defaultMessage: "Background color"
               }) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => toggleRowStriping(),
               "data-test-id": "table-row-striping",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                 id: "lexical.plugin.table.striping.toggle",
                 defaultMessage: "Toggle Row Striping"
               }) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("hr", {}),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx("hr", {}),
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => insertTableRowAtSelection(false),
               "data-test-id": "table-insert-row-above",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage(
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage(
                 {
                   id: "lexical.plugin.table.row.insert.above",
                   defaultMessage: "Insert {count} {count, plural, one {row} other {rows}} above"
@@ -23653,14 +23632,14 @@ function TableActionMenu({
               ) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => insertTableRowAtSelection(true),
               "data-test-id": "table-insert-row-below",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage(
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage(
                 {
                   id: "lexical.plugin.table.row.insert.below",
                   defaultMessage: "Insert {count} {count, plural, one {row} other {rows}} below"
@@ -23669,15 +23648,15 @@ function TableActionMenu({
               ) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("hr", {}),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx("hr", {}),
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => insertTableColumnAtSelection(false),
               "data-test-id": "table-insert-column-before",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage(
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage(
                 {
                   id: "lexical.plugin.table.column.insert.left",
                   defaultMessage: "Insert {count} {count, plural, one {column} other {columns}} left"
@@ -23686,14 +23665,14 @@ function TableActionMenu({
               ) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => insertTableColumnAtSelection(true),
               "data-test-id": "table-insert-column-after",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage(
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage(
                 {
                   id: "lexical.plugin.table.column.insert.right",
                   defaultMessage: "Insert {count} {count, plural, one {column} other {columns}} right"
@@ -23702,73 +23681,73 @@ function TableActionMenu({
               ) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("hr", {}),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx("hr", {}),
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => deleteTableColumnAtSelection(),
               "data-test-id": "table-delete-columns",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                 id: "lexical.plugin.table.column.delete",
                 defaultMessage: "Delete column"
               }) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => deleteTableRowAtSelection(),
               "data-test-id": "table-delete-rows",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                 id: "lexical.plugin.table.row.delete",
                 defaultMessage: "Delete row"
               }) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => deleteTableAtSelection(),
               "data-test-id": "table-delete",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                 id: "lexical.plugin.table.delete",
                 defaultMessage: "Delete table"
               }) })
             }
           ),
-          /* @__PURE__ */ jsxRuntime.jsx("hr", {}),
-          /* @__PURE__ */ jsxRuntime.jsx("button", { type: "button", className: "item", onClick: () => toggleTableRowIsHeader(), children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage(
+          /* @__PURE__ */ jsx("hr", {}),
+          /* @__PURE__ */ jsx("button", { type: "button", className: "item", onClick: () => toggleTableRowIsHeader(), children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage(
             {
               id: "lexical.plugin.table.row.header",
               defaultMessage: "{action} row header"
             },
             {
-              action: (tableCellNode.__headerState & table.TableCellHeaderStates.ROW) === table.TableCellHeaderStates.ROW ? formatMessage({
+              action: (tableCellNode.__headerState & TableCellHeaderStates.ROW) === TableCellHeaderStates.ROW ? formatMessage({
                 id: "lexical.plugin.table.header.remove",
                 defaultMessage: "Remove"
               }) : formatMessage({ id: "lexical.plugin.table.header.add", defaultMessage: "Add" })
             }
           ) }) }),
-          /* @__PURE__ */ jsxRuntime.jsx(
+          /* @__PURE__ */ jsx(
             "button",
             {
               type: "button",
               className: "item",
               onClick: () => toggleTableColumnIsHeader(),
               "data-test-id": "table-column-header",
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage(
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage(
                 {
                   id: "lexical.plugin.table.column.header",
                   defaultMessage: "{action} column header"
                 },
                 {
-                  action: (tableCellNode.__headerState & table.TableCellHeaderStates.COLUMN) === table.TableCellHeaderStates.COLUMN ? formatMessage({
+                  action: (tableCellNode.__headerState & TableCellHeaderStates.COLUMN) === TableCellHeaderStates.COLUMN ? formatMessage({
                     id: "lexical.plugin.table.header.remove",
                     defaultMessage: "Remove"
                   }) : formatMessage({ id: "lexical.plugin.table.header.add", defaultMessage: "Add" })
@@ -23786,16 +23765,16 @@ function TableCellActionMenuContainer({
   anchorElem,
   cellMerge
 }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const menuButtonRef = React.useRef(null);
-  const menuRootRef = React.useRef(null);
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [tableCellNode, setTableMenuCellNode] = React.useState(null);
+  const [editor] = useLexicalComposerContext();
+  const menuButtonRef = useRef(null);
+  const menuRootRef = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [tableCellNode, setTableMenuCellNode] = useState(null);
   const [colorPickerModal, showColorPickerModal] = useModal();
-  const $moveMenu = React.useCallback(() => {
+  const $moveMenu = useCallback(() => {
     const menu = menuButtonRef.current;
-    const selection2 = lexical.$getSelection();
-    const nativeSelection = lexical.getDOMSelection(editor._window);
+    const selection = $getSelection();
+    const nativeSelection = getDOMSelection(editor._window);
     const activeElement = document.activeElement;
     function disable() {
       if (menu) {
@@ -23804,15 +23783,15 @@ function TableCellActionMenuContainer({
       }
       setTableMenuCellNode(null);
     }
-    if (selection2 == null || menu == null) {
+    if (selection == null || menu == null) {
       return disable();
     }
     const rootElement = editor.getRootElement();
     let tableObserver = null;
     let tableCellParentNodeDOM = null;
-    if (lexical.$isRangeSelection(selection2) && rootElement !== null && nativeSelection !== null && rootElement.contains(nativeSelection.anchorNode)) {
-      const tableCellNodeFromSelection = table.$getTableCellNodeFromLexicalNode(
-        selection2.anchor.getNode()
+    if ($isRangeSelection(selection) && rootElement !== null && nativeSelection !== null && rootElement.contains(nativeSelection.anchorNode)) {
+      const tableCellNodeFromSelection = $getTableCellNodeFromLexicalNode(
+        selection.anchor.getNode()
       );
       if (tableCellNodeFromSelection == null) {
         return disable();
@@ -23821,27 +23800,27 @@ function TableCellActionMenuContainer({
       if (tableCellParentNodeDOM == null || !tableCellNodeFromSelection.isAttached()) {
         return disable();
       }
-      const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNodeFromSelection);
-      const tableElement = table.getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
+      const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNodeFromSelection);
+      const tableElement = getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
       invariant(tableElement !== null, "TableActionMenu: Expected to find tableElement in DOM");
       if (!tableElement) {
         return;
       }
-      tableObserver = table.getTableObserverFromTableElement(tableElement);
+      tableObserver = getTableObserverFromTableElement(tableElement);
       setTableMenuCellNode(tableCellNodeFromSelection);
-    } else if (table.$isTableSelection(selection2)) {
-      const anchorNode = table.$getTableCellNodeFromLexicalNode(selection2.anchor.getNode());
-      invariant(table.$isTableCellNode(anchorNode), "TableSelection anchorNode must be a TableCellNode");
+    } else if ($isTableSelection(selection)) {
+      const anchorNode = $getTableCellNodeFromLexicalNode(selection.anchor.getNode());
+      invariant($isTableCellNode(anchorNode), "TableSelection anchorNode must be a TableCellNode");
       if (!anchorNode) {
         return;
       }
-      const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(anchorNode);
-      const tableElement = table.getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
+      const tableNode = $getTableNodeFromLexicalNodeOrThrow(anchorNode);
+      const tableElement = getTableElement(tableNode, editor.getElementByKey(tableNode.getKey()));
       invariant(tableElement !== null, "TableActionMenu: Expected to find tableElement in DOM");
       if (!tableElement) {
         return;
       }
-      tableObserver = table.getTableObserverFromTableElement(tableElement);
+      tableObserver = getTableObserverFromTableElement(tableElement);
       tableCellParentNodeDOM = editor.getElementByKey(anchorNode.getKey());
     } else if (!activeElement) {
       return disable();
@@ -23860,7 +23839,7 @@ function TableCellActionMenuContainer({
       menu.style.transform = `translate(${left}px, ${top}px)`;
     }
   }, [editor, anchorElem]);
-  React.useEffect(() => {
+  useEffect(() => {
     let timeoutId = void 0;
     const callback = () => {
       timeoutId = void 0;
@@ -23872,9 +23851,9 @@ function TableCellActionMenuContainer({
       }
       return false;
     };
-    return utils.mergeRegister(
+    return mergeRegister(
       editor.registerUpdateListener(delayedCallback),
-      editor.registerCommand(lexical.SELECTION_CHANGE_COMMAND, delayedCallback, lexical.COMMAND_PRIORITY_CRITICAL),
+      editor.registerCommand(SELECTION_CHANGE_COMMAND, delayedCallback, COMMAND_PRIORITY_CRITICAL),
       editor.registerRootListener((rootElement, prevRootElement) => {
         if (prevRootElement) {
           prevRootElement.removeEventListener("mouseup", delayedCallback);
@@ -23887,15 +23866,15 @@ function TableCellActionMenuContainer({
       () => clearTimeout(timeoutId)
     );
   });
-  const prevTableCellDOM = React.useRef(tableCellNode);
-  React.useEffect(() => {
+  const prevTableCellDOM = useRef(tableCellNode);
+  useEffect(() => {
     if (prevTableCellDOM.current !== tableCellNode) {
       setIsMenuOpen(false);
     }
     prevTableCellDOM.current = tableCellNode;
   }, [prevTableCellDOM, tableCellNode]);
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "table-cell-action-button-container", ref: menuButtonRef, children: tableCellNode != null && /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx("div", { className: "table-cell-action-button-container", ref: menuButtonRef, children: tableCellNode != null && /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
@@ -23905,11 +23884,11 @@ function TableCellActionMenuContainer({
           setIsMenuOpen(!isMenuOpen);
         },
         ref: menuRootRef,
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "chevron-down" })
+        children: /* @__PURE__ */ jsx("i", { className: "chevron-down" })
       }
     ),
     colorPickerModal,
-    isMenuOpen && /* @__PURE__ */ jsxRuntime.jsx(
+    isMenuOpen && /* @__PURE__ */ jsx(
       TableActionMenu,
       {
         contextRef: menuRootRef,
@@ -23926,26 +23905,26 @@ function TableActionMenuPlugin({
   anchorElem = document.body,
   cellMerge = false
 }) {
-  const isEditable = useLexicalEditable.useLexicalEditable();
-  return ReactDOM.createPortal(
-    isEditable ? /* @__PURE__ */ jsxRuntime.jsx(TableCellActionMenuContainer, { anchorElem, cellMerge }) : null,
+  const isEditable = useLexicalEditable();
+  return createPortal(
+    isEditable ? /* @__PURE__ */ jsx(TableCellActionMenuContainer, { anchorElem, cellMerge }) : null,
     anchorElem
   );
 }
 const MIN_ROW_HEIGHT = 33;
 const MIN_COLUMN_WIDTH = 92;
 function TableCellResizer({ editor }) {
-  const targetRef = React.useRef(null);
-  const resizerRef = React.useRef(null);
-  const tableRectRef = React.useRef(null);
-  const mouseStartPosRef = React.useRef(null);
-  const [mouseCurrentPos, updateMouseCurrentPos] = React.useState(null);
-  const [activeCell, updateActiveCell] = React.useState(null);
-  const [isMouseDown, updateIsMouseDown] = React.useState(false);
-  const [draggingDirection, updateDraggingDirection] = React.useState(
+  const targetRef = useRef(null);
+  const resizerRef = useRef(null);
+  const tableRectRef = useRef(null);
+  const mouseStartPosRef = useRef(null);
+  const [mouseCurrentPos, updateMouseCurrentPos] = useState(null);
+  const [activeCell, updateActiveCell] = useState(null);
+  const [isMouseDown, updateIsMouseDown] = useState(false);
+  const [draggingDirection, updateDraggingDirection] = useState(
     null
   );
-  const resetState = React.useCallback(() => {
+  const resetState = useCallback(() => {
     updateActiveCell(null);
     targetRef.current = null;
     updateDraggingDirection(null);
@@ -23955,8 +23934,8 @@ function TableCellResizer({ editor }) {
   const isMouseDownOnEvent = (event) => {
     return (event.buttons & 1) === 1;
   };
-  React.useEffect(() => {
-    return editor.registerNodeTransform(table.TableNode, (tableNode) => {
+  useEffect(() => {
+    return editor.registerNodeTransform(TableNode, (tableNode) => {
       if (tableNode.getColWidths()) {
         return tableNode;
       }
@@ -23966,10 +23945,10 @@ function TableCellResizer({ editor }) {
       return tableNode;
     });
   }, [editor]);
-  React.useEffect(() => {
+  useEffect(() => {
     const onMouseMove = (event) => {
       const target = event.target;
-      if (!lexical.isHTMLElement(target)) {
+      if (!isHTMLElement(target)) {
         return;
       }
       if (draggingDirection) {
@@ -23985,16 +23964,16 @@ function TableCellResizer({ editor }) {
       }
       if (targetRef.current !== target) {
         targetRef.current = target;
-        const cell = table.getDOMCellFromTarget(target);
+        const cell = getDOMCellFromTarget(target);
         if (cell && activeCell !== cell) {
           editor.getEditorState().read(
             () => {
-              const tableCellNode = lexical.$getNearestNodeFromDOMNode(cell.elem);
+              const tableCellNode = $getNearestNodeFromDOMNode(cell.elem);
               if (!tableCellNode) {
                 throw new Error("TableCellResizer: Table cell node not found.");
               }
-              const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-              const tableElement = table.getTableElement(
+              const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+              const tableElement = getTableElement(
                 tableNode,
                 editor.getElementByKey(tableNode.getKey())
               );
@@ -24036,25 +24015,25 @@ function TableCellResizer({ editor }) {
     }
     return false;
   };
-  const updateRowHeight = React.useCallback(
+  const updateRowHeight = useCallback(
     (heightChange) => {
       if (!activeCell) {
         throw new Error("TableCellResizer: Expected active cell.");
       }
       editor.update(
         () => {
-          const tableCellNode = lexical.$getNearestNodeFromDOMNode(activeCell.elem);
-          if (!table.$isTableCellNode(tableCellNode)) {
+          const tableCellNode = $getNearestNodeFromDOMNode(activeCell.elem);
+          if (!$isTableCellNode(tableCellNode)) {
             throw new Error("TableCellResizer: Table cell node not found.");
           }
-          const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-          const tableRowIndex = table.$getTableRowIndexFromTableCellNode(tableCellNode) + tableCellNode.getRowSpan() - 1;
+          const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+          const tableRowIndex = $getTableRowIndexFromTableCellNode(tableCellNode) + tableCellNode.getRowSpan() - 1;
           const tableRows = tableNode.getChildren();
           if (tableRowIndex >= tableRows.length || tableRowIndex < 0) {
             throw new Error("Expected table cell to be inside of table row.");
           }
           const tableRow = tableRows[tableRowIndex];
-          if (!table.$isTableRowNode(tableRow)) {
+          if (!$isTableRowNode(tableRow)) {
             throw new Error("Expected table row");
           }
           let height = tableRow.getHeight();
@@ -24085,19 +24064,19 @@ function TableCellResizer({ editor }) {
       }
     }
   };
-  const updateColumnWidth = React.useCallback(
+  const updateColumnWidth = useCallback(
     (widthChange) => {
       if (!activeCell) {
         throw new Error("TableCellResizer: Expected active cell.");
       }
       editor.update(
         () => {
-          const tableCellNode = lexical.$getNearestNodeFromDOMNode(activeCell.elem);
-          if (!table.$isTableCellNode(tableCellNode)) {
+          const tableCellNode = $getNearestNodeFromDOMNode(activeCell.elem);
+          if (!$isTableCellNode(tableCellNode)) {
             throw new Error("TableCellResizer: Table cell node not found.");
           }
-          const tableNode = table.$getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-          const [tableMap] = table.$computeTableMapSkipCellCheck(tableNode, null, null);
+          const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
+          const [tableMap] = $computeTableMapSkipCellCheck(tableNode, null, null);
           const columnIndex = getCellColumnIndex(tableCellNode, tableMap);
           if (columnIndex === void 0) {
             throw new Error("TableCellResizer: Table column not found.");
@@ -24120,7 +24099,7 @@ function TableCellResizer({ editor }) {
     },
     [activeCell, editor]
   );
-  const mouseUpHandler = React.useCallback(
+  const mouseUpHandler = useCallback(
     (direction) => {
       const handler = (event) => {
         event.preventDefault();
@@ -24133,7 +24112,7 @@ function TableCellResizer({ editor }) {
           if (activeCell === null) {
             return;
           }
-          const zoom = utils.calculateZoomLevel(event.target);
+          const zoom = calculateZoomLevel(event.target);
           if (isHeightChanging(direction)) {
             const heightChange = (event.clientY - y) / zoom;
             updateRowHeight(heightChange);
@@ -24149,7 +24128,7 @@ function TableCellResizer({ editor }) {
     },
     [activeCell, resetState, updateColumnWidth, updateRowHeight]
   );
-  const toggleResize = React.useCallback(
+  const toggleResize = useCallback(
     (direction) => (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -24166,10 +24145,10 @@ function TableCellResizer({ editor }) {
     },
     [activeCell, mouseUpHandler]
   );
-  const getResizers = React.useCallback(() => {
+  const getResizers = useCallback(() => {
     if (activeCell) {
       const { height, width, top, left } = activeCell.elem.getBoundingClientRect();
-      const zoom = utils.calculateZoomLevel(activeCell.elem);
+      const zoom = calculateZoomLevel(activeCell.elem);
       const zoneWidth = 10;
       const styles = {
         bottom: {
@@ -24214,8 +24193,8 @@ function TableCellResizer({ editor }) {
     };
   }, [activeCell, draggingDirection, mouseCurrentPos]);
   const resizerStyles = getResizers();
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { ref: resizerRef, children: activeCell != null && !isMouseDown && /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx("div", { ref: resizerRef, children: activeCell != null && !isMouseDown && /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
       "div",
       {
         className: "TableCellResizer__resizer TableCellResizer__ui",
@@ -24223,7 +24202,7 @@ function TableCellResizer({ editor }) {
         onMouseDown: toggleResize("right")
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "div",
       {
         className: "TableCellResizer__resizer TableCellResizer__ui",
@@ -24234,10 +24213,10 @@ function TableCellResizer({ editor }) {
   ] }) });
 }
 function TableCellResizerPlugin() {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const isEditable = useLexicalEditable.useLexicalEditable();
-  return React.useMemo(
-    () => isEditable ? ReactDOM.createPortal(/* @__PURE__ */ jsxRuntime.jsx(TableCellResizer, { editor }), document.body) : null,
+  const [editor] = useLexicalComposerContext();
+  const isEditable = useLexicalEditable();
+  return useMemo(
+    () => isEditable ? createPortal(/* @__PURE__ */ jsx(TableCellResizer, { editor }), document.body) : null,
     [editor, isEditable]
   );
 }
@@ -24245,14 +24224,14 @@ const BUTTON_WIDTH_PX = 20;
 function TableHoverActionsContainer({
   anchorElem
 }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const isEditable = useLexicalEditable.useLexicalEditable();
-  const [isShownRow, setShownRow] = React.useState(false);
-  const [isShownColumn, setShownColumn] = React.useState(false);
-  const [shouldListenMouseMove, setShouldListenMouseMove] = React.useState(false);
-  const [position, setPosition] = React.useState({});
-  const tableSetRef = React.useRef(/* @__PURE__ */ new Set());
-  const tableCellDOMNodeRef = React.useRef(null);
+  const [editor] = useLexicalComposerContext();
+  const isEditable = useLexicalEditable();
+  const [isShownRow, setShownRow] = useState(false);
+  const [isShownColumn, setShownColumn] = useState(false);
+  const [shouldListenMouseMove, setShouldListenMouseMove] = useState(false);
+  const [position, setPosition] = useState({});
+  const tableSetRef = useRef(/* @__PURE__ */ new Set());
+  const tableCellDOMNodeRef = useRef(null);
   const debouncedOnMouseMove = useDebounce(
     (event) => {
       const { isOutside, tableDOMNode } = getMouseInfo(event);
@@ -24270,18 +24249,18 @@ function TableHoverActionsContainer({
       let tableDOMElement = null;
       editor.getEditorState().read(
         () => {
-          const maybeTableCell = lexical.$getNearestNodeFromDOMNode(tableDOMNode);
-          if (table.$isTableCellNode(maybeTableCell)) {
-            const table$1 = utils.$findMatchingParent(maybeTableCell, (node) => table.$isTableNode(node));
-            if (!table.$isTableNode(table$1)) {
+          const maybeTableCell = $getNearestNodeFromDOMNode(tableDOMNode);
+          if ($isTableCellNode(maybeTableCell)) {
+            const table = $findMatchingParent(maybeTableCell, (node) => $isTableNode(node));
+            if (!$isTableNode(table)) {
               return;
             }
-            tableDOMElement = table.getTableElement(table$1, editor.getElementByKey(table$1.getKey()));
+            tableDOMElement = getTableElement(table, editor.getElementByKey(table.getKey()));
             if (tableDOMElement) {
-              const rowCount = table$1.getChildrenSize();
-              const colCount = table$1.getChildAtIndex(0)?.getChildrenSize();
-              const rowIndex = table.$getTableRowIndexFromTableCellNode(maybeTableCell);
-              const colIndex = table.$getTableColumnIndexFromTableCellNode(maybeTableCell);
+              const rowCount = table.getChildrenSize();
+              const colCount = table.getChildAtIndex(0)?.getChildrenSize();
+              const rowIndex = $getTableRowIndexFromTableCellNode(maybeTableCell);
+              const colIndex = $getTableColumnIndexFromTableCellNode(maybeTableCell);
               if (rowIndex === rowCount - 1) {
                 hoveredRowNode = maybeTableCell;
               } else if (colIndex === colCount - 1) {
@@ -24331,13 +24310,13 @@ function TableHoverActionsContainer({
     50,
     250
   );
-  const tableResizeObserver = React.useMemo(() => {
+  const tableResizeObserver = useMemo(() => {
     return new ResizeObserver(() => {
       setShownRow(false);
       setShownColumn(false);
     });
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     if (!shouldListenMouseMove) {
       return;
     }
@@ -24349,10 +24328,10 @@ function TableHoverActionsContainer({
       document.removeEventListener("mousemove", debouncedOnMouseMove);
     };
   }, [shouldListenMouseMove, debouncedOnMouseMove]);
-  React.useEffect(() => {
-    return utils.mergeRegister(
+  useEffect(() => {
+    return mergeRegister(
       editor.registerMutationListener(
-        table.TableNode,
+        TableNode,
         (mutations) => {
           editor.getEditorState().read(
             () => {
@@ -24374,7 +24353,7 @@ function TableHoverActionsContainer({
               if (resetObserver) {
                 tableResizeObserver.disconnect();
                 for (const tableKey of tableSetRef.current) {
-                  const { tableElement } = table.$getTableAndElementByKey(tableKey);
+                  const { tableElement } = $getTableAndElementByKey(tableKey);
                   tableResizeObserver.observe(tableElement);
                 }
                 setShouldListenMouseMove(tableSetRef.current.size > 0);
@@ -24390,13 +24369,13 @@ function TableHoverActionsContainer({
   const insertAction = (insertRow) => {
     editor.update(() => {
       if (tableCellDOMNodeRef.current) {
-        const maybeTableNode = lexical.$getNearestNodeFromDOMNode(tableCellDOMNodeRef.current);
+        const maybeTableNode = $getNearestNodeFromDOMNode(tableCellDOMNodeRef.current);
         maybeTableNode?.selectEnd();
         if (insertRow) {
-          table.$insertTableRow__EXPERIMENTAL();
+          $insertTableRow__EXPERIMENTAL();
           setShownRow(false);
         } else {
-          table.$insertTableColumn__EXPERIMENTAL();
+          $insertTableColumn__EXPERIMENTAL();
           setShownColumn(false);
         }
       }
@@ -24405,8 +24384,8 @@ function TableHoverActionsContainer({
   if (!isEditable) {
     return null;
   }
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    isShownRow && /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    isShownRow && /* @__PURE__ */ jsx(
       "button",
       {
         className: "PlaygroundEditorTheme__tableAddRows",
@@ -24414,7 +24393,7 @@ function TableHoverActionsContainer({
         onClick: () => insertAction(true)
       }
     ),
-    isShownColumn && /* @__PURE__ */ jsxRuntime.jsx(
+    isShownColumn && /* @__PURE__ */ jsx(
       "button",
       {
         className: "PlaygroundEditorTheme__tableAddColumns",
@@ -24426,7 +24405,7 @@ function TableHoverActionsContainer({
 }
 function getMouseInfo(event) {
   const target = event.target;
-  if (lexical.isHTMLElement(target)) {
+  if (isHTMLElement(target)) {
     const tableDOMNode = target.closest(
       "td.PlaygroundEditorTheme__tableCell, th.PlaygroundEditorTheme__tableCell"
     );
@@ -24439,12 +24418,12 @@ function getMouseInfo(event) {
 function TableHoverActionsPlugin({
   anchorElem = document.body
 }) {
-  const isEditable = useLexicalEditable.useLexicalEditable();
-  return isEditable ? ReactDOM.createPortal(/* @__PURE__ */ jsxRuntime.jsx(TableHoverActionsContainer, { anchorElem }), anchorElem) : null;
+  const isEditable = useLexicalEditable();
+  return isEditable ? createPortal(/* @__PURE__ */ jsx(TableHoverActionsContainer, { anchorElem }), anchorElem) : null;
 }
 function getCodeLanguageOptions() {
   const options = [];
-  for (const [lang, friendlyName] of Object.entries(code.CODE_LANGUAGE_FRIENDLY_NAME_MAP)) {
+  for (const [lang, friendlyName] of Object.entries(CODE_LANGUAGE_FRIENDLY_NAME_MAP)) {
     options.push([lang, friendlyName]);
   }
   return options;
@@ -24495,8 +24474,8 @@ function BlockFormatDropDown({
   rootType,
   disabled = false
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  return /* @__PURE__ */ jsxRuntime.jsxs(
+  const { formatMessage } = useIntl();
+  return /* @__PURE__ */ jsxs(
     DropDown,
     {
       disabled,
@@ -24511,156 +24490,156 @@ function BlockFormatDropDown({
         defaultMessage: "Formatting options for text style"
       }),
       children: [
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "paragraph"),
             onClick: () => formatParagraph(editor),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon paragraph" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon paragraph" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.paragraph",
                   defaultMessage: "Paragraph"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.NORMAL })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.NORMAL })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "h1"),
             onClick: () => formatHeading(editor, blockType, "h1"),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon h1" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon h1" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.h1",
                   defaultMessage: "Heading 1"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.HEADING1 })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.HEADING1 })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "h2"),
             onClick: () => formatHeading(editor, blockType, "h2"),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon h2" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon h2" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.h2",
                   defaultMessage: "Heading 2"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.HEADING2 })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.HEADING2 })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "h3"),
             onClick: () => formatHeading(editor, blockType, "h3"),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon h3" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon h3" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.h3",
                   defaultMessage: "Heading 3"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.HEADING3 })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.HEADING3 })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "bullet"),
             onClick: () => formatBulletList(editor, blockType),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon bullet-list" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon bullet-list" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.bullet",
                   defaultMessage: "Bullet List"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.BULLET_LIST })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.BULLET_LIST })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "number"),
             onClick: () => formatNumberedList(editor, blockType),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon numbered-list" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon numbered-list" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.number",
                   defaultMessage: "Numbered List"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.NUMBERED_LIST })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.NUMBERED_LIST })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "check"),
             onClick: () => formatCheckList(editor, blockType),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon check-list" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon check-list" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.check",
                   defaultMessage: "Check List"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.CHECK_LIST })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.CHECK_LIST })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "quote"),
             onClick: () => formatQuote(editor, blockType),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon quote" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon quote" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.quote",
                   defaultMessage: "Quote"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.QUOTE })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.QUOTE })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             className: "item wide " + dropDownActiveClass(blockType === "code"),
             onClick: () => formatCode(editor, blockType),
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon code" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon code" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.block.code",
                   defaultMessage: "Code Block"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.CODE_BLOCK })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.CODE_BLOCK })
             ]
           }
         )
@@ -24669,7 +24648,7 @@ function BlockFormatDropDown({
   );
 }
 function Divider() {
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "divider" });
+  return /* @__PURE__ */ jsx("div", { className: "divider" });
 }
 function ElementFormatDropdown({
   editor,
@@ -24677,9 +24656,9 @@ function ElementFormatDropdown({
   isRTL,
   disabled = false
 }) {
-  const { formatMessage } = reactIntl.useIntl();
+  const { formatMessage } = useIntl();
   const formatOption = ELEMENT_FORMAT_OPTIONS[value || "left"];
-  return /* @__PURE__ */ jsxRuntime.jsxs(
+  return /* @__PURE__ */ jsxs(
     DropDown,
     {
       disabled,
@@ -24694,160 +24673,160 @@ function ElementFormatDropdown({
         defaultMessage: "Formatting options for text alignment"
       }),
       children: [
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             onClick: () => {
-              editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "left");
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
             },
             className: "item wide",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon left-align" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon left-align" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.align.left",
                   defaultMessage: "Left Align"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.LEFT_ALIGN })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.LEFT_ALIGN })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             onClick: () => {
-              editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "center");
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
             },
             className: "item wide",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon center-align" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon center-align" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.align.center",
                   defaultMessage: "Center Align"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.CENTER_ALIGN })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.CENTER_ALIGN })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             onClick: () => {
-              editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "right");
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
             },
             className: "item wide",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon right-align" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon right-align" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.align.right",
                   defaultMessage: "Right Align"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.RIGHT_ALIGN })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.RIGHT_ALIGN })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             onClick: () => {
-              editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "justify");
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
             },
             className: "item wide",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon justify-align" }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon justify-align" }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.align.justify",
                   defaultMessage: "Justify Align"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.JUSTIFY_ALIGN })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.JUSTIFY_ALIGN })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             onClick: () => {
-              editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "start");
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "start");
             },
             className: "item wide",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsx(
+              /* @__PURE__ */ jsx(
                 "i",
                 {
                   className: `icon ${isRTL ? ELEMENT_FORMAT_OPTIONS.start.iconRTL : ELEMENT_FORMAT_OPTIONS.start.icon}`
                 }
               ),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                 id: "lexical.plugin.toolbar.align.start",
                 defaultMessage: "Start Align"
               }) })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             onClick: () => {
-              editor.dispatchCommand(lexical.FORMAT_ELEMENT_COMMAND, "end");
+              editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "end");
             },
             className: "item wide",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsx(
+              /* @__PURE__ */ jsx(
                 "i",
                 {
                   className: `icon ${isRTL ? ELEMENT_FORMAT_OPTIONS.end.iconRTL : ELEMENT_FORMAT_OPTIONS.end.icon}`
                 }
               ),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                 id: "lexical.plugin.toolbar.align.end",
                 defaultMessage: "End Align"
               }) })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsx(Divider, {}),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsx(Divider, {}),
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             onClick: () => {
-              editor.dispatchCommand(lexical.OUTDENT_CONTENT_COMMAND, void 0);
+              editor.dispatchCommand(OUTDENT_CONTENT_COMMAND, void 0);
             },
             className: "item wide",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon " + (isRTL ? "indent" : "outdent") }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon " + (isRTL ? "indent" : "outdent") }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.indent.outdent",
                   defaultMessage: "Outdent"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.OUTDENT })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.OUTDENT })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+        /* @__PURE__ */ jsxs(
           DropDownItem,
           {
             onClick: () => {
-              editor.dispatchCommand(lexical.INDENT_CONTENT_COMMAND, void 0);
+              editor.dispatchCommand(INDENT_CONTENT_COMMAND, void 0);
             },
             className: "item wide",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon " + (isRTL ? "outdent" : "indent") }),
-                /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+              /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                /* @__PURE__ */ jsx("i", { className: "icon " + (isRTL ? "outdent" : "indent") }),
+                /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                   id: "lexical.plugin.toolbar.indent.indent",
                   defaultMessage: "Indent"
                 }) })
               ] }),
-              /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.INDENT })
+              /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.INDENT })
             ]
           }
         )
@@ -24861,15 +24840,15 @@ function ToolbarPlugin({
   setActiveEditor,
   setIsLinkEditMode
 }) {
-  const { formatMessage } = reactIntl.useIntl();
-  const [selectedElementKey, setSelectedElementKey] = React.useState(null);
+  const { formatMessage } = useIntl();
+  const [selectedElementKey, setSelectedElementKey] = useState(null);
   const [modal, showModal] = useModal();
-  const [isEditable, setIsEditable] = React.useState(() => editor.isEditable());
+  const [isEditable, setIsEditable] = useState(() => editor.isEditable());
   const { toolbarState, updateToolbarState } = useToolbarState();
-  const $updateToolbar = React.useCallback(() => {
-    const selection$1 = lexical.$getSelection();
-    if (lexical.$isRangeSelection(selection$1)) {
-      if (activeEditor !== editor && utils.$isEditorIsNestedEditor(activeEditor)) {
+  const $updateToolbar = useCallback(() => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      if (activeEditor !== editor && $isEditorIsNestedEditor(activeEditor)) {
         const rootElement = activeEditor.getRootElement();
         updateToolbarState(
           "isImageCaption",
@@ -24878,43 +24857,43 @@ function ToolbarPlugin({
       } else {
         updateToolbarState("isImageCaption", false);
       }
-      const anchorNode = selection$1.anchor.getNode();
-      let element = anchorNode.getKey() === "root" ? anchorNode : utils.$findMatchingParent(anchorNode, (e) => {
+      const anchorNode = selection.anchor.getNode();
+      let element = anchorNode.getKey() === "root" ? anchorNode : $findMatchingParent(anchorNode, (e) => {
         const parent2 = e.getParent();
-        return parent2 !== null && lexical.$isRootOrShadowRoot(parent2);
+        return parent2 !== null && $isRootOrShadowRoot(parent2);
       });
       if (element === null) {
         element = anchorNode.getTopLevelElementOrThrow();
       }
       const elementKey = element.getKey();
       const elementDOM = activeEditor.getElementByKey(elementKey);
-      updateToolbarState("isRTL", selection.$isParentElementRTL(selection$1));
-      const node = getSelectedNode(selection$1);
+      updateToolbarState("isRTL", $isParentElementRTL(selection));
+      const node = getSelectedNode(selection);
       const parent = node.getParent();
-      const isLink = link.$isLinkNode(parent) || link.$isLinkNode(node);
+      const isLink = $isLinkNode(parent) || $isLinkNode(node);
       updateToolbarState("isLink", isLink);
-      const tableNode = utils.$findMatchingParent(node, table.$isTableNode);
-      if (table.$isTableNode(tableNode)) {
+      const tableNode = $findMatchingParent(node, $isTableNode);
+      if ($isTableNode(tableNode)) {
         updateToolbarState("rootType", "table");
       } else {
         updateToolbarState("rootType", "root");
       }
       if (elementDOM !== null) {
         setSelectedElementKey(elementKey);
-        if (list.$isListNode(element)) {
-          const parentList = utils.$getNearestNodeOfType(anchorNode, list.ListNode);
+        if ($isListNode(element)) {
+          const parentList = $getNearestNodeOfType(anchorNode, ListNode);
           const type = parentList ? parentList.getListType() : element.getListType();
           updateToolbarState("blockType", type);
         } else {
-          const type = richText.$isHeadingNode(element) ? element.getTag() : element.getType();
+          const type = $isHeadingNode(element) ? element.getTag() : element.getType();
           if (type in blockTypeToBlockName) {
             updateToolbarState("blockType", type);
           }
-          if (code.$isCodeNode(element)) {
+          if ($isCodeNode(element)) {
             const language = element.getLanguage();
             updateToolbarState(
               "codeLanguage",
-              language ? code.CODE_LANGUAGE_MAP[language] || language : ""
+              language ? CODE_LANGUAGE_MAP[language] || language : ""
             );
             return;
           }
@@ -24922,63 +24901,63 @@ function ToolbarPlugin({
       }
       updateToolbarState(
         "fontColor",
-        selection.$getSelectionStyleValueForProperty(selection$1, "color", "#000")
+        $getSelectionStyleValueForProperty(selection, "color", "#000")
       );
       updateToolbarState(
         "bgColor",
-        selection.$getSelectionStyleValueForProperty(selection$1, "background-color", "#fff")
+        $getSelectionStyleValueForProperty(selection, "background-color", "#fff")
       );
       updateToolbarState(
         "fontFamily",
-        selection.$getSelectionStyleValueForProperty(selection$1, "font-family", "Arial")
+        $getSelectionStyleValueForProperty(selection, "font-family", "Arial")
       );
       let matchingParent;
-      if (link.$isLinkNode(parent)) {
-        matchingParent = utils.$findMatchingParent(
+      if ($isLinkNode(parent)) {
+        matchingParent = $findMatchingParent(
           node,
-          (parentNode) => lexical.$isElementNode(parentNode) && !parentNode.isInline()
+          (parentNode) => $isElementNode(parentNode) && !parentNode.isInline()
         );
       }
       updateToolbarState(
         "elementFormat",
-        lexical.$isElementNode(matchingParent) ? matchingParent.getFormatType() : lexical.$isElementNode(node) ? node.getFormatType() : parent?.getFormatType() || "left"
+        $isElementNode(matchingParent) ? matchingParent.getFormatType() : $isElementNode(node) ? node.getFormatType() : parent?.getFormatType() || "left"
       );
     }
-    if (lexical.$isRangeSelection(selection$1) || table.$isTableSelection(selection$1)) {
-      updateToolbarState("isBold", selection$1.hasFormat("bold"));
-      updateToolbarState("isItalic", selection$1.hasFormat("italic"));
-      updateToolbarState("isUnderline", selection$1.hasFormat("underline"));
-      updateToolbarState("isStrikethrough", selection$1.hasFormat("strikethrough"));
-      updateToolbarState("isSubscript", selection$1.hasFormat("subscript"));
-      updateToolbarState("isSuperscript", selection$1.hasFormat("superscript"));
-      updateToolbarState("isCode", selection$1.hasFormat("code"));
+    if ($isRangeSelection(selection) || $isTableSelection(selection)) {
+      updateToolbarState("isBold", selection.hasFormat("bold"));
+      updateToolbarState("isItalic", selection.hasFormat("italic"));
+      updateToolbarState("isUnderline", selection.hasFormat("underline"));
+      updateToolbarState("isStrikethrough", selection.hasFormat("strikethrough"));
+      updateToolbarState("isSubscript", selection.hasFormat("subscript"));
+      updateToolbarState("isSuperscript", selection.hasFormat("superscript"));
+      updateToolbarState("isCode", selection.hasFormat("code"));
       updateToolbarState(
         "fontSize",
-        selection.$getSelectionStyleValueForProperty(selection$1, "font-size", "15px")
+        $getSelectionStyleValueForProperty(selection, "font-size", "15px")
       );
-      updateToolbarState("isLowercase", selection$1.hasFormat("lowercase"));
-      updateToolbarState("isUppercase", selection$1.hasFormat("uppercase"));
-      updateToolbarState("isCapitalize", selection$1.hasFormat("capitalize"));
+      updateToolbarState("isLowercase", selection.hasFormat("lowercase"));
+      updateToolbarState("isUppercase", selection.hasFormat("uppercase"));
+      updateToolbarState("isCapitalize", selection.hasFormat("capitalize"));
     }
   }, [activeEditor, editor, updateToolbarState]);
-  React.useEffect(() => {
+  useEffect(() => {
     return editor.registerCommand(
-      lexical.SELECTION_CHANGE_COMMAND,
+      SELECTION_CHANGE_COMMAND,
       (_payload, newEditor) => {
         setActiveEditor(newEditor);
         $updateToolbar();
         return false;
       },
-      lexical.COMMAND_PRIORITY_CRITICAL
+      COMMAND_PRIORITY_CRITICAL
     );
   }, [editor, $updateToolbar, setActiveEditor]);
-  React.useEffect(() => {
+  useEffect(() => {
     activeEditor.getEditorState().read(() => {
       $updateToolbar();
     });
   }, [activeEditor, $updateToolbar]);
-  React.useEffect(() => {
-    return utils.mergeRegister(
+  useEffect(() => {
+    return mergeRegister(
       editor.registerEditableListener((editable) => {
         setIsEditable(editable);
       }),
@@ -24988,30 +24967,30 @@ function ToolbarPlugin({
         });
       }),
       activeEditor.registerCommand(
-        lexical.CAN_UNDO_COMMAND,
+        CAN_UNDO_COMMAND,
         (payload) => {
           updateToolbarState("canUndo", payload);
           return false;
         },
-        lexical.COMMAND_PRIORITY_CRITICAL
+        COMMAND_PRIORITY_CRITICAL
       ),
       activeEditor.registerCommand(
-        lexical.CAN_REDO_COMMAND,
+        CAN_REDO_COMMAND,
         (payload) => {
           updateToolbarState("canRedo", payload);
           return false;
         },
-        lexical.COMMAND_PRIORITY_CRITICAL
+        COMMAND_PRIORITY_CRITICAL
       )
     );
   }, [$updateToolbar, activeEditor, editor, updateToolbarState]);
-  const applyStyleText = React.useCallback(
+  const applyStyleText = useCallback(
     (styles, skipHistoryStack) => {
       activeEditor.update(
         () => {
-          const selection$1 = lexical.$getSelection();
-          if (selection$1 !== null) {
-            selection.$patchStyleText(selection$1, styles);
+          const selection = $getSelection();
+          if (selection !== null) {
+            $patchStyleText(selection, styles);
           }
         },
         skipHistoryStack ? { tag: "historic" } : {}
@@ -25019,33 +24998,33 @@ function ToolbarPlugin({
     },
     [activeEditor]
   );
-  React.useCallback(
+  useCallback(
     (value, skipHistoryStack) => {
       applyStyleText({ color: value }, skipHistoryStack);
     },
     [applyStyleText]
   );
-  React.useCallback(
+  useCallback(
     (value, skipHistoryStack) => {
       applyStyleText({ "background-color": value }, skipHistoryStack);
     },
     [applyStyleText]
   );
-  const insertLink = React.useCallback(() => {
+  const insertLink = useCallback(() => {
     if (!toolbarState.isLink) {
       setIsLinkEditMode(true);
-      activeEditor.dispatchCommand(link.TOGGLE_LINK_COMMAND, sanitizeUrl("https://"));
+      activeEditor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl("https://"));
     } else {
       setIsLinkEditMode(false);
-      activeEditor.dispatchCommand(link.TOGGLE_LINK_COMMAND, null);
+      activeEditor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     }
   }, [activeEditor, setIsLinkEditMode, toolbarState.isLink]);
-  const onCodeLanguageSelect = React.useCallback(
+  const onCodeLanguageSelect = useCallback(
     (value) => {
       activeEditor.update(() => {
         if (selectedElementKey !== null) {
-          const node = lexical.$getNodeByKey(selectedElementKey);
-          if (code.$isCodeNode(node)) {
+          const node = $getNodeByKey(selectedElementKey);
+          if ($isCodeNode(node)) {
             node.setLanguage(value);
           }
         }
@@ -25055,16 +25034,16 @@ function ToolbarPlugin({
   );
   const canViewerSeeInsertDropdown = !toolbarState.isImageCaption;
   const canViewerSeeInsertCodeButton = !toolbarState.isImageCaption;
-  const [isStrapiImageDialogOpen, setIsStrapiImageDialogOpen] = React.useState(false);
-  const components = admin.useStrapiApp("ImageDialog", (state) => state.components);
+  const [isStrapiImageDialogOpen, setIsStrapiImageDialogOpen] = useState(false);
+  const components = useStrapiApp("ImageDialog", (state) => state.components);
   const MediaLibraryDialog = components["media-library"];
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "toolbar", children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs("div", { className: "toolbar", children: [
+    /* @__PURE__ */ jsx(
       "button",
       {
         disabled: !toolbarState.canUndo || !isEditable,
         onClick: () => {
-          activeEditor.dispatchCommand(lexical.UNDO_COMMAND, void 0);
+          activeEditor.dispatchCommand(UNDO_COMMAND, void 0);
         },
         title: formatMessage(
           { id: "lexical.plugin.toolbar.undo.title", defaultMessage: "Undo ({shortcut})" },
@@ -25076,15 +25055,15 @@ function ToolbarPlugin({
           id: "lexical.plugin.toolbar.undo.aria",
           defaultMessage: "Undo"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format undo" })
+        children: /* @__PURE__ */ jsx("i", { className: "format undo" })
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(
       "button",
       {
         disabled: !toolbarState.canRedo || !isEditable,
         onClick: () => {
-          activeEditor.dispatchCommand(lexical.REDO_COMMAND, void 0);
+          activeEditor.dispatchCommand(REDO_COMMAND, void 0);
         },
         title: formatMessage(
           { id: "lexical.plugin.toolbar.redo.title", defaultMessage: "Redo ({shortcut})" },
@@ -25096,10 +25075,10 @@ function ToolbarPlugin({
           id: "lexical.plugin.toolbar.redo.aria",
           defaultMessage: "Redo"
         }),
-        children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format redo" })
+        children: /* @__PURE__ */ jsx("i", { className: "format redo" })
       }
     ),
-    isStrapiImageDialogOpen && /* @__PURE__ */ jsxRuntime.jsx(
+    isStrapiImageDialogOpen && /* @__PURE__ */ jsx(
       InsertStrapiImageDialog,
       {
         MediaLibraryDialog,
@@ -25107,9 +25086,9 @@ function ToolbarPlugin({
         onClose: () => setIsStrapiImageDialogOpen(false)
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(Divider, {}),
-    toolbarState.blockType in blockTypeToBlockName && activeEditor === editor && /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-      /* @__PURE__ */ jsxRuntime.jsx(
+    /* @__PURE__ */ jsx(Divider, {}),
+    toolbarState.blockType in blockTypeToBlockName && activeEditor === editor && /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx(
         BlockFormatDropDown,
         {
           disabled: !isEditable,
@@ -25118,34 +25097,34 @@ function ToolbarPlugin({
           editor: activeEditor
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(Divider, {})
+      /* @__PURE__ */ jsx(Divider, {})
     ] }),
-    toolbarState.blockType === "code" ? /* @__PURE__ */ jsxRuntime.jsx(
+    toolbarState.blockType === "code" ? /* @__PURE__ */ jsx(
       DropDown,
       {
         disabled: !isEditable,
         buttonClassName: "toolbar-item code-language",
-        buttonLabel: code.getLanguageFriendlyName(toolbarState.codeLanguage),
+        buttonLabel: getLanguageFriendlyName(toolbarState.codeLanguage),
         buttonAriaLabel: "Select language",
         children: CODE_LANGUAGE_OPTIONS.map(([value, name]) => {
-          return /* @__PURE__ */ jsxRuntime.jsx(
+          return /* @__PURE__ */ jsx(
             DropDownItem,
             {
               className: `item ${dropDownActiveClass(value === toolbarState.codeLanguage)}`,
               onClick: () => onCodeLanguageSelect(value),
-              children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: name })
+              children: /* @__PURE__ */ jsx("span", { className: "text", children: name })
             },
             value
           );
         })
       }
-    ) : /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-      /* @__PURE__ */ jsxRuntime.jsx(
+    ) : /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx(
         "button",
         {
           disabled: !isEditable,
           onClick: () => {
-            activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "bold");
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
           },
           className: "toolbar-item spaced " + (toolbarState.isBold ? "active" : ""),
           title: formatMessage(
@@ -25160,15 +25139,15 @@ function ToolbarPlugin({
             id: "lexical.plugin.toolbar.format.bold.aria",
             defaultMessage: "Format text as bold"
           }),
-          children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format bold" })
+          children: /* @__PURE__ */ jsx("i", { className: "format bold" })
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx(
         "button",
         {
           disabled: !isEditable,
           onClick: () => {
-            activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "italic");
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
           },
           className: "toolbar-item spaced " + (toolbarState.isItalic ? "active" : ""),
           title: formatMessage(
@@ -25183,15 +25162,15 @@ function ToolbarPlugin({
             id: "lexical.plugin.toolbar.format.italic.aria",
             defaultMessage: "Format text as italics"
           }),
-          children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format italic" })
+          children: /* @__PURE__ */ jsx("i", { className: "format italic" })
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx(
         "button",
         {
           disabled: !isEditable,
           onClick: () => {
-            activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "underline");
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
           },
           className: "toolbar-item spaced " + (toolbarState.isUnderline ? "active" : ""),
           title: formatMessage(
@@ -25206,15 +25185,15 @@ function ToolbarPlugin({
             id: "lexical.plugin.toolbar.format.underline.aria",
             defaultMessage: "Format text to underlined"
           }),
-          children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format underline" })
+          children: /* @__PURE__ */ jsx("i", { className: "format underline" })
         }
       ),
-      canViewerSeeInsertCodeButton && /* @__PURE__ */ jsxRuntime.jsx(
+      canViewerSeeInsertCodeButton && /* @__PURE__ */ jsx(
         "button",
         {
           disabled: !isEditable,
           onClick: () => {
-            activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "code");
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
           },
           className: "toolbar-item spaced " + (toolbarState.isCode ? "active" : ""),
           title: formatMessage(
@@ -25229,10 +25208,10 @@ function ToolbarPlugin({
             id: "lexical.plugin.toolbar.format.code.aria",
             defaultMessage: "Insert code block"
           }),
-          children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format code" })
+          children: /* @__PURE__ */ jsx("i", { className: "format code" })
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsxs(
+      /* @__PURE__ */ jsxs(
         DropDown,
         {
           disabled: !isEditable,
@@ -25244,11 +25223,11 @@ function ToolbarPlugin({
           }),
           buttonIconClassName: "icon dropdown-more",
           children: [
-            /* @__PURE__ */ jsxRuntime.jsxs(
+            /* @__PURE__ */ jsxs(
               DropDownItem,
               {
                 onClick: () => {
-                  activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "lowercase");
+                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "lowercase");
                 },
                 className: "item wide " + dropDownActiveClass(toolbarState.isLowercase),
                 title: formatMessage({
@@ -25260,22 +25239,22 @@ function ToolbarPlugin({
                   defaultMessage: "Format text to lowercase"
                 }),
                 children: [
-                  /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon lowercase" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                  /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                    /* @__PURE__ */ jsx("i", { className: "icon lowercase" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.format.lowercase.text",
                       defaultMessage: "Lowercase"
                     }) })
                   ] }),
-                  /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.LOWERCASE })
+                  /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.LOWERCASE })
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsxs(
+            /* @__PURE__ */ jsxs(
               DropDownItem,
               {
                 onClick: () => {
-                  activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "uppercase");
+                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "uppercase");
                 },
                 className: "item wide " + dropDownActiveClass(toolbarState.isUppercase),
                 title: formatMessage({
@@ -25287,22 +25266,22 @@ function ToolbarPlugin({
                   defaultMessage: "Format text to uppercase"
                 }),
                 children: [
-                  /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon uppercase" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                  /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                    /* @__PURE__ */ jsx("i", { className: "icon uppercase" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.format.uppercase.text",
                       defaultMessage: "Uppercase"
                     }) })
                   ] }),
-                  /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.UPPERCASE })
+                  /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.UPPERCASE })
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsxs(
+            /* @__PURE__ */ jsxs(
               DropDownItem,
               {
                 onClick: () => {
-                  activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "capitalize");
+                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "capitalize");
                 },
                 className: "item wide " + dropDownActiveClass(toolbarState.isCapitalize),
                 title: formatMessage({
@@ -25314,22 +25293,22 @@ function ToolbarPlugin({
                   defaultMessage: "Format text to capitalize"
                 }),
                 children: [
-                  /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon capitalize" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                  /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                    /* @__PURE__ */ jsx("i", { className: "icon capitalize" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.format.capitalize.text",
                       defaultMessage: "Capitalize"
                     }) })
                   ] }),
-                  /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.CAPITALIZE })
+                  /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.CAPITALIZE })
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsxs(
+            /* @__PURE__ */ jsxs(
               DropDownItem,
               {
                 onClick: () => {
-                  activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "strikethrough");
+                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
                 },
                 className: "item wide " + dropDownActiveClass(toolbarState.isStrikethrough),
                 title: formatMessage({
@@ -25341,22 +25320,22 @@ function ToolbarPlugin({
                   defaultMessage: "Format text with a strikethrough"
                 }),
                 children: [
-                  /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon strikethrough" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                  /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                    /* @__PURE__ */ jsx("i", { className: "icon strikethrough" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.format.strikethrough.text",
                       defaultMessage: "Strikethrough"
                     }) })
                   ] }),
-                  /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.STRIKETHROUGH })
+                  /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.STRIKETHROUGH })
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsxs(
+            /* @__PURE__ */ jsxs(
               DropDownItem,
               {
                 onClick: () => {
-                  activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "subscript");
+                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "subscript");
                 },
                 className: "item wide " + dropDownActiveClass(toolbarState.isSubscript),
                 title: formatMessage({
@@ -25368,22 +25347,22 @@ function ToolbarPlugin({
                   defaultMessage: "Format text with a subscript"
                 }),
                 children: [
-                  /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon subscript" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                  /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                    /* @__PURE__ */ jsx("i", { className: "icon subscript" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.format.subscript.text",
                       defaultMessage: "Subscript"
                     }) })
                   ] }),
-                  /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.SUBSCRIPT })
+                  /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.SUBSCRIPT })
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsxs(
+            /* @__PURE__ */ jsxs(
               DropDownItem,
               {
                 onClick: () => {
-                  activeEditor.dispatchCommand(lexical.FORMAT_TEXT_COMMAND, "superscript");
+                  activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "superscript");
                 },
                 className: "item wide " + dropDownActiveClass(toolbarState.isSuperscript),
                 title: formatMessage({
@@ -25395,18 +25374,18 @@ function ToolbarPlugin({
                   defaultMessage: "Format text with a superscript"
                 }),
                 children: [
-                  /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon superscript" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                  /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                    /* @__PURE__ */ jsx("i", { className: "icon superscript" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.format.superscript.text",
                       defaultMessage: "Superscript"
                     }) })
                   ] }),
-                  /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.SUPERSCRIPT })
+                  /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.SUPERSCRIPT })
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsxs(
+            /* @__PURE__ */ jsxs(
               DropDownItem,
               {
                 onClick: () => clearFormatting(activeEditor),
@@ -25420,22 +25399,22 @@ function ToolbarPlugin({
                   defaultMessage: "Clear all text formatting"
                 }),
                 children: [
-                  /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "icon-text-container", children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon clear" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                  /* @__PURE__ */ jsxs("div", { className: "icon-text-container", children: [
+                    /* @__PURE__ */ jsx("i", { className: "icon clear" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.format.clear.text",
                       defaultMessage: "Clear Formatting"
                     }) })
                   ] }),
-                  /* @__PURE__ */ jsxRuntime.jsx("span", { className: "shortcut", children: SHORTCUTS.CLEAR_FORMATTING })
+                  /* @__PURE__ */ jsx("span", { className: "shortcut", children: SHORTCUTS.CLEAR_FORMATTING })
                 ]
               }
             )
           ]
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(Divider, {}),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx(Divider, {}),
+      /* @__PURE__ */ jsx(
         "button",
         {
           disabled: !isEditable,
@@ -25453,10 +25432,10 @@ function ToolbarPlugin({
             { shortcut: SHORTCUTS.INSERT_LINK }
           ),
           type: "button",
-          children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format link" })
+          children: /* @__PURE__ */ jsx("i", { className: "format link" })
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx(
         "button",
         {
           onClick: () => setIsStrapiImageDialogOpen(true),
@@ -25470,10 +25449,10 @@ function ToolbarPlugin({
             id: "lexical.plugin.toolbar.insert.strapiimage.aria",
             defaultMessage: "Insert Strapi Image"
           }),
-          children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format image" })
+          children: /* @__PURE__ */ jsx("i", { className: "format image" })
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx(
         "button",
         {
           disabled: !isEditable,
@@ -25488,11 +25467,11 @@ function ToolbarPlugin({
             id: "lexical.plugin.toolbar.upload.image.aria",
             defaultMessage: "Upload Image"
           }),
-          children: /* @__PURE__ */ jsxRuntime.jsx("i", { className: "format upload" })
+          children: /* @__PURE__ */ jsx("i", { className: "format upload" })
         }
       ),
-      /* @__PURE__ */ jsxRuntime.jsx(Divider, {}),
-      /* @__PURE__ */ jsxRuntime.jsx(
+      /* @__PURE__ */ jsx(Divider, {}),
+      /* @__PURE__ */ jsx(
         ElementFormatDropdown,
         {
           disabled: !isEditable,
@@ -25501,9 +25480,9 @@ function ToolbarPlugin({
           isRTL: toolbarState.isRTL
         }
       ),
-      canViewerSeeInsertDropdown && /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntime.jsx(Divider, {}),
-        /* @__PURE__ */ jsxRuntime.jsxs(
+      canViewerSeeInsertDropdown && /* @__PURE__ */ jsxs(Fragment, { children: [
+        /* @__PURE__ */ jsx(Divider, {}),
+        /* @__PURE__ */ jsxs(
           DropDown,
           {
             disabled: !isEditable,
@@ -25518,23 +25497,23 @@ function ToolbarPlugin({
             }),
             buttonIconClassName: "icon plus",
             children: [
-              /* @__PURE__ */ jsxRuntime.jsxs(
+              /* @__PURE__ */ jsxs(
                 DropDownItem,
                 {
                   onClick: () => {
-                    activeEditor.dispatchCommand(LexicalHorizontalRuleNode.INSERT_HORIZONTAL_RULE_COMMAND, void 0);
+                    activeEditor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, void 0);
                   },
                   className: "item",
                   children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon horizontal-rule" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                    /* @__PURE__ */ jsx("i", { className: "icon horizontal-rule" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.insert.horizontalrule.text",
                       defaultMessage: "Horizontal Rule"
                     }) })
                   ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntime.jsxs(
+              /* @__PURE__ */ jsxs(
                 DropDownItem,
                 {
                   onClick: () => {
@@ -25543,20 +25522,20 @@ function ToolbarPlugin({
                         id: "lexical.plugin.toolbar.insert.table.modal.title",
                         defaultMessage: "Insert Table"
                       }),
-                      (onClose) => /* @__PURE__ */ jsxRuntime.jsx(InsertTableDialog, { activeEditor, onClose })
+                      (onClose) => /* @__PURE__ */ jsx(InsertTableDialog, { activeEditor, onClose })
                     );
                   },
                   className: "item",
                   children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon table" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                    /* @__PURE__ */ jsx("i", { className: "icon table" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.insert.table.text",
                       defaultMessage: "Table"
                     }) })
                   ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntime.jsxs(
+              /* @__PURE__ */ jsxs(
                 DropDownItem,
                 {
                   onClick: () => {
@@ -25565,20 +25544,20 @@ function ToolbarPlugin({
                         id: "lexical.plugin.toolbar.insert.cta-button.modal.title",
                         defaultMessage: "Insert CTA Button"
                       }),
-                      (onClose) => /* @__PURE__ */ jsxRuntime.jsx(InsertCTAButtonDialog, { activeEditor, onClose })
+                      (onClose) => /* @__PURE__ */ jsx(InsertCTAButtonDialog, { activeEditor, onClose })
                     );
                   },
                   className: "item",
                   children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon link" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                    /* @__PURE__ */ jsx("i", { className: "icon link" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.insert.cta-button.text",
                       defaultMessage: "CTA Button"
                     }) })
                   ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntime.jsxs(
+              /* @__PURE__ */ jsxs(
                 DropDownItem,
                 {
                   onClick: () => {
@@ -25587,20 +25566,20 @@ function ToolbarPlugin({
                         id: "lexical.plugin.toolbar.insert.columns.modal.title",
                         defaultMessage: "Insert Columns Layout"
                       }),
-                      (onClose) => /* @__PURE__ */ jsxRuntime.jsx(InsertLayoutDialog, { activeEditor, onClose })
+                      (onClose) => /* @__PURE__ */ jsx(InsertLayoutDialog, { activeEditor, onClose })
                     );
                   },
                   className: "item",
                   children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon columns" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                    /* @__PURE__ */ jsx("i", { className: "icon columns" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.insert.columns.text",
                       defaultMessage: "Columns Layout"
                     }) })
                   ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntime.jsxs(
+              /* @__PURE__ */ jsxs(
                 DropDownItem,
                 {
                   onClick: () => {
@@ -25608,24 +25587,24 @@ function ToolbarPlugin({
                   },
                   className: "item",
                   children: [
-                    /* @__PURE__ */ jsxRuntime.jsx("i", { className: "icon caret-right" }),
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: formatMessage({
+                    /* @__PURE__ */ jsx("i", { className: "icon caret-right" }),
+                    /* @__PURE__ */ jsx("span", { className: "text", children: formatMessage({
                       id: "lexical.plugin.toolbar.insert.collapsible.text",
                       defaultMessage: "Collapsible container"
                     }) })
                   ]
                 }
               ),
-              EmbedConfigs.map((embedConfig) => /* @__PURE__ */ jsxRuntime.jsxs(
+              EmbedConfigs.map((embedConfig) => /* @__PURE__ */ jsxs(
                 DropDownItem,
                 {
                   onClick: () => {
-                    activeEditor.dispatchCommand(LexicalAutoEmbedPlugin.INSERT_EMBED_COMMAND, embedConfig.type);
+                    activeEditor.dispatchCommand(INSERT_EMBED_COMMAND, embedConfig.type);
                   },
                   className: "item",
                   children: [
                     embedConfig.icon,
-                    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text", children: embedConfig.contentName })
+                    /* @__PURE__ */ jsx("span", { className: "text", children: embedConfig.contentName })
                   ]
                 },
                 embedConfig.type
@@ -25644,18 +25623,18 @@ function LexicalContentEditable({
   placeholderClassName,
   ref
 }) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    LexicalContentEditable$1.ContentEditable,
+  return /* @__PURE__ */ jsx(
+    ContentEditable,
     {
       ref,
       className: className ?? "ContentEditable__root",
       "aria-placeholder": placeholder,
-      placeholder: /* @__PURE__ */ jsxRuntime.jsx("div", { className: placeholderClassName ?? "ContentEditable__placeholder", children: placeholder })
+      placeholder: /* @__PURE__ */ jsx("div", { className: placeholderClassName ?? "ContentEditable__placeholder", children: placeholder })
     }
   );
 }
 function Editor(props) {
-  const { formatMessage } = reactIntl.useIntl();
+  const { formatMessage } = useIntl();
   const { historyState } = useSharedHistoryContext();
   const isAutocomplete = false;
   const isMaxLength = false;
@@ -25669,7 +25648,7 @@ function Editor(props) {
   const tableHorizontalScroll = false;
   const shouldAllowHighlightingWithBrackets = false;
   const selectionAlwaysOnDisplay = false;
-  const isEditable = useLexicalEditable.useLexicalEditable();
+  const isEditable = useLexicalEditable();
   const placeholder = formatMessage(
     {
       id: "lexical.editor.placeholder",
@@ -25677,17 +25656,17 @@ function Editor(props) {
     },
     { state: "rich" }
   );
-  const [floatingAnchorElem, setFloatingAnchorElem] = React.useState(null);
-  const [isSmallWidthViewport, setIsSmallWidthViewport] = React.useState(false);
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const [activeEditor, setActiveEditor] = React.useState(editor);
-  const [isLinkEditMode, setIsLinkEditMode] = React.useState(false);
+  const [floatingAnchorElem, setFloatingAnchorElem] = useState(null);
+  const [isSmallWidthViewport, setIsSmallWidthViewport] = useState(false);
+  const [editor] = useLexicalComposerContext();
+  const [activeEditor, setActiveEditor] = useState(editor);
+  const [isLinkEditMode, setIsLinkEditMode] = useState(false);
   const onRef = (_floatingAnchorElem) => {
     if (_floatingAnchorElem !== null) {
       setFloatingAnchorElem(_floatingAnchorElem);
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     const updateViewPortWidth = () => {
       const isNextSmallWidthViewport = CAN_USE_DOM && window.matchMedia("(max-width: 1025px)").matches;
       if (isNextSmallWidthViewport !== isSmallWidthViewport) {
@@ -25704,8 +25683,8 @@ function Editor(props) {
     const editorStateJSON = editorState.toJSON();
     props.onChange(editorStateJSON);
   }
-  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
       ToolbarPlugin,
       {
         editor,
@@ -25714,60 +25693,60 @@ function Editor(props) {
         setIsLinkEditMode
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx(ShortcutsPlugin, { editor: activeEditor, setIsLinkEditMode }),
-    /* @__PURE__ */ jsxRuntime.jsxs(
+    /* @__PURE__ */ jsx(ShortcutsPlugin, { editor: activeEditor, setIsLinkEditMode }),
+    /* @__PURE__ */ jsxs(
       "div",
       {
         className: `editor-container ${""} ${""}`,
         children: [
           isMaxLength,
-          /* @__PURE__ */ jsxRuntime.jsx(DragDropPaste, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(LexicalAutoFocusPlugin.AutoFocusPlugin, {}),
+          /* @__PURE__ */ jsx(DragDropPaste, {}),
+          /* @__PURE__ */ jsx(AutoFocusPlugin, {}),
           selectionAlwaysOnDisplay,
-          /* @__PURE__ */ jsxRuntime.jsx(LexicalClearEditorPlugin.ClearEditorPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(ComponentPickerMenuPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(EmojiPickerPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(AutoEmbedPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(NewMentionsPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(EmojisPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(LexicalHashtagPlugin.HashtagPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(KeywordsPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsx(LexicalAutoLinkPlugin, {}),
-          /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-            /* @__PURE__ */ jsxRuntime.jsx(LexicalHistoryPlugin.HistoryPlugin, { externalHistoryState: historyState }),
-            /* @__PURE__ */ jsxRuntime.jsx(
-              LexicalRichTextPlugin.RichTextPlugin,
+          /* @__PURE__ */ jsx(ClearEditorPlugin, {}),
+          /* @__PURE__ */ jsx(ComponentPickerMenuPlugin, {}),
+          /* @__PURE__ */ jsx(EmojiPickerPlugin, {}),
+          /* @__PURE__ */ jsx(AutoEmbedPlugin, {}),
+          /* @__PURE__ */ jsx(NewMentionsPlugin, {}),
+          /* @__PURE__ */ jsx(EmojisPlugin, {}),
+          /* @__PURE__ */ jsx(HashtagPlugin, {}),
+          /* @__PURE__ */ jsx(KeywordsPlugin, {}),
+          /* @__PURE__ */ jsx(LexicalAutoLinkPlugin, {}),
+          /* @__PURE__ */ jsxs(Fragment, { children: [
+            /* @__PURE__ */ jsx(HistoryPlugin, { externalHistoryState: historyState }),
+            /* @__PURE__ */ jsx(
+              RichTextPlugin,
               {
-                contentEditable: /* @__PURE__ */ jsxRuntime.jsx("div", { className: "editor-scroller", children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: "editor", ref: onRef, children: /* @__PURE__ */ jsxRuntime.jsx(LexicalContentEditable, { placeholder, ref: props.ref }) }) }),
-                ErrorBoundary: LexicalErrorBoundary.LexicalErrorBoundary
+                contentEditable: /* @__PURE__ */ jsx("div", { className: "editor-scroller", children: /* @__PURE__ */ jsx("div", { className: "editor", ref: onRef, children: /* @__PURE__ */ jsx(LexicalContentEditable, { placeholder, ref: props.ref }) }) }),
+                ErrorBoundary: LexicalErrorBoundary
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsx(MarkdownPlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(CodeHighlightPlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(LexicalListPlugin.ListPlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(LexicalCheckListPlugin.CheckListPlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(
-              LexicalTablePlugin.TablePlugin,
+            /* @__PURE__ */ jsx(MarkdownPlugin, {}),
+            /* @__PURE__ */ jsx(CodeHighlightPlugin, {}),
+            /* @__PURE__ */ jsx(ListPlugin, {}),
+            /* @__PURE__ */ jsx(CheckListPlugin, {}),
+            /* @__PURE__ */ jsx(
+              TablePlugin,
               {
                 hasCellMerge: tableCellMerge,
                 hasCellBackgroundColor: tableCellBackgroundColor,
                 hasHorizontalScroll: tableHorizontalScroll
               }
             ),
-            /* @__PURE__ */ jsxRuntime.jsx(TableCellResizerPlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(LinkPlugin, { hasLinkAttributes }),
-            /* @__PURE__ */ jsxRuntime.jsx(YouTubePlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(LexicalClickableLinkPlugin.ClickableLinkPlugin, { disabled: isEditable }),
-            /* @__PURE__ */ jsxRuntime.jsx(LexicalHorizontalRulePlugin.HorizontalRulePlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(TabFocusPlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(LexicalTabIndentationPlugin.TabIndentationPlugin, { maxIndent: 7 }),
-            /* @__PURE__ */ jsxRuntime.jsx(CollapsiblePlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(LayoutPlugin, {}),
-            /* @__PURE__ */ jsxRuntime.jsx(CTAButtonPlugin, {}),
-            floatingAnchorElem && !isSmallWidthViewport && /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
-              /* @__PURE__ */ jsxRuntime.jsx(DraggableBlockPlugin, { anchorElem: floatingAnchorElem }),
-              /* @__PURE__ */ jsxRuntime.jsx(CodeActionMenuPlugin, { anchorElem: floatingAnchorElem }),
-              /* @__PURE__ */ jsxRuntime.jsx(
+            /* @__PURE__ */ jsx(TableCellResizerPlugin, {}),
+            /* @__PURE__ */ jsx(LinkPlugin, { hasLinkAttributes }),
+            /* @__PURE__ */ jsx(YouTubePlugin, {}),
+            /* @__PURE__ */ jsx(ClickableLinkPlugin, { disabled: isEditable }),
+            /* @__PURE__ */ jsx(HorizontalRulePlugin, {}),
+            /* @__PURE__ */ jsx(TabFocusPlugin, {}),
+            /* @__PURE__ */ jsx(TabIndentationPlugin, { maxIndent: 7 }),
+            /* @__PURE__ */ jsx(CollapsiblePlugin, {}),
+            /* @__PURE__ */ jsx(LayoutPlugin, {}),
+            /* @__PURE__ */ jsx(CTAButtonPlugin, {}),
+            floatingAnchorElem && !isSmallWidthViewport && /* @__PURE__ */ jsxs(Fragment, { children: [
+              /* @__PURE__ */ jsx(DraggableBlockPlugin, { anchorElem: floatingAnchorElem }),
+              /* @__PURE__ */ jsx(CodeActionMenuPlugin, { anchorElem: floatingAnchorElem }),
+              /* @__PURE__ */ jsx(
                 FloatingLinkEditorPlugin,
                 {
                   anchorElem: floatingAnchorElem,
@@ -25776,9 +25755,9 @@ function Editor(props) {
                   fieldName: props.fieldName
                 }
               ),
-              /* @__PURE__ */ jsxRuntime.jsx(TableActionMenuPlugin, { anchorElem: floatingAnchorElem, cellMerge: true }),
-              /* @__PURE__ */ jsxRuntime.jsx(TableHoverActionsPlugin, { anchorElem: floatingAnchorElem }),
-              /* @__PURE__ */ jsxRuntime.jsx(
+              /* @__PURE__ */ jsx(TableActionMenuPlugin, { anchorElem: floatingAnchorElem, cellMerge: true }),
+              /* @__PURE__ */ jsx(TableHoverActionsPlugin, { anchorElem: floatingAnchorElem }),
+              /* @__PURE__ */ jsx(
                 FloatingTextFormatToolbarPlugin,
                 {
                   anchorElem: floatingAnchorElem,
@@ -25789,34 +25768,34 @@ function Editor(props) {
           ] }),
           isCharLimitUtf8,
           isAutocomplete,
-          /* @__PURE__ */ jsxRuntime.jsx("div", { children: showTableOfContents }),
+          /* @__PURE__ */ jsx("div", { children: showTableOfContents }),
           shouldUseLexicalContextMenu,
           shouldAllowHighlightingWithBrackets
         ]
       }
     ),
     showTreeView,
-    /* @__PURE__ */ jsxRuntime.jsx(StrapiOnChangePlugin, { onChange, expectedEditorState: props.expectedEditorState }),
-    /* @__PURE__ */ jsxRuntime.jsx(StrapiImagePlugin, {}),
-    /* @__PURE__ */ jsxRuntime.jsx(StrapiImageUploadPlugin, { folder: "post" })
+    /* @__PURE__ */ jsx(StrapiOnChangePlugin, { onChange, expectedEditorState: props.expectedEditorState }),
+    /* @__PURE__ */ jsx(StrapiImagePlugin, {}),
+    /* @__PURE__ */ jsx(StrapiImageUploadPlugin, { folder: "post" })
   ] });
 }
 function FlashMessage({ children }) {
-  return ReactDOM.createPortal(
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "FlashMessage__overlay", role: "dialog", children: /* @__PURE__ */ jsxRuntime.jsx("p", { className: "FlashMessage__alert", role: "alert", children }) }),
+  return createPortal(
+    /* @__PURE__ */ jsx("div", { className: "FlashMessage__overlay", role: "dialog", children: /* @__PURE__ */ jsx("p", { className: "FlashMessage__alert", role: "alert", children }) }),
     document.body
   );
 }
-const Context = React.createContext(void 0);
+const Context = createContext(void 0);
 const INITIAL_STATE = {};
 const DEFAULT_DURATION = 1e3;
 const FlashMessageContext = ({ children }) => {
-  const [props, setProps] = React.useState(INITIAL_STATE);
-  const showFlashMessage = React.useCallback(
+  const [props, setProps] = useState(INITIAL_STATE);
+  const showFlashMessage = useCallback(
     (message, duration) => setProps(message ? { duration, message } : INITIAL_STATE),
     []
   );
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.message) {
       const timeoutId = setTimeout(
         () => setProps(INITIAL_STATE),
@@ -25825,9 +25804,9 @@ const FlashMessageContext = ({ children }) => {
       return () => clearTimeout(timeoutId);
     }
   }, [props]);
-  return /* @__PURE__ */ jsxRuntime.jsxs(Context.Provider, { value: showFlashMessage, children: [
+  return /* @__PURE__ */ jsxs(Context.Provider, { value: showFlashMessage, children: [
     children,
-    props.message && /* @__PURE__ */ jsxRuntime.jsx(FlashMessage, { children: props.message })
+    props.message && /* @__PURE__ */ jsx(FlashMessage, { children: props.message })
   ] });
 };
 const theme = {
@@ -25942,7 +25921,7 @@ const theme = {
   }
 };
 function FigmaComponent({ className, format, nodeKey, documentID }) {
-  return /* @__PURE__ */ jsxRuntime.jsx(LexicalBlockWithAlignableContents.BlockWithAlignableContents, { className, format, nodeKey, children: /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(BlockWithAlignableContents, { className, format, nodeKey, children: /* @__PURE__ */ jsx(
     "iframe",
     {
       width: "560",
@@ -25952,7 +25931,7 @@ function FigmaComponent({ className, format, nodeKey, documentID }) {
     }
   ) });
 }
-class FigmaNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
+class FigmaNode extends DecoratorBlockNode {
   __id;
   static getType() {
     return "figma";
@@ -25988,7 +25967,7 @@ class FigmaNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
       base: embedBlockTheme.base || "",
       focus: embedBlockTheme.focus || ""
     };
-    return /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(
       FigmaComponent,
       {
         className,
@@ -26002,16 +25981,16 @@ class FigmaNode extends LexicalDecoratorBlockNode.DecoratorBlockNode {
 function $createFigmaNode(documentID) {
   return new FigmaNode(documentID);
 }
-const InlineImageComponent = React__namespace.lazy(() => Promise.resolve().then(() => require("./InlineImageComponent-C6IG8-jX.js")));
+const InlineImageComponent = React.lazy(() => import("./InlineImageComponent-XVw2IBEd.mjs"));
 function $convertInlineImageElement(domNode) {
-  if (lexical.isHTMLElement(domNode) && domNode.nodeName === "IMG") {
+  if (isHTMLElement(domNode) && domNode.nodeName === "IMG") {
     const { alt: altText, src, width, height } = domNode;
     const node = $createInlineImageNode({ altText, height, src, width });
     return { node };
   }
   return null;
 }
-class InlineImageNode extends lexical.DecoratorNode {
+class InlineImageNode extends DecoratorNode {
   __src;
   __altText;
   __width;
@@ -26070,7 +26049,7 @@ class InlineImageNode extends lexical.DecoratorNode {
     this.__width = width || "inherit";
     this.__height = height || "inherit";
     this.__showCaption = showCaption || false;
-    this.__caption = caption || lexical.createEditor();
+    this.__caption = caption || createEditor();
     this.__position = position;
   }
   exportDOM() {
@@ -26155,7 +26134,7 @@ class InlineImageNode extends lexical.DecoratorNode {
     return false;
   }
   decorate() {
-    return /* @__PURE__ */ jsxRuntime.jsx(React.Suspense, { fallback: null, children: /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(Suspense, { fallback: null, children: /* @__PURE__ */ jsx(
       InlineImageComponent,
       {
         src: this.__src,
@@ -26180,7 +26159,7 @@ function $createInlineImageNode({
   caption,
   key
 }) {
-  return lexical.$applyNodeReplacement(
+  return $applyNodeReplacement(
     new InlineImageNode(src, altText, position, width, height, showCaption, caption, key)
   );
 }
@@ -26188,13 +26167,13 @@ function $isInlineImageNode(node) {
   return node instanceof InlineImageNode;
 }
 function PageBreakComponent({ nodeKey }) {
-  const [editor] = LexicalComposerContext.useLexicalComposerContext();
-  const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection.useLexicalNodeSelection(nodeKey);
-  const $onDelete = React.useCallback(
+  const [editor] = useLexicalComposerContext();
+  const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey);
+  const $onDelete = useCallback(
     (event) => {
       event.preventDefault();
-      const deleteSelection = lexical.$getSelection();
-      if (isSelected && lexical.$isNodeSelection(deleteSelection)) {
+      const deleteSelection = $getSelection();
+      if (isSelected && $isNodeSelection(deleteSelection)) {
         deleteSelection.getNodes().forEach((node) => {
           if ($isPageBreakNode(node)) {
             node.remove();
@@ -26205,10 +26184,10 @@ function PageBreakComponent({ nodeKey }) {
     },
     [isSelected]
   );
-  React.useEffect(() => {
-    return utils.mergeRegister(
+  useEffect(() => {
+    return mergeRegister(
       editor.registerCommand(
-        lexical.CLICK_COMMAND,
+        CLICK_COMMAND,
         (event) => {
           const pbElem = editor.getElementByKey(nodeKey);
           if (event.target === pbElem) {
@@ -26220,13 +26199,13 @@ function PageBreakComponent({ nodeKey }) {
           }
           return false;
         },
-        lexical.COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW$1
       ),
-      editor.registerCommand(lexical.KEY_DELETE_COMMAND, $onDelete, lexical.COMMAND_PRIORITY_LOW),
-      editor.registerCommand(lexical.KEY_BACKSPACE_COMMAND, $onDelete, lexical.COMMAND_PRIORITY_LOW)
+      editor.registerCommand(KEY_DELETE_COMMAND, $onDelete, COMMAND_PRIORITY_LOW$1),
+      editor.registerCommand(KEY_BACKSPACE_COMMAND, $onDelete, COMMAND_PRIORITY_LOW$1)
     );
   }, [clearSelection, editor, isSelected, nodeKey, $onDelete, setSelected]);
-  React.useEffect(() => {
+  useEffect(() => {
     const pbElem = editor.getElementByKey(nodeKey);
     if (pbElem !== null) {
       pbElem.className = isSelected ? "selected" : "";
@@ -26234,7 +26213,7 @@ function PageBreakComponent({ nodeKey }) {
   }, [editor, isSelected, nodeKey]);
   return null;
 }
-class PageBreakNode extends lexical.DecoratorNode {
+class PageBreakNode extends DecoratorNode {
   static getType() {
     return "page-break";
   }
@@ -26253,7 +26232,7 @@ class PageBreakNode extends lexical.DecoratorNode {
         }
         return {
           conversion: $convertPageBreakElement,
-          priority: lexical.COMMAND_PRIORITY_HIGH
+          priority: COMMAND_PRIORITY_HIGH
         };
       }
     };
@@ -26274,7 +26253,7 @@ class PageBreakNode extends lexical.DecoratorNode {
     return false;
   }
   decorate() {
-    return /* @__PURE__ */ jsxRuntime.jsx(PageBreakComponent, { nodeKey: this.__key });
+    return /* @__PURE__ */ jsx(PageBreakComponent, { nodeKey: this.__key });
   }
 }
 function $convertPageBreakElement() {
@@ -26286,7 +26265,7 @@ function $createPageBreakNode() {
 function $isPageBreakNode(node) {
   return node instanceof PageBreakNode;
 }
-const PollComponent = React__namespace.lazy(() => Promise.resolve().then(() => require("./PollComponent-DrhRO6iv.js")));
+const PollComponent = React.lazy(() => import("./PollComponent-4JOqtaBU.mjs"));
 function createUID() {
   return Math.random().toString(36).replace(/[^a-z]+/g, "").slice(0, 5);
 }
@@ -26313,7 +26292,7 @@ function $convertPollElement(domNode) {
   }
   return null;
 }
-class PollNode extends lexical.DecoratorNode {
+class PollNode extends DecoratorNode {
   __question;
   __options;
   static getType() {
@@ -26404,7 +26383,7 @@ class PollNode extends lexical.DecoratorNode {
     return false;
   }
   decorate() {
-    return /* @__PURE__ */ jsxRuntime.jsx(React.Suspense, { fallback: null, children: /* @__PURE__ */ jsxRuntime.jsx(PollComponent, { question: this.__question, options: this.__options, nodeKey: this.__key }) });
+    return /* @__PURE__ */ jsx(Suspense, { fallback: null, children: /* @__PURE__ */ jsx(PollComponent, { question: this.__question, options: this.__options, nodeKey: this.__key }) });
   }
 }
 function $createPollNode(question, options) {
@@ -26413,8 +26392,8 @@ function $createPollNode(question, options) {
 function $isPollNode(node) {
   return node instanceof PollNode;
 }
-const StickyComponent = React__namespace.lazy(() => Promise.resolve().then(() => require("./StickyComponent-DyuIIq2g.js")));
-class StickyNode extends lexical.DecoratorNode {
+const StickyComponent = React.lazy(() => import("./StickyComponent-CK1deDUa.mjs"));
+class StickyNode extends DecoratorNode {
   __x;
   __y;
   __color;
@@ -26446,7 +26425,7 @@ class StickyNode extends lexical.DecoratorNode {
     super(key);
     this.__x = x;
     this.__y = y;
-    this.__caption = caption || lexical.createEditor();
+    this.__caption = caption || createEditor();
     this.__color = color;
   }
   exportJSON() {
@@ -26470,15 +26449,15 @@ class StickyNode extends lexical.DecoratorNode {
     const writable = this.getWritable();
     writable.__x = x;
     writable.__y = y;
-    lexical.$setSelection(null);
+    $setSelection(null);
   }
   toggleColor() {
     const writable = this.getWritable();
     writable.__color = writable.__color === "pink" ? "yellow" : "pink";
   }
   decorate(editor, config) {
-    return ReactDOM.createPortal(
-      /* @__PURE__ */ jsxRuntime.jsx(React.Suspense, { fallback: null, children: /* @__PURE__ */ jsxRuntime.jsx(
+    return createPortal(
+      /* @__PURE__ */ jsx(Suspense, { fallback: null, children: /* @__PURE__ */ jsx(
         StickyComponent,
         {
           color: this.__color,
@@ -26499,19 +26478,19 @@ function $isStickyNode(node) {
   return node instanceof StickyNode;
 }
 const Nodes = [
-  richText.HeadingNode,
-  list.ListNode,
-  list.ListItemNode,
-  richText.QuoteNode,
-  code.CodeNode,
-  table.TableNode,
-  table.TableCellNode,
-  table.TableRowNode,
-  hashtag.HashtagNode,
-  code.CodeHighlightNode,
-  link.AutoLinkNode,
-  link.LinkNode,
-  overflow.OverflowNode,
+  HeadingNode,
+  ListNode,
+  ListItemNode,
+  QuoteNode,
+  CodeNode,
+  TableNode,
+  TableCellNode,
+  TableRowNode,
+  HashtagNode,
+  CodeHighlightNode,
+  AutoLinkNode,
+  LinkNode,
+  OverflowNode,
   PollNode,
   StickyNode,
   ImageNode,
@@ -26521,11 +26500,11 @@ const Nodes = [
   EquationNode,
   AutocompleteNode,
   KeywordNode,
-  LexicalHorizontalRuleNode.HorizontalRuleNode,
+  HorizontalRuleNode,
   TweetNode,
   YouTubeNode,
   FigmaNode,
-  mark.MarkNode,
+  MarkNode,
   CollapsibleContainerNode,
   CollapsibleContentNode,
   CollapsibleTitleNode,
@@ -26536,16 +26515,16 @@ const Nodes = [
   StrapiImageNode,
   CTAButtonNode
 ];
-const Input = React__namespace.forwardRef(
+const Input = React.forwardRef(
   (props, ref) => {
     const { attribute, name, onChange, required, value, error, hint, labelAction, label } = props;
-    const { formatMessage } = reactIntl.useIntl();
-    const { get } = admin.useFetchClient();
-    const [expectedEditorState, setExpectedEditorState] = React__namespace.useState(void 0);
-    const [flagUserInput, setFlagUserInput] = React__namespace.useState(false);
-    const [lastValue, setLastValue] = React__namespace.useState(value);
-    React__namespace.useEffect(() => {
-      if (!equal__default.default(value, lastValue)) {
+    const { formatMessage } = useIntl();
+    const { get } = useFetchClient();
+    const [expectedEditorState, setExpectedEditorState] = React.useState(void 0);
+    const [flagUserInput, setFlagUserInput] = React.useState(false);
+    const [lastValue, setLastValue] = React.useState(value);
+    React.useEffect(() => {
+      if (!equal(value, lastValue)) {
         setLastValue(value);
         if (flagUserInput) {
           setFlagUserInput(false);
@@ -26556,7 +26535,7 @@ const Input = React__namespace.forwardRef(
       }
     }, [value]);
     const handleChange = async (newValue) => {
-      if (equal__default.default(value, newValue)) {
+      if (equal(value, newValue)) {
         return;
       }
       onChange({
@@ -26678,8 +26657,8 @@ const Input = React__namespace.forwardRef(
         console.error(err);
       }
     };
-    const handleChangeCb = React__namespace.useCallback(
-      lodash.debounce(
+    const handleChangeCb = React.useCallback(
+      debounce$2(
         async (newValue) => {
           await handleChange(newValue);
         },
@@ -26688,7 +26667,7 @@ const Input = React__namespace.forwardRef(
       ),
       [handleChange]
     );
-    const initialConfig = React__namespace.useMemo(
+    const initialConfig = React.useMemo(
       () => ({
         editorState: value && value.root && value.root.children.length ? JSON.stringify(value) : void 0,
         namespace: "Lexical",
@@ -26700,9 +26679,9 @@ const Input = React__namespace.forwardRef(
       }),
       []
     );
-    return /* @__PURE__ */ jsxRuntime.jsx(designSystem.Field.Root, { name, id: name, error, hint, required, children: /* @__PURE__ */ jsxRuntime.jsxs(designSystem.Flex, { direction: "column", alignItems: "stretch", gap: 1, children: [
-      /* @__PURE__ */ jsxRuntime.jsx(designSystem.Field.Label, { action: labelAction, children: label }),
-      /* @__PURE__ */ jsxRuntime.jsx("div", { children: /* @__PURE__ */ jsxRuntime.jsx(FlashMessageContext, { children: /* @__PURE__ */ jsxRuntime.jsx(LexicalComposer.LexicalComposer, { initialConfig, children: /* @__PURE__ */ jsxRuntime.jsx(TableContext, { children: /* @__PURE__ */ jsxRuntime.jsx(ToolbarContext, { children: /* @__PURE__ */ jsxRuntime.jsx(
+    return /* @__PURE__ */ jsx(Field.Root, { name, id: name, error, hint, required, children: /* @__PURE__ */ jsxs(Flex, { direction: "column", alignItems: "stretch", gap: 1, children: [
+      /* @__PURE__ */ jsx(Field.Label, { action: labelAction, children: label }),
+      /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(FlashMessageContext, { children: /* @__PURE__ */ jsx(LexicalComposer, { initialConfig, children: /* @__PURE__ */ jsx(TableContext, { children: /* @__PURE__ */ jsx(ToolbarContext, { children: /* @__PURE__ */ jsx(
         Editor,
         {
           onChange: handleChangeCb,
@@ -26711,8 +26690,8 @@ const Input = React__namespace.forwardRef(
           expectedEditorState
         }
       ) }) }) }) }) }),
-      /* @__PURE__ */ jsxRuntime.jsx(designSystem.Field.Hint, {}),
-      /* @__PURE__ */ jsxRuntime.jsx(designSystem.Field.Error, {})
+      /* @__PURE__ */ jsx(Field.Hint, {}),
+      /* @__PURE__ */ jsx(Field.Error, {})
     ] }) });
   }
 );
@@ -26720,26 +26699,28 @@ const Input$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   __proto__: null,
   default: Input
 }, Symbol.toStringTag, { value: "Module" }));
-exports.$isEquationNode = $isEquationNode;
-exports.$isImageNode = $isImageNode;
-exports.$isInlineImageNode = $isInlineImageNode;
-exports.$isPollNode = $isPollNode;
-exports.$isStickyNode = $isStickyNode;
-exports.$isStrapiImageNode = $isStrapiImageNode;
-exports.Button = Button;
-exports.CAN_USE_DOM = CAN_USE_DOM;
-exports.DialogActions = DialogActions;
-exports.EmojiNode = EmojiNode;
-exports.EmojisPlugin = EmojisPlugin;
-exports.Input = Input$1;
-exports.KeywordNode = KeywordNode;
-exports.KeywordsPlugin = KeywordsPlugin;
-exports.LexicalContentEditable = LexicalContentEditable;
-exports.LinkPlugin = LinkPlugin;
-exports.NewMentionsPlugin = NewMentionsPlugin;
-exports.TextInput = TextInput;
-exports.createPollOption = createPollOption;
-exports.joinClasses = joinClasses;
-exports.theme = theme;
-exports.useModal = useModal;
-exports.useSharedHistoryContext = useSharedHistoryContext;
+export {
+  $isEquationNode as $,
+  Button as B,
+  CAN_USE_DOM as C,
+  DialogActions as D,
+  EmojiNode as E,
+  Input$1 as I,
+  KeywordNode as K,
+  LinkPlugin as L,
+  NewMentionsPlugin as N,
+  TextInput as T,
+  $isImageNode as a,
+  EmojisPlugin as b,
+  KeywordsPlugin as c,
+  LexicalContentEditable as d,
+  $isStrapiImageNode as e,
+  useModal as f,
+  $isInlineImageNode as g,
+  $isPollNode as h,
+  createPollOption as i,
+  joinClasses as j,
+  $isStickyNode as k,
+  theme as t,
+  useSharedHistoryContext as u
+};

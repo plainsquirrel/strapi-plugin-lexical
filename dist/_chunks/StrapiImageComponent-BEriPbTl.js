@@ -8,7 +8,7 @@ const utils = require("@lexical/utils");
 const lexical = require("lexical");
 const React = require("react");
 const imageBroken = require("./image-broken-DvpTkJDI.js");
-const Input = require("./Input-BFtYFOHC.js");
+const Input = require("./Input-BdzqMIym.js");
 const reactIntl = require("react-intl");
 const imageCache = /* @__PURE__ */ new Set();
 const RIGHT_CLICK_STRAPI_IMAGE_COMMAND = lexical.createCommand(
@@ -126,19 +126,29 @@ function StrapiImageComponent({
   }, []);
   const $onDelete = React.useCallback(
     (payload) => {
+      if (isEditingCaption) {
+        return false;
+      }
       const deleteSelection = lexical.$getSelection();
       if (isSelected && lexical.$isNodeSelection(deleteSelection)) {
-        const event = payload;
-        event.preventDefault();
-        deleteSelection.getNodes().forEach((node) => {
-          if (Input.$isImageNode(node) || Input.$isStrapiImageNode(node)) {
-            node.remove();
-          }
-        });
+        const selectedNodes = deleteSelection.getNodes();
+        const isCurrentImageSelected = selectedNodes.some(
+          (node) => node.getKey() === nodeKey && (Input.$isImageNode(node) || Input.$isStrapiImageNode(node))
+        );
+        if (isCurrentImageSelected) {
+          const event = payload;
+          event.preventDefault();
+          selectedNodes.forEach((node) => {
+            if (Input.$isImageNode(node) || Input.$isStrapiImageNode(node)) {
+              node.remove();
+            }
+          });
+          return true;
+        }
       }
       return false;
     },
-    [isSelected]
+    [isSelected, nodeKey, isEditingCaption]
   );
   const $onEnter = React.useCallback(
     (event) => {
